@@ -75,6 +75,7 @@ ist_zustand:
     - Minimal HIITBuddy start screen with a text-free CSS circuit/timer drawing and New Workout as the only primary action for ordinary entry.
     - Shared config links open setup step 1 directly.
     - Sequential three-step setup UI for people, exercise selection, and timer/start actions.
+    - Copy Link is available from all three setup steps.
     - People setup with active/pool handling.
     - Exercise setup with built-in selection and custom exercises.
     - Timer setup with copy link and start validation.

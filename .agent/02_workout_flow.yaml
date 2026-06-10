@@ -38,7 +38,8 @@ setup_screen:
     navigation:
       - Show only the current setup step.
       - Allow moving forward and backward without losing entered values.
-      - Keep Copy Link and Start Workout on the final Timer step.
+      - Keep Copy Link available on every setup step.
+      - Keep Start Workout on the final Timer step.
   primary_actions:
     - label: Start Workout
       behavior: Validate config and enter the round_start state for round 1.

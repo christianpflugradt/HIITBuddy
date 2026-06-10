@@ -678,14 +678,8 @@ const renderSetupNav = () => {
   return `
     <footer class="setup-nav">
       <button class="button ghost" type="button" data-action="setup-back" ${isFirst ? "disabled" : ""}>Back</button>
-      ${
-        isLast
-          ? `
-            <button class="button ghost" type="button" data-action="copy-link">Copy</button>
-            <button class="button primary" type="button" data-action="start-workout">Start</button>
-          `
-          : `<button class="button primary" type="button" data-action="setup-next">Next</button>`
-      }
+      <button class="button ghost" type="button" data-action="copy-link">Copy</button>
+      ${isLast ? `<button class="button primary" type="button" data-action="start-workout">Start</button>` : `<button class="button primary" type="button" data-action="setup-next">Next</button>`}
     </footer>
   `;
 };

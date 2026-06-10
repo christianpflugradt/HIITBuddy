@@ -78,7 +78,7 @@ interface_and_design:
         - Step 1 is People and shows alphabetically sorted Active and Pool sections.
         - Step 2 is Exercises and shows built-in selections plus custom additions in a compact multi-column matrix.
         - Step 3 is Timer and shows the four duration controls as large touch-first cards.
-        - Bottom navigation offers Back and Next until the final step.
+        - Bottom navigation offers Back, Copy, and Next until the final step.
         - Final step offers Back, Copy, and Start.
       exercise_matrix:
         target_visible_count: At least 20 exercises should fit without scrolling in a desktop or tablet-landscape viewport.
