@@ -82,6 +82,8 @@ ist_zustand:
     - Exercise setup with built-in selection and custom exercises.
     - Timer setup with copy link and start validation.
     - Timer setup uses four large touch-first stepper cards with direct numeric editing.
+    - All timer settings are constrained to whole seconds from 5 through 300 in validation, setup state, and timer inputs.
+    - Rest and Round Break extension buttons cap the current phase at 300 total seconds.
     - Add Person, Add Exercise, and Icon Picker dialogs.
     - Add Exercise dialog uses a square icon button next to the free-text name field, with icon labels shown only in the Icon Picker.
     - Setup-state tests for people, exercises, timers, and start validation.

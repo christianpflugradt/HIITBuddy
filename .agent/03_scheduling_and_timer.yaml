@@ -80,6 +80,14 @@ timer:
     interval only as a render trigger.
 
   phase_durations:
+    constraints:
+      min_seconds: 5
+      max_seconds: 300
+      applies_to:
+        - round_start
+        - work
+        - interval_rest
+        - round_break
     round_start:
       source: timer.getReadySeconds
       default_seconds: 30
@@ -114,6 +122,7 @@ timer:
   extension_behavior:
     - Extension buttons can be pressed repeatedly.
     - Each press increases addedSeconds for the current phase only.
+    - Repeated extensions must not increase the current phase above 300 total seconds.
     - Extensions do not mutate the configured default duration.
     - If an extension is pressed near zero, the current phase continues from the newly computed remaining time.
 

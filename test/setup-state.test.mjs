@@ -72,6 +72,15 @@ test("timer updates and start validation reflect setup state", () => {
   assert.equal(config.timer.workSeconds, 45);
   assert.equal(config.timer.intervalRestSeconds, 10);
 
+  config = updateTimerSetting(config, "getReadySeconds", "0");
+  config = updateTimerSetting(config, "workSeconds", 301);
+  config = updateTimerSetting(config, "intervalRestSeconds", -10);
+  config = updateTimerSetting(config, "roundBreakSeconds", "999");
+  assert.equal(config.timer.getReadySeconds, 5);
+  assert.equal(config.timer.workSeconds, 300);
+  assert.equal(config.timer.intervalRestSeconds, 5);
+  assert.equal(config.timer.roundBreakSeconds, 300);
+
   assert.deepEqual(
     getStartValidation(config).issues.map((issue) => issue.code),
     ["no_active_people", "no_exercises"]

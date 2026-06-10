@@ -116,6 +116,9 @@ setup_screen:
         visible_when: Exercise is custom.
         behavior: Delete custom exercise from the config after lightweight confirmation.
   timer_settings:
+    constraints:
+      min_seconds: 5
+      max_seconds: 300
     fields:
       - label: Get Ready
         default_seconds: 30
@@ -128,6 +131,7 @@ setup_screen:
         default_seconds: 90
     input_behavior:
       - Use numeric controls that are easy to adjust with touch.
+      - Clamp all timer values to the 5..300 second range.
       - Store values as whole seconds.
       - Prevent negative values.
 
@@ -178,11 +182,11 @@ interval_rest_state:
     - Preview of next assignments if useful and legible.
   controls:
     - label: "+5"
-      behavior: Add 5 seconds to the current rest countdown.
+      behavior: Add 5 seconds to the current rest countdown, capped at 300 total seconds.
     - label: "+10"
-      behavior: Add 10 seconds to the current rest countdown.
+      behavior: Add 10 seconds to the current rest countdown, capped at 300 total seconds.
     - label: "+20"
-      behavior: Add 20 seconds to the current rest countdown.
+      behavior: Add 20 seconds to the current rest countdown, capped at 300 total seconds.
   automatic_transition:
     when_countdown_reaches_zero:
       - Advance intervalIndex by 1.
@@ -203,9 +207,9 @@ round_break_state:
     - Fade upcoming assignments in when they become visible during longer round breaks.
   controls:
     - label: "+30"
-      behavior: Add 30 seconds to the current round break countdown.
+      behavior: Add 30 seconds to the current round break countdown, capped at 300 total seconds.
     - label: "+60"
-      behavior: Add 60 seconds to the current round break countdown.
+      behavior: Add 60 seconds to the current round break countdown, capped at 300 total seconds.
     - label: Finish
       behavior: End the workout and enter summary.
   automatic_transition:

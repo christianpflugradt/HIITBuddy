@@ -163,6 +163,9 @@ interface_and_design:
         requirement: Use a familiar symbol or lucide icon equivalent if an icon library is introduced.
     numeric_inputs:
       preferred: Large tablet stepper controls with direct numeric editing.
+      timer_bounds:
+        min_seconds: 5
+        max_seconds: 300
       fields:
         - Work
         - Rest

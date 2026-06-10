@@ -15,7 +15,7 @@ import {
   encodeConfig,
   readConfigFromUrl
 } from "../dist/domain/share-link.js";
-import { validateConfig, validateStartWorkout } from "../dist/domain/validation.js";
+import { TIMER_LIMITS, validateConfig, validateStartWorkout } from "../dist/domain/validation.js";
 
 test("default config contains the eight HYROX stations and no running station", () => {
   const config = createDefaultConfig();
@@ -26,6 +26,12 @@ test("default config contains the eight HYROX stations and no running station", 
     workSeconds: 40,
     intervalRestSeconds: 20,
     roundBreakSeconds: 90
+  });
+  assert.deepEqual(TIMER_LIMITS, {
+    getReadySeconds: { min: 5, max: 300 },
+    workSeconds: { min: 5, max: 300 },
+    intervalRestSeconds: { min: 5, max: 300 },
+    roundBreakSeconds: { min: 5, max: 300 }
   });
   assert.deepEqual(config.selectedExerciseIds, DEFAULT_SELECTED_EXERCISE_IDS);
   assert.equal(config.people.length, 0);
@@ -79,6 +85,32 @@ test("start validation blocks empty people, empty exercises, too many people, an
     noExerciseStart.issues.map((issue) => issue.code),
     ["no_exercises"]
   );
+});
+
+test("timer validation enforces five to three hundred seconds for every timer", () => {
+  const timerKeys = ["getReadySeconds", "workSeconds", "intervalRestSeconds", "roundBreakSeconds"];
+
+  for (const key of timerKeys) {
+    const belowMinimum = createDefaultConfig();
+    belowMinimum.people = [{ id: "p1", name: "Alice", active: true }];
+    belowMinimum.selectedExerciseIds = ["rowing"];
+    belowMinimum.timer[key] = 4;
+
+    assert.deepEqual(
+      validateStartWorkout(belowMinimum).issues.map((issue) => issue.code),
+      ["invalid_timer"]
+    );
+
+    const aboveMaximum = createDefaultConfig();
+    aboveMaximum.timer[key] = 301;
+    const configResult = validateConfig(aboveMaximum);
+
+    assert.equal(configResult.valid, false);
+    assert.deepEqual(
+      configResult.issues.map((issue) => issue.code),
+      ["invalid_timer_settings"]
+    );
+  }
 });
 
 test("config validation trims names and normalizes selected exercise flags", () => {

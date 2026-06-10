@@ -96,6 +96,14 @@ test("timer snapshot uses monotonic elapsed time and repeatable extensions", () 
   const extended = extendTimer(extendTimer(timer, 5), 10);
   assert.equal(extended.addedSeconds, 15);
   assert.equal(getTimerSnapshot(extended, 41000).remainingSeconds, 15);
+
+  const almostMaxed = createTimerState({
+    startedAt: 1000,
+    baseDurationSeconds: 290
+  });
+  const capped = extendTimer(almostMaxed, 20);
+  assert.equal(capped.addedSeconds, 10);
+  assert.equal(getTimerSnapshot(capped, 1000).totalSeconds, 300);
 });
 
 test("session advances through start, work, rest, completed round break, and next round", () => {
@@ -180,6 +188,14 @@ test("session extensions apply only to rest phases and phase completion honors a
   assert.equal(extendedRest.addedSeconds, 15);
   assert.equal(advanceIfPhaseComplete(extendedRest, 65_999).phase, "interval_rest");
   assert.equal(advanceIfPhaseComplete(extendedRest, 66_000).phase, "work");
+
+  const longRestConfig = createConfigWithPeople();
+  longRestConfig.timer.intervalRestSeconds = 290;
+  const longRestInitial = advanceAfterCountdown(createWorkoutSession(longRestConfig, 0), 30_000);
+  const longRest = skipCurrentExercise(longRestInitial, 31_000);
+  const cappedRest = extendCurrentPhase(longRest, 20);
+  assert.equal(cappedRest.phaseDurationSeconds + cappedRest.addedSeconds, 300);
+
   assert.throws(() => extendCurrentPhase(initial, 5), /Only rest and round break/);
 });
 

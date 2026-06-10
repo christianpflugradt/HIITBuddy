@@ -1,5 +1,5 @@
 import { type Exercise, type Person, type TimerSettings, type WorkoutConfig } from "../domain/types.js";
-import { validateStartWorkout, type StartValidationResult } from "../domain/validation.js";
+import { TIMER_LIMITS, validateStartWorkout, type StartValidationResult } from "../domain/validation.js";
 
 const createId = (prefix: string): string => {
   const cryptoApi = globalThis.crypto;
@@ -118,7 +118,10 @@ export const updateTimerSetting = (
   }
 
   const nextConfig = cloneConfig(config);
-  nextConfig.timer[key] = Math.max(0, Math.trunc(numericValue));
+  nextConfig.timer[key] = Math.min(
+    TIMER_LIMITS[key].max,
+    Math.max(TIMER_LIMITS[key].min, Math.trunc(numericValue))
+  );
   return nextConfig;
 };
 

@@ -1,3 +1,7 @@
+import { TIMER_LIMITS } from "../domain/validation.js";
+
+const MAX_TIMER_SECONDS = TIMER_LIMITS.workSeconds.max;
+
 export type TimerSnapshot = {
   elapsedSeconds: number;
   totalSeconds: number;
@@ -53,6 +57,11 @@ export const getTimerSnapshot = (timer: TimerState, now: DOMHighResTimeStamp): T
   };
 };
 
+export const getCappedAddedSeconds = (baseDurationSeconds: number, addedSeconds: number, extensionSeconds: number) => {
+  const maxAddedSeconds = Math.max(0, MAX_TIMER_SECONDS - baseDurationSeconds);
+  return Math.min(maxAddedSeconds, addedSeconds + extensionSeconds);
+};
+
 export const extendTimer = (timer: TimerState, seconds: number): TimerState => {
   if (!Number.isFinite(seconds) || seconds < 0) {
     throw new RangeError("Extension seconds must be a non-negative number.");
@@ -60,6 +69,6 @@ export const extendTimer = (timer: TimerState, seconds: number): TimerState => {
 
   return {
     ...timer,
-    addedSeconds: timer.addedSeconds + seconds
+    addedSeconds: getCappedAddedSeconds(timer.baseDurationSeconds, timer.addedSeconds, seconds)
   };
 };

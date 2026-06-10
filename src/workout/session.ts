@@ -1,5 +1,5 @@
 import { type SessionPhase, type WorkoutConfig, type WorkoutSession } from "../domain/types.js";
-import { getTimerSnapshot } from "./timer.js";
+import { getCappedAddedSeconds, getTimerSnapshot } from "./timer.js";
 import { isFinalIntervalOfRound } from "./scheduler.js";
 
 export type RoundBreakReason = "completed" | "abandoned";
@@ -73,7 +73,7 @@ export const extendCurrentPhase = (session: WorkoutSession, seconds: number): Wo
 
   return {
     ...session,
-    addedSeconds: session.addedSeconds + seconds
+    addedSeconds: getCappedAddedSeconds(session.phaseDurationSeconds, session.addedSeconds, seconds)
   };
 };
 

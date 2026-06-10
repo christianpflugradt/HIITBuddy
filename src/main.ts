@@ -1,7 +1,7 @@
 import { createDefaultConfig } from "./config/default-config.js";
 import { CONFIG_QUERY_PARAMETER, createShareUrl, readConfigFromUrl } from "./domain/share-link.js";
 import { type Exercise, type Person, type TimerSettings, type WorkoutConfig, type WorkoutSession } from "./domain/types.js";
-import { START_VALIDATION_MESSAGES } from "./domain/validation.js";
+import { START_VALIDATION_MESSAGES, TIMER_LIMITS } from "./domain/validation.js";
 import {
   AUTO_ICON_ID,
   CONCRETE_EXERCISE_ICON_IDS,
@@ -313,11 +313,11 @@ const renderExercise = (exercise: Exercise) => {
   `;
 };
 
-const timerControlMeta: Record<keyof TimerSettings, { label: string; min: number; step: number }> = {
-  getReadySeconds: { label: "Get Ready", min: 0, step: 5 },
-  workSeconds: { label: "Work", min: 5, step: 5 },
-  intervalRestSeconds: { label: "Rest", min: 0, step: 5 },
-  roundBreakSeconds: { label: "Round Break", min: 0, step: 30 }
+const timerControlMeta: Record<keyof TimerSettings, { label: string; step: number }> = {
+  getReadySeconds: { label: "Get Ready", step: 5 },
+  workSeconds: { label: "Work", step: 5 },
+  intervalRestSeconds: { label: "Rest", step: 5 },
+  roundBreakSeconds: { label: "Round Break", step: 30 }
 };
 
 const renderTimerField = (key: keyof TimerSettings) => {
@@ -331,7 +331,7 @@ const renderTimerField = (key: keyof TimerSettings) => {
       </header>
       <div class="timer-control">
         <button class="timer-step" type="button" aria-label="Decrease ${meta.label}" data-action="timer-step" data-timer-key="${key}" data-step="-${meta.step}">-</button>
-        <input class="timer-value" type="number" inputmode="numeric" aria-label="${meta.label} seconds" min="${meta.min}" max="3600" step="${meta.step}" value="${config.timer[key]}" data-action="timer-change" data-timer-key="${key}">
+        <input class="timer-value" type="number" inputmode="numeric" aria-label="${meta.label} seconds" min="${TIMER_LIMITS[key].min}" max="${TIMER_LIMITS[key].max}" step="${meta.step}" value="${config.timer[key]}" data-action="timer-change" data-timer-key="${key}">
         <button class="timer-step" type="button" aria-label="Increase ${meta.label}" data-action="timer-step" data-timer-key="${key}" data-step="${meta.step}">+</button>
       </div>
     </article>
@@ -868,7 +868,7 @@ const handleAction = (target: HTMLElement) => {
       const meta = timerControlMeta[timerKey];
 
       if (meta && Number.isFinite(step)) {
-        config = updateTimerSetting(config, timerKey, Math.max(meta.min, config.timer[timerKey] + step));
+        config = updateTimerSetting(config, timerKey, config.timer[timerKey] + step);
         setStatus("");
       }
       break;

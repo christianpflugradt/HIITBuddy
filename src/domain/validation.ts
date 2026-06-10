@@ -10,20 +10,20 @@ import {
 
 export const TIMER_LIMITS = {
   getReadySeconds: {
-    min: 0,
-    max: 3600
+    min: 5,
+    max: 300
   },
   workSeconds: {
     min: 5,
-    max: 3600
+    max: 300
   },
   intervalRestSeconds: {
-    min: 0,
-    max: 3600
+    min: 5,
+    max: 300
   },
   roundBreakSeconds: {
-    min: 0,
-    max: 3600
+    min: 5,
+    max: 300
   }
 } as const;
 
