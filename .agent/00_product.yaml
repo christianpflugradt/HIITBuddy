@@ -9,6 +9,7 @@ product:
     the setup through a URL.
 
 goals:
+  - Start with a minimal HIITBuddy screen that offers New Workout as the single primary action.
   - Provide a simple setup screen for people, exercises, interval durations, and sharing.
   - Let users start a workout without accounts, storage, or backend state.
   - Show clear person-to-exercise assignments during each interval.

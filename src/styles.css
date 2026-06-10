@@ -54,6 +54,30 @@ button {
   padding: 1.1rem 1.4rem;
 }
 
+.start-shell {
+  display: grid;
+  min-height: 100vh;
+  padding: 1.4rem;
+  place-items: center;
+}
+
+.start-content {
+  display: grid;
+  gap: 2rem;
+  justify-items: center;
+}
+
+.start-content h1 {
+  font-size: 5rem;
+  font-weight: 950;
+}
+
+.button.start-button {
+  min-width: 18rem;
+  min-height: 72px;
+  font-size: 1.15rem;
+}
+
 .modal-body {
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -969,6 +993,14 @@ input:focus-visible,
 }
 
 @media (max-width: 620px) {
+  .start-content h1 {
+    font-size: 3.4rem;
+  }
+
+  .button.start-button {
+    width: min(100%, 18rem);
+  }
+
   .app-shell {
     padding: 0.8rem;
   }

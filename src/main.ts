@@ -33,6 +33,7 @@ import { formatElapsedTime, getWorkoutSummary } from "./workout/summary.js";
 
 type StatusTone = "neutral" | "success" | "danger";
 type SetupStepId = "people" | "exercises" | "timer";
+type AppMode = "start" | "setup";
 
 const setupSteps: Array<{ id: SetupStepId; label: string }> = [
   { id: "people", label: "People" },
@@ -60,6 +61,7 @@ let selectedDialogIconId = AUTO_ICON_ID;
 let iconSearchQuery = "";
 let pendingExerciseName = "";
 let session: WorkoutSession | null = null;
+let appMode: AppMode = "start";
 let animationFrameId: number | null = null;
 let lastRenderedSecond: number | null = null;
 let lastRoundBreakPreviewVisible: boolean | null = null;
@@ -565,6 +567,15 @@ const renderWorkoutScreen = (workoutSession: WorkoutSession) => {
   `;
 };
 
+const renderStartScreen = () => `
+  <section class="start-shell" aria-labelledby="start-title">
+    <div class="start-content">
+      <h1 id="start-title">HIITBuddy</h1>
+      <button class="button primary start-button" type="button" data-action="new-workout">New Workout</button>
+    </div>
+  </section>
+`;
+
 const renderPeoplePanel = (activePeople: Person[], pooledPeople: Person[], counts: ReturnType<typeof getPersonCounts>) => `
   <section class="panel people-panel setup-panel" aria-labelledby="people-title">
     <div class="panel-header">
@@ -693,7 +704,7 @@ const renderSummaryScreen = (workoutSession: WorkoutSession) => {
     </dl>
     <div class="summary-actions">
       <button class="button ghost" type="button" data-action="copy-link">Copy</button>
-      <button class="button primary" type="button" data-action="back-setup">New Workout</button>
+      <button class="button primary" type="button" data-action="new-workout">New Workout</button>
     </div>
     <div class="status ${statusTone}" role="status" aria-live="polite">${escapeHtml(statusMessage)}</div>
   </section>
@@ -703,6 +714,11 @@ const renderSummaryScreen = (workoutSession: WorkoutSession) => {
 const render = () => {
   if (session) {
     app.innerHTML = session.phase === "summary" ? renderSummaryScreen(session) : renderWorkoutScreen(session);
+    return;
+  }
+
+  if (appMode === "start") {
+    app.innerHTML = renderStartScreen();
     return;
   }
 
@@ -814,6 +830,15 @@ const handleAction = (target: HTMLElement) => {
     case "start-workout":
       handleStartWorkout();
       break;
+    case "new-workout":
+      session = null;
+      stopWorkoutLoop();
+      appMode = "setup";
+      setupStepIndex = 0;
+      statusMessage = "";
+      statusTone = "neutral";
+      render();
+      break;
     case "open-person-dialog":
       openDialog("person-dialog");
       break;
@@ -897,6 +922,7 @@ const handleAction = (target: HTMLElement) => {
     case "back-setup":
       session = null;
       stopWorkoutLoop();
+      appMode = "setup";
       setupStepIndex = 0;
       statusMessage = "";
       statusTone = "neutral";

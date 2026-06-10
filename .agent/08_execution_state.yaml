@@ -35,8 +35,9 @@ ist_zustand:
     configuration, validation, and base64url share-link helpers. The workout
     core now includes scheduling, timer calculations, and session transitions.
     The bundled SVG icon registry now covers the eight HYROX stations plus
-    a broader custom-exercise icon pool with Auto placeholder support. The app currently supports setup, live workout,
-    and summary screens served by a small Node static server. The setup UI now
+    a broader custom-exercise icon pool with Auto placeholder support. The app currently supports start, setup, live workout,
+    and summary screens served by a small Node static server. The app starts on
+    a minimal HIITBuddy screen with a single New Workout action. The setup UI now
     uses a sequential People, Exercises, Timer flow so only one configuration
     area is visible at a time. The Timer setup step uses large touch-first
     stepper cards instead of a narrow office-like form. The workout starts with
@@ -71,6 +72,7 @@ ist_zustand:
     - Auto question-mark icon for new custom exercises, resolved to a concrete random bundled icon at workout start unless the user chooses a specific icon.
     - Icon rendering, lookup, availability, and search helpers.
     - Icon-registry tests covering default exercise icon coverage and SVG constraints.
+    - Minimal HIITBuddy start screen with New Workout as the only primary action.
     - Sequential three-step setup UI for people, exercise selection, and timer/start actions.
     - People setup with active/pool handling.
     - Exercise setup with built-in selection and custom exercises.

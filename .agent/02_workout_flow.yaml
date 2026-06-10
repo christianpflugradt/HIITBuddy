@@ -1,5 +1,6 @@
 workout_flow:
   top_level_states:
+    - start
     - setup
     - round_start
     - work
@@ -10,14 +11,23 @@ workout_flow:
 launch_behavior:
   with_valid_config_param:
     - Decode and validate the shared config.
-    - Populate the setup screen from the URL.
+    - Keep the decoded setup ready in memory.
+    - Show the minimal start screen.
     - Do not auto-start the workout.
   with_invalid_config_param:
     - Ignore the invalid payload.
-    - Show the default setup.
+    - Show the minimal start screen with the default setup ready in memory.
     - Optionally show a non-blocking message: "This shared setup could not be loaded."
   without_config_param:
-    - Show the default setup.
+    - Show the minimal start screen with the default setup ready in memory.
+
+start_screen:
+  purpose: Present the HIITBuddy tool and enter workout setup.
+  displayed_content:
+    - Product name: HIITBuddy
+  actions:
+    - label: New Workout
+      behavior: Enter setup step 1 with the current configuration loaded from memory or the URL config parameter.
 
 setup_screen:
   purpose: Configure the reusable workout setup.
@@ -221,6 +231,7 @@ summary_screen:
 
 navigation_rules:
   - The app is a single-page experience.
-  - Browser reload returns to setup using the URL config if present.
+  - Browser reload returns to the minimal start screen and keeps URL config available for the next setup flow.
   - Runtime workout state is intentionally lost on reload.
-  - The setup screen is the first visible screen; no marketing landing page.
+  - The start screen is the first visible screen.
+  - The start screen is not a marketing landing page; it contains only the HIITBuddy name and New Workout action.

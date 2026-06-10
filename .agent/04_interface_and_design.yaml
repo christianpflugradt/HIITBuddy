@@ -48,7 +48,7 @@ interface_and_design:
       viewport: Small phone
 
   layout_principles:
-    - The first screen is the actual setup app, not a landing page.
+    - The first screen is a minimal HIITBuddy start screen with only a New Workout action.
     - Include exactly the elements necessary for the current workflow.
     - Use dense but readable operational layouts.
     - Avoid decorative panels that do not carry information.
@@ -63,6 +63,13 @@ interface_and_design:
     - Ensure button text never clips; wrap or shorten labels when necessary.
 
   setup_screen_layout:
+    start_screen:
+      structure:
+        - Product name: HIITBuddy.
+        - One primary New Workout button.
+      style:
+        - Minimal, centered, touch-friendly, and visually calm.
+        - No explanatory copy, feature descriptions, panels, or secondary actions.
     desktop_and_landscape_tablet:
       structure:
         - Top bar with the current setup step and compact step position.
