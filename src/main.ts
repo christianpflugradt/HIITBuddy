@@ -603,11 +603,11 @@ const renderPeoplePanel = (activePeople: Person[], pooledPeople: Person[], count
       <button class="button secondary" type="button" data-action="open-person-dialog">Add</button>
     </div>
     <div class="split-list">
-      <section>
+      <section class="people-group people-group-active">
         <h3>Active</h3>
         ${renderPersonList(activePeople, "No active people")}
       </section>
-      <section>
+      <section class="people-group people-group-pool">
         <h3>Pool</h3>
         ${renderPersonList(pooledPeople, "Empty")}
       </section>
@@ -795,7 +795,7 @@ const handleCopyLink = async () => {
 
   try {
     await navigator.clipboard.writeText(shareUrl);
-    setStatus("Link copied", "success");
+    setStatus("Settings copied", "success");
   } catch {
     setStatus("Copy failed", "danger");
   }

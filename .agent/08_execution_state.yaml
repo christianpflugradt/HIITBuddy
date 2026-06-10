@@ -76,7 +76,9 @@ ist_zustand:
     - Shared config links open setup step 1 directly.
     - Sequential three-step setup UI for people, exercise selection, and timer/start actions.
     - Copy Link is available from all three setup steps.
+    - Copy Link success feedback says "Settings copied".
     - People setup with active/pool handling.
+    - Active and Pool people sections use very subtle different background tones.
     - Exercise setup with built-in selection and custom exercises.
     - Timer setup with copy link and start validation.
     - Timer setup uses four large touch-first stepper cards with direct numeric editing.
