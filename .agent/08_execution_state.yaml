@@ -1,0 +1,422 @@
+execution_state:
+  product: HIITBuddy
+  last_updated: "2026-06-10"
+  status_terms:
+    pending: Not started.
+    in_progress: Currently being implemented.
+    completed: Implemented and verified.
+    blocked: Cannot continue without a decision or external change.
+
+go_protocol:
+  trigger: User message exactly or effectively saying "go".
+  behavior:
+    - Read this file before making implementation changes.
+    - Select the first increment whose status is pending.
+    - Mark it in_progress before or while starting work.
+    - Implement only that increment unless a tiny supporting change is required.
+    - Run the verification commands listed on the increment when available.
+    - Update ist_zustand and the increment status after verification.
+    - If blocked, record the blocker in this file.
+    - Respond with what changed, what was verified, and what the next pending increment is.
+  scope_control: >
+    Each "go" should move the project forward by one coherent, reviewable
+    increment. Avoid bundling unrelated future increments into the same step.
+  local_runtime_rule: >
+    For browser verification, use "make build" to rebuild and start the Docker
+    Compose service on port 8080. A separate "make up" is only needed when the
+    image is already built and the container is stopped. Do not stop the
+    container between rebuilds unless cleanup or final verification requires it.
+
+ist_zustand:
+  summary: >
+    The repository contains the product specifications plus a minimal
+    framework-free npm/TypeScript project foundation and a Docker Compose based
+    local container workflow. The domain layer now includes default workout
+    configuration, validation, and base64url share-link helpers. The workout
+    core now includes scheduling, timer calculations, and session transitions.
+    The bundled SVG icon registry now covers the eight HYROX stations plus
+    a broader custom-exercise icon pool with Auto placeholder support. The app currently supports setup, live workout,
+    and summary screens served by a small Node static server. The setup UI now
+    uses a sequential People, Exercises, Timer flow so only one configuration
+    area is visible at a time. The workout starts with a fixed 30 second
+    assignment-preview countdown before the first work interval.
+  implemented:
+    - Structured product specification in .agent/*.yaml.
+    - Core product decisions resolved for participant/exercise count, skipped rounds, finish availability, and HYROX default stations.
+    - Increment-based execution state introduced in this file.
+    - npm project with package.json and package-lock.json.
+    - TypeScript configuration and src/main.ts entry point.
+    - Plain CSS setup UI in src/styles.css.
+    - Static HTML shell in src/index.html.
+    - Build script that compiles TypeScript and copies static assets to dist.
+    - Node static server in scripts/serve.mjs.
+    - npm scripts for build, dev, start, check, and test.
+    - Smoke test covering the project foundation.
+    - .gitignore for node_modules and generated build output.
+    - Dockerfile using node:24-alpine with a build stage and runtime stage.
+    - docker-compose.yml exposing the app on port 8080.
+    - Makefile with build, up, and down entry points; build rebuilds and starts the Docker Compose service.
+    - .dockerignore for node_modules, dist, and local metadata.
+    - Domain TypeScript types for people, exercises, timer settings, workout config, sessions, and assignments.
+    - Default HYROX station catalog with all exercises initially deselected, 40/20/90 timer defaults, and no running station.
+    - Config and start-workout validation helpers.
+    - Base64url share-link encode/decode helpers using the config query parameter.
+    - Domain tests for defaults, validation, and share-link round trips.
+    - Scheduler module for modular person-to-exercise station rotation.
+    - Timer module for monotonic countdown snapshots and repeatable extensions.
+    - Session module for work, interval rest, round break, summary, skip, abandoned round, and finish transitions.
+    - Workout-core tests for unique assignments, full round coverage, skips, extensions, and phase advancement.
+    - SVG icon registry with text-free inline icons for the eight HYROX stations plus a custom-exercise icon pool.
+    - Auto question-mark icon for new custom exercises, resolved to a concrete random bundled icon at workout start unless the user chooses a specific icon.
+    - Icon rendering, lookup, availability, and search helpers.
+    - Icon-registry tests covering default exercise icon coverage and SVG constraints.
+    - Sequential three-step setup UI for people, exercise selection, and timer/start actions.
+    - People setup with active/pool handling.
+    - Exercise setup with built-in selection and custom exercises.
+    - Timer setup with copy link and start validation.
+    - Add Person, Add Exercise, and Icon Picker dialogs.
+    - Add Exercise dialog uses a square icon button next to the free-text name field, with icon labels shown only in the Icon Picker.
+    - Setup-state tests for people, exercises, timers, and start validation.
+    - Live workout UI with phase header, assignment cards, large countdown, timer band, and phase-specific controls.
+    - Fixed 30 second Get Ready countdown before the first work interval with visible upcoming assignments.
+    - Work controls for Skip Exercise and Round Break.
+    - Rest controls for +5, +10, and +20 seconds.
+    - Round Break controls for +30, +60, and Finish.
+    - Round Break upcoming assignment preview in the final 30 seconds, or from the start when the break duration is 30 seconds or less.
+    - Assignment tile layout follows participant-count patterns: 1-3 in one row, 4-6 in two columns, 7 as 3/2/2, and 8+ in three columns.
+    - Workout screens use compact density for larger participant groups so training views fit in one tablet-landscape viewport without scrolling.
+    - Summary UI with completed rounds, abandoned rounds, active people, selected exercises, elapsed time, Copy, and New Workout returning to setup step 1.
+    - Summary helpers and tests for compact elapsed-time formatting and summary facts.
+    - Reduced structural UI chrome so setup and workout headers/stages avoid unnecessary frames, borders, and shadows.
+    - Git workflow specification with commit-after-prompt rule.
+    - Repository-local Git hooks for pre-commit verification and commit-message validation.
+    - Dependency-free commit message validator enforcing Conventional Commits without scopes.
+  not_implemented:
+    - Web Components.
+    - Application UI/runtime tests beyond the foundation, domain, workout-core, icon-registry, setup-state, and summary tests.
+  known_constraints:
+    - App text must be English.
+    - UI must be appealing but minimalistic, with exactly the elements necessary for the current workflow.
+    - Avoid long static texts and visible explanations of functions in primary screens.
+    - Add Exercise must keep the visible exercise name and selected icon separate: the dialog shows only the icon graphic next to the name input, while icon labels appear only in the picker.
+    - Put optional explanations behind info icons, tooltips, or popups only if needed later.
+    - Use only necessary frames, panel boxes, borders, and hard edges; prefer a modern, lightweight layout over office-like chrome.
+    - Use npm only.
+    - Avoid frontend frameworks.
+    - Use TypeScript and plain CSS.
+    - Do not use cookies or browser storage APIs.
+    - Runtime state is in memory only.
+    - Share setup state only through a base64url URL parameter.
+    - Setup should show one configuration area at a time: People, then Exercises, then Timer.
+    - After each file-changing user prompt, verify and create a Git commit.
+    - Commit messages must use Conventional Commits without scopes.
+
+soll_zustand:
+  summary: >
+    A complete framework-free, tablet-first HIIT circuit web app served from one
+    Docker container, locally controlled through Docker Compose and Make.
+  capabilities:
+    - Configure active people and pooled inactive people.
+    - Select built-in HYROX station exercises.
+    - Add custom exercises with bundled SVG icons or Auto icon resolution.
+    - Configure work, rest, and round-break durations with 40/20/90 defaults.
+    - Navigate setup forward and backward one step at a time without losing values.
+    - Copy and load setup state through a base64url config query parameter.
+    - Start an endless circuit workout.
+    - Show a fixed 30 second first-round preparation countdown before work begins.
+    - Assign every active person to a unique exercise during each work interval.
+    - Block workout start when active people exceed selected exercises.
+    - Rotate assignments so every active person completes every selected exercise once per round.
+    - Skip current exercise into rest.
+    - Skip to round break and count the round as abandoned.
+    - Extend interval rest by 5, 10, or 20 seconds.
+    - Extend round break by 30 or 60 seconds.
+    - Fade in next-round assignments during the final 30 seconds of round breaks.
+    - Finish only during round break.
+    - Show a summary with completed rounds, abandoned rounds, participants, exercises, and elapsed time.
+  technical_completion:
+    - npm scripts for build, dev, start, check, and test.
+    - Minimal dependencies with justification.
+    - Dockerfile using a Node image.
+    - docker-compose.yml for local container execution.
+    - Makefile exposing build, up, and down.
+    - Git initialized with .githooks as core.hooksPath.
+    - pre-commit hook running npm run check and npm test.
+    - commit-msg hook enforcing Conventional Commits without scopes.
+    - Unit tests for validation, share links, scheduler, and timer calculations.
+    - Browser or manual verification for tablet landscape layouts.
+
+increments:
+  - id: inc_001_project_foundation
+    status: completed
+    title: Project foundation
+    objective: >
+      Create the minimal npm/TypeScript project and local static app skeleton.
+    deliverables:
+      - package.json and package-lock.json.
+      - tsconfig.json.
+      - src/main.ts.
+      - src/styles.css.
+      - scripts/serve.mjs.
+      - npm scripts for build, dev, start, check, and test.
+      - A placeholder page proving the app boots.
+    verification:
+      - npm install
+      - npm run check
+      - npm run build
+      - npm test
+    updates_after_completion:
+      - Move npm project, TypeScript skeleton, static server, and placeholder UI from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm install
+        result: passed
+      - command: npm run check
+        result: passed
+      - command: npm run build
+        result: passed
+      - command: npm test
+        result: passed
+      - command: Browser check at http://localhost:8080/
+        result: passed
+        notes: Rendered HIITBuddy placeholder with no console error logs.
+
+  - id: inc_002_container_and_make
+    status: completed
+    title: Docker Compose and Make entry points
+    objective: >
+      Add the single-container runtime plus Make commands for build, up, and down.
+    deliverables:
+      - Dockerfile.
+      - docker-compose.yml.
+      - Makefile.
+      - Documentation comments only where useful.
+    verification:
+      - make build
+      - make up
+      - make down
+    updates_after_completion:
+      - Move Dockerfile, docker-compose.yml, and Makefile from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: docker compose config
+        result: passed
+      - command: make build
+        result: passed
+        notes: Current behavior rebuilds and starts the Docker Compose service.
+      - command: make up
+        result: passed
+      - command: curl -fsS http://localhost:8080/
+        result: passed
+        notes: Container served the HIITBuddy HTML shell on port 8080.
+      - command: make down
+        result: passed
+
+  - id: inc_003_domain_and_share_link
+    status: completed
+    title: Domain model, validation, and share links
+    objective: >
+      Implement the configuration types, defaults, validation rules, and
+      base64url URL config encoding/decoding.
+    deliverables:
+      - Domain TypeScript types.
+      - Default HYROX station config.
+      - Validation helpers.
+      - Share-link encode/decode helpers.
+      - Unit tests.
+    verification:
+      - npm run check
+      - npm test
+    updates_after_completion:
+      - Move share-link encoding and validation from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm run check
+        result: passed
+      - command: npm test
+        result: passed
+        notes: 7 Node tests passed, including domain defaults, validation, share-link codec, and foundation smoke tests.
+
+  - id: inc_004_scheduler_and_timer_core
+    status: completed
+    title: Scheduler and timer core
+    objective: >
+      Implement assignment rotation, session transitions, skipped and abandoned
+      round tracking, and pure timer calculations.
+    deliverables:
+      - Scheduler module.
+      - Session state transition module.
+      - Timer calculation module.
+      - Unit tests for unique assignments, full round coverage, skips, and extensions.
+    verification:
+      - npm run check
+      - npm test
+    updates_after_completion:
+      - Move timer and scheduler implementation from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm run check
+        result: passed
+      - command: npm test
+        result: passed
+        notes: 15 Node tests passed, including scheduler, timer, session, domain, and foundation coverage.
+
+  - id: inc_005_icon_registry
+    status: completed
+    title: SVG exercise icon registry
+    objective: >
+      Add bundled SVG icons for the eight HYROX stations plus a few custom
+      exercise examples.
+    deliverables:
+      - SVG icon registry.
+      - HYROX station icons.
+      - Kettlebell Row and Lunges icons.
+      - Rendering helper.
+    verification:
+      - npm run check
+      - npm test
+      - npm run build
+    updates_after_completion:
+      - Move SVG icon registry from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm run check
+        result: passed
+      - command: npm test
+        result: passed
+        notes: 20 Node tests passed, including icon registry coverage and SVG constraints.
+      - command: npm run build
+        result: passed
+
+  - id: inc_006_setup_ui
+    status: completed
+    title: Setup UI
+    objective: >
+      Build the tablet-first setup screen for people, exercises, timers, custom
+      exercise dialog, icon picker, copy link, and start validation.
+    deliverables:
+      - Setup screen components.
+      - Add Person dialog.
+      - Add Exercise dialog.
+      - Icon picker dialog.
+      - Timer controls.
+      - Copy Link behavior.
+      - Start Workout validation.
+    verification:
+      - npm run check
+      - npm test
+      - npm run build
+    updates_after_completion:
+      - Move CSS and setup UI from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm run check
+        result: passed
+      - command: npm test
+        result: passed
+        notes: 24 Node tests passed, including setup-state coverage.
+      - command: npm run build
+        result: passed
+      - command: make build
+        result: passed
+      - command: make up
+        result: passed
+      - command: Browser check at http://localhost:8080/
+        result: passed
+        notes: Setup UI rendered at 1024x768 with no horizontal overflow, no too-small visible buttons, 8 default exercises, working Add Person, Start validation, and Icon Picker.
+      - command: make down
+        result: passed
+
+  - id: inc_007_workout_ui
+    status: completed
+    title: Workout runtime UI
+    objective: >
+      Build the live workout screen with phase header, assignment grid, large
+      countdown, skip controls, extension controls, and round-break finish.
+    deliverables:
+      - Workout screen components.
+      - Assignment tiles.
+      - Timer band.
+      - Phase-specific controls.
+      - Integration with scheduler and timer core.
+    verification:
+      - npm run check
+      - npm test
+      - npm run build
+    updates_after_completion:
+      - Move workout UI from not_implemented to implemented. Web Components were not introduced because native DOM remains lighter for the current scope.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm run check
+        result: passed
+      - command: npm test
+        result: passed
+        notes: 24 Node tests passed.
+      - command: npm run build
+        result: passed
+      - command: make build
+        result: passed
+      - command: make up
+        result: passed
+      - command: Browser check at http://localhost:8080/
+        result: passed
+        notes: Work, Rest, Round Break, and Finished screens rendered at 1024x768 with no horizontal overflow, no too-small visible buttons, working Skip Exercise, rest extension, Skip to Round Break, and Finish controls.
+      - command: make down
+        result: passed
+
+  - id: inc_008_summary_ui
+    status: completed
+    title: Summary UI
+    objective: >
+      Build the final summary screen and return-to-setup loop.
+    deliverables:
+      - Summary screen.
+      - Completed and abandoned round display.
+      - Elapsed time display.
+      - Back to Setup.
+      - Copy Link.
+    verification:
+      - npm run check
+      - npm test
+      - npm run build
+    updates_after_completion:
+      - Move summary UI from not_implemented to implemented.
+    completed_at: "2026-06-10"
+    verification_results:
+      - command: npm run check
+        result: passed
+      - command: npm test
+        result: passed
+        notes: 26 Node tests passed, including summary facts and elapsed-time formatting.
+      - command: npm run build
+        result: passed
+      - command: make build
+        result: passed
+      - command: make up
+        result: passed
+      - command: Browser check at http://localhost:8080/
+        result: passed
+        notes: Summary rendered at 1024x768 with completed/abandoned/people/exercises/elapsed facts, Copy feedback, Back to Setup preserving roster, no horizontal overflow, no too-small visible buttons, and no console errors.
+      - command: make down
+        result: passed
+
+  - id: inc_009_tablet_polish
+    status: pending
+    title: Tablet polish and final verification
+    objective: >
+      Verify and refine the interface for tablet landscape, desktop, and
+      touch-friendly operation.
+    deliverables:
+      - Layout fixes.
+      - Accessibility and focus fixes.
+      - Final visual pass.
+      - Verification notes.
+    verification:
+      - npm run check
+      - npm test
+      - npm run build
+      - make build
+    updates_after_completion:
+      - Mark the first complete app version as implemented.
+
+blocked_items: []

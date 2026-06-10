@@ -1,0 +1,159 @@
+product:
+  name: HIITBuddy
+  category: Tablet-first HIIT circuit training companion
+  primary_language: English
+  short_description: >
+    A lightweight web app that helps a group run endless high intensity
+    interval circuit rounds. It assigns each active person to a unique exercise
+    station, shows large touch-friendly countdowns, and lets the group share
+    the setup through a URL.
+
+goals:
+  - Provide a simple setup screen for people, exercises, interval durations, and sharing.
+  - Let users start a workout without accounts, storage, or backend state.
+  - Show clear person-to-exercise assignments during each interval.
+  - Keep the app highly usable on a tablet in landscape orientation.
+  - Keep the visible UI minimal and limited to necessary controls, status, and workout information.
+  - Use small hand-drawn style SVG exercise illustrations for fast recognition.
+  - Support endless rounds until the user chooses to finish.
+  - Preserve reusable setup data only in a base64 URL parameter.
+
+non_goals:
+  - No user accounts.
+  - No server-side persistence.
+  - No cookies.
+  - No localStorage, sessionStorage, or IndexedDB.
+  - No smartphone-first optimization.
+  - No rate limiting or backend security model for the app itself.
+  - No analytics or tracking.
+  - No package managers other than npm.
+  - No frontend framework such as React, Vue, Svelte, Angular, or Solid.
+  - No long static help text or visible explanations of obvious functions in the primary UI.
+
+target_context:
+  primary_device:
+    type: Tablet
+    orientation: Landscape
+    usage: Shared workout display with touch interaction
+  secondary_device:
+    type: Desktop or laptop
+    usage: Configuration, testing, occasional workout display
+  small_phone_support:
+    priority: Low
+    expectation: >
+      The app should remain technically accessible, but UI decisions should not
+      be optimized for very small phone screens.
+  deployment_context:
+    expected: >
+      Static frontend served from a single Docker container behind an external
+      reverse proxy and custom domain.
+    app_security_scope: >
+      The app has no backend API and no persistent user data. Reverse proxy
+      concerns are outside the app implementation.
+
+core_user_story:
+  as_a: Training host
+  i_want: >
+    To define participants and exercises, start an interval circuit, and see
+    who should do which exercise at every moment.
+  so_that: >
+    The group can follow a HIIT or HYROX-inspired circuit without manual
+    rotation planning.
+
+mvp_features:
+  setup:
+    - Manage a named roster of people.
+    - Mark people as active participants or keep them in a reusable pool.
+    - Delete people completely from the configuration.
+    - Select predefined HYROX station exercises.
+    - Add custom exercises by name.
+    - Assign an SVG icon to each custom exercise, or keep Auto for random icon resolution at workout start.
+    - Configure work interval duration, defaulting to 40 seconds.
+    - Configure interval rest duration, defaulting to 20 seconds.
+    - Configure round break duration, defaulting to 90 seconds.
+    - Copy the complete setup configuration as a shareable URL.
+    - Start the workout when the configuration is valid.
+  workout:
+    - Show the current round number.
+    - Show the current phase: work, interval rest, or round break.
+    - Show a large countdown.
+    - Show one assignment tile per active person during work intervals.
+    - Include exercise icon, exercise name, and person name in each assignment.
+    - Ensure no two active people are assigned to the same exercise in the same interval.
+    - Allow skipping the current exercise interval into interval rest.
+    - Allow skipping directly to the round break.
+    - During interval rest, allow adding 5, 10, or 20 seconds.
+    - During round break, allow adding 30 or 60 seconds.
+    - During round break, allow finishing the workout.
+    - Automatically advance through intervals, rests, and rounds unless skipped or finished.
+  summary:
+    - Show a finished workout screen.
+    - Include a simple completion message.
+    - Include lightweight session facts, such as completed rounds, abandoned rounds, and elapsed time.
+    - Offer a return to setup action.
+    - Offer copying the same setup link again.
+
+default_exercises:
+  description: >
+    The initial selectable exercise set should contain the HYROX station
+    exercises in English. Running is intentionally excluded. The circuit app
+    treats the eight workout movements as stations, not as the full official
+    race format. Exercises start deselected so the host selects only the
+    stations that are actually present.
+  exercises:
+    - id: skierg
+      name: SkiErg
+      selected_by_default: false
+    - id: sled_push
+      name: Sled Push
+      selected_by_default: false
+    - id: sled_pull
+      name: Sled Pull
+      selected_by_default: false
+    - id: burpee_broad_jumps
+      name: Burpee Broad Jumps
+      selected_by_default: false
+    - id: rowing
+      name: Rowing
+      selected_by_default: false
+    - id: farmers_carry
+      name: Farmers Carry
+      selected_by_default: false
+    - id: sandbag_lunges
+      name: Sandbag Lunges
+      selected_by_default: false
+    - id: wall_balls
+      name: Wall Balls
+      selected_by_default: false
+
+terminology:
+  roster: All saved person names in the current configuration.
+  active_people: People currently participating in the workout.
+  pool: Saved people who are not active for the current workout.
+  exercise: A station that can be assigned to one active person per interval.
+  work_interval: The timed exercise phase.
+  interval_rest: Short rest between work intervals inside a round.
+  round_break: Longer break between rounds.
+  round: >
+    A full rotation where every active person performs every selected exercise
+    exactly once, assuming the active people count does not exceed the selected
+    exercise count.
+  assignment: The pairing of one active person with one exercise for the current work interval.
+
+product_assumptions:
+  - >
+    Active people count must be less than or equal to selected exercise count in
+    the MVP. This is required to guarantee unique simultaneous exercise
+    assignments without adding wait stations.
+  - >
+    A round contains one work interval per selected exercise. If there are fewer
+    active people than exercises, some exercise stations are unused during each
+    interval, but every person still completes every exercise by the end of the round.
+  - >
+    The share link stores configuration only, not in-progress workout runtime state.
+  - >
+    Custom exercises reference an icon from the app's bundled icon library by
+    icon id. The share link should not embed raw SVG text.
+  - >
+    The app text is English even if implementation notes or future issue
+    discussions happen in German.

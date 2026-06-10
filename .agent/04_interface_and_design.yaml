@@ -1,0 +1,332 @@
+interface_and_design:
+  design_intent: >
+    The app should feel like a practical training floor tool: direct,
+    minimalistic, energetic, highly legible, and easy to operate with sweaty
+    hands on a tablet.
+
+  language:
+    app_text: English
+    tone:
+      - Short labels.
+      - Direct verbs.
+      - No instructional marketing copy on the main surfaces.
+      - No long static explanations in the visible primary UI.
+
+  minimalism_policy:
+    principle: >
+      Every visible element must earn its place by supporting immediate setup,
+      control, orientation, or workout execution.
+    include:
+      - Primary actions.
+      - Current status and validation messages.
+      - Necessary labels for people, exercises, timers, phases, and controls.
+      - Compact summary facts.
+    avoid:
+      - Long explanatory paragraphs.
+      - Feature descriptions.
+      - Static help text.
+      - Decorative content that does not improve recognition or operation.
+      - Extra panels that only explain what a nearby control already makes clear.
+      - Structural frames, borders, and panel chrome where spacing and typography are sufficient.
+    future_help_pattern: >
+      If a feature later needs explanation, hide it behind an info icon,
+      tooltip, or small modal instead of keeping explanatory text visible by
+      default.
+    feedback_rule: >
+      Do not show validation text passively on initial setup load. Show feedback
+      only after a user action needs confirmation or correction.
+
+  responsive_priority:
+    primary:
+      viewport: Tablet landscape
+      approximate_minimum: 1024x768
+    secondary:
+      viewport: Desktop
+    tertiary:
+      viewport: Tablet portrait
+    low_priority:
+      viewport: Small phone
+
+  layout_principles:
+    - The first screen is the actual setup app, not a landing page.
+    - Include exactly the elements necessary for the current workflow.
+    - Use dense but readable operational layouts.
+    - Avoid decorative panels that do not carry information.
+    - Use as few visible frames, panel boxes, borders, and hard edges as possible.
+    - Prefer whitespace, alignment, and restrained background contrast over enclosing every area in a box.
+    - Use cards only for repeated items such as people, exercises, and assignment tiles.
+    - Keep card border radius at 8px or below.
+    - Use stable dimensions for grids, tiles, icon buttons, and timer areas to prevent layout shift.
+    - Do not rely on viewport-scaled font sizes.
+    - Keep letter spacing at 0.
+    - Make all touch targets at least 48px by 48px.
+    - Ensure button text never clips; wrap or shorten labels when necessary.
+
+  setup_screen_layout:
+    desktop_and_landscape_tablet:
+      structure:
+        - Top bar with the current setup step and compact step position.
+        - Main stage shows exactly one setup panel at a time.
+        - Step 1 is People and shows alphabetically sorted Active and Pool sections.
+        - Step 2 is Exercises and shows built-in selections plus custom additions in a compact multi-column matrix.
+        - Step 3 is Timer and shows the three duration controls.
+        - Bottom navigation offers Back and Next until the final step.
+        - Final step offers Back, Copy, and Start.
+      exercise_matrix:
+        target_visible_count: At least 20 exercises should fit without scrolling in a desktop or tablet-landscape viewport.
+        desktop_columns: 3
+        narrow_tablet_columns: 2
+        compactness: Preserve touchability while reducing icon and row height compared with person/workout tiles.
+        ordering:
+          - Built-in exercises first, alphabetically.
+          - Custom exercises after built-ins, alphabetically.
+          - Built-in exercises use a minimally different background tone to signal that they are always available.
+    portrait_tablet:
+      structure:
+        - The same single-step flow is retained.
+        - People subsections may stack vertically.
+        - Navigation remains reachable at the bottom of the setup view.
+  workout_screen_layout:
+    structure:
+      - Top strip with phase, round number, and interval position.
+      - Main area with assignment tiles in a responsive grid.
+      - Bottom timer band with large countdown and phase-specific controls.
+      - The first workout phase is a 30 second Get Ready countdown with upcoming assignments visible.
+      - Round Break shows upcoming assignments only in the final 30 seconds, fading them in without adding explanatory text.
+      - Every workout screen from Get Ready through Round Break must fit into one viewport on tablet landscape; scrolling must not be required during training.
+      - For larger groups, shrink assignment tiles, icons, and text before allowing the workout surface to overflow.
+    assignment_tile:
+      content:
+        - Exercise SVG icon.
+        - Exercise name.
+        - Person name.
+      desktop_layout_by_participant_count:
+        - "1: one tile in one row"
+        - "2: two tiles in one row"
+        - "3: three tiles in one row"
+        - "4: two rows with two tiles each"
+        - "5: rows of 2, 2, and 1"
+        - "6: rows of 2, 2, and 2"
+        - "7: rows of 3, 2, and 2"
+        - "8_plus: three tiles per row, with the last row partially filled when needed"
+      density:
+        compact_from_participant_count: 5
+        verified_target: 12 participants in tablet landscape without workout scrolling.
+      priority_order:
+        - Person name must be easy to identify quickly.
+        - Exercise icon must be large enough to distinguish.
+        - Exercise name confirms the icon.
+    timer_band:
+      behavior:
+        - Fixed height across phases.
+        - Countdown remains in the same visual location.
+        - Buttons change by phase without causing layout jumps.
+  summary_screen_layout:
+    structure:
+      - Clear completion headline.
+      - Compact session facts.
+      - New Workout and Copy Link actions.
+      - New Workout returns to the first setup step.
+
+  controls:
+    buttons:
+      primary:
+        examples:
+          - Start Workout
+          - Finish
+      secondary:
+        examples:
+          - Copy Link
+          - Add Person
+          - Add Exercise
+      destructive:
+        examples:
+          - Remove
+      icon_buttons:
+        expected_for:
+          - remove
+          - activate
+          - move to pool
+        requirement: Use a familiar symbol or lucide icon equivalent if an icon library is introduced.
+    numeric_inputs:
+      preferred: Stepper style controls with direct numeric editing.
+      fields:
+        - Work
+        - Rest
+        - Round Break
+    segmented_or_toggle_controls:
+      usage:
+        - selected versus unselected exercises
+        - active versus pool people if represented inline
+
+  visual_style:
+    palette_direction:
+      background: "#F7F7F2"
+      surface: "#FFFFFF"
+      ink: "#15171A"
+      muted_text: "#62666D"
+      border: "#DADDD8"
+      action_blue: "#2563EB"
+      energy_lime: "#A3E635"
+      warning_coral: "#F9735B"
+      rest_teal: "#14B8A6"
+      round_break_gold: "#F5B942"
+    notes:
+      - Avoid a one-note palette dominated by one hue.
+      - Use phase colors sparingly as state signals, not as full-screen decoration.
+      - Maintain strong contrast for timer and assignment information.
+    typography:
+      system_stack: "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+      timer: Very large, tabular numbers if available.
+      headings: Compact and functional.
+      body: Highly legible at tablet distance.
+
+  dialogs:
+    general:
+      - Modal surfaces should be easy to operate by touch.
+      - Use autofocus for the primary text input.
+      - Provide OK and Cancel.
+      - Pressing Enter in Add Person and Add Exercise name fields should trigger OK.
+      - Close only after valid OK or explicit Cancel.
+      - Do not lose typed text when opening the icon picker from the Add Exercise dialog.
+    add_person:
+      title: Add Person
+      confirm_label: OK
+      cancel_label: Cancel
+    add_exercise:
+      title: Add Exercise
+      confirm_label: OK
+      cancel_label: Cancel
+      icon_selection_label: Choose Icon
+      default_icon: Auto
+      layout:
+        - Show the selected icon as a square button directly left of the free-text name field.
+        - Do not show the icon label in the Add Exercise dialog.
+        - Show icon labels only inside the icon picker where filtering and choice happen.
+      behavior:
+        - Exercise names are always free text.
+        - Auto shows a question-mark setup icon and resolves to a concrete bundled SVG at workout start.
+        - The user can override Auto by opening the icon picker and choosing a specific icon.
+    icon_picker:
+      title: Choose Icon
+      grid:
+        min_tile_size: 72px
+        content:
+          - SVG preview
+          - Short label
+
+  svg_icon_direction:
+    style:
+      - Simple hand-drawn line or flat-line illustration.
+      - Consistent stroke width.
+      - Rounded stroke caps and joins.
+      - ViewBox 0 0 64 64.
+      - Works at 32px, 64px, and assignment-card sizes.
+      - No embedded text.
+      - No external image references.
+    default_icon_assets:
+      - id: auto
+        label: Auto
+        visual: Question-mark placeholder for random icon assignment at workout start.
+      - id: skierg
+        label: SkiErg
+        visual: Athlete pulling two cables from a tall machine.
+      - id: sled_push
+        label: Sled Push
+        visual: Athlete leaning into a weighted sled.
+      - id: sled_pull
+        label: Sled Pull
+        visual: Athlete pulling a rope attached to a sled.
+      - id: burpee_broad_jumps
+        label: Burpee Broad Jumps
+        visual: Figure moving from floor position into a forward jump.
+      - id: rowing
+        label: Rowing
+        visual: Seated athlete with handle and flywheel.
+      - id: farmers_carry
+        label: Farmers Carry
+        visual: Athlete carrying weights in both hands.
+      - id: sandbag_lunges
+        label: Sandbag Lunges
+        visual: Lunging athlete with bag over shoulders.
+      - id: wall_balls
+        label: Wall Balls
+        visual: Athlete throwing a ball to a wall target.
+      - id: kettlebell_row
+        label: Kettlebell Row
+        visual: Bent-over figure pulling a kettlebell.
+      - id: lunges
+        label: Lunges
+        visual: Figure in split stance lunge.
+      - id: push_ups
+        label: Push Ups
+        visual: Figure in floor push-up position.
+      - id: air_squats
+        label: Air Squats
+        visual: Figure in squat stance.
+      - id: plank
+        label: Plank
+        visual: Figure holding plank position.
+      - id: box_jumps
+        label: Box Jumps
+        visual: Figure jumping toward a box.
+      - id: jump_rope
+        label: Jump Rope
+        visual: Figure inside a rope arc.
+      - id: pull_ups
+        label: Pull Ups
+        visual: Figure hanging from a pull-up bar.
+      - id: battle_ropes
+        label: Battle Ropes
+        visual: Figure holding two wave ropes.
+      - id: kettlebell_swings
+        label: Kettlebell Swings
+        visual: Figure swinging a kettlebell.
+      - id: dumbbell_press
+        label: Dumbbell Press
+        visual: Figure pressing dumbbells.
+      - id: deadlift
+        label: Deadlift
+        visual: Figure lifting a barbell from the floor.
+      - id: sit_ups
+        label: Sit Ups
+        visual: Figure doing a sit-up.
+      - id: mountain_climbers
+        label: Mountain Climbers
+        visual: Figure in fast floor climber stance.
+      - id: medicine_ball_slams
+        label: Ball Slams
+        visual: Figure slamming a ball.
+      - id: step_ups
+        label: Step Ups
+        visual: Figure stepping onto a box.
+      - id: bike
+        label: Bike
+        visual: Figure on a stationary bike.
+      - id: thrusters
+        label: Thrusters
+        visual: Figure combining squat and press.
+    future_icon_library:
+      target_size: 50 to 100 icons
+      organization:
+        - strength
+        - cardio
+        - kettlebell
+        - bodyweight
+        - machines
+        - mobility
+      picker_features:
+        - search
+        - tags
+        - recently used icons only if persistence policy changes or remains in URL config
+
+  accessibility:
+    minimum:
+      - All buttons and dialogs keyboard accessible.
+      - Visible focus states.
+      - Semantic buttons for actions.
+      - aria-live polite or assertive handling for phase changes if practical.
+      - Color is not the only indicator of phase.
+    reduced_motion:
+      - Avoid essential information in animations.
+      - Respect prefers-reduced-motion.

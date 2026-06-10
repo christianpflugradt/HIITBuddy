@@ -1,0 +1,223 @@
+technical_architecture:
+  guiding_constraints:
+    - Framework-free frontend.
+    - TypeScript preferred for all app logic.
+    - Web Components are acceptable when they simplify encapsulation.
+    - CSS is plain CSS.
+    - npm is the only package manager.
+    - Single Docker container.
+    - Docker Compose for local build, start, and stop.
+    - Makefile as the human entry point.
+    - No persistent client storage.
+    - No backend application state.
+
+  recommended_stack:
+    language: TypeScript
+    ui:
+      approach: Native DOM plus optional Web Components
+      rationale: >
+        The app has a small number of screens and benefits from direct control
+        over layout, custom elements, and timer rendering without framework cost.
+    styling: Plain CSS with CSS custom properties
+    build:
+      default: TypeScript compiler
+      optional_tooling:
+        vite:
+          allowed_if: >
+            The implementation wants faster local dev serving, asset handling,
+            or simpler module bundling.
+          justification_required: true
+          note: Vite is a build tool, not a UI framework, but it is still a dependency.
+    runtime_server:
+      default: Small Node static server using Node built-in http/fs/path modules
+      rationale: >
+        A Node image can serve the built static app without adding Express or
+        another production server dependency.
+
+  dependency_policy:
+    allowed_by_default:
+      - name: typescript
+        type: devDependency
+        reason: Compile TypeScript to browser JavaScript.
+    consider_with_justification:
+      - name: vite
+        type: devDependency
+        reason: Faster no-framework development server and bundling if plain tsc becomes awkward.
+      - name: playwright
+        type: devDependency
+        reason: End-to-end and visual verification of the tablet workout UI.
+      - name: lucide
+        type: dependency
+        reason: Only if icon buttons need a maintained icon set and inline SVG symbols are not enough.
+    avoid:
+      - UI frameworks
+      - CSS frameworks
+      - date/time libraries
+      - state management libraries
+      - server frameworks such as Express unless a built-in Node static server proves insufficient
+      - compression libraries for share links unless URL length becomes a real problem
+
+  proposed_source_structure:
+    root_files:
+      - package.json
+      - package-lock.json
+      - tsconfig.json
+      - Dockerfile
+      - docker-compose.yml
+      - Makefile
+    directories:
+      public:
+        purpose: Static assets copied directly if needed.
+      src:
+        files:
+          - main.ts
+          - styles.css
+          - config/default-config.ts
+          - domain/types.ts
+          - domain/validation.ts
+          - domain/share-link.ts
+          - workout/scheduler.ts
+          - workout/timer.ts
+          - workout/session.ts
+          - icons/icon-registry.ts
+          - icons/svg-icons.ts
+          - components/app-root.ts
+          - components/setup-screen.ts
+          - components/workout-screen.ts
+          - components/summary-screen.ts
+          - components/dialogs.ts
+          - components/timer-controls.ts
+      scripts:
+        files:
+          - serve.mjs
+        purpose: Static production server for the Docker container.
+      dist:
+        purpose: Build output; should be generated.
+
+  web_components:
+    recommended_custom_elements:
+      - name: hiit-app
+        responsibility: Top-level state routing and config ownership.
+      - name: setup-screen
+        responsibility: Setup UI and config editing events.
+      - name: workout-screen
+        responsibility: Runtime workout UI for work, rest, and round break states.
+      - name: summary-screen
+        responsibility: Finished workout summary.
+      - name: assignment-tile
+        responsibility: Display one person-exercise pairing.
+      - name: icon-picker-dialog
+        responsibility: Icon selection grid.
+    event_pattern:
+      description: Components dispatch typed CustomEvent objects upward.
+      examples:
+        - person:add
+        - person:update-active
+        - person:remove
+        - exercise:add
+        - exercise:update-selected
+        - workout:start
+        - workout:skip-exercise
+        - workout:skip-round
+        - timer:extend
+        - workout:finish
+
+  build_and_run:
+    npm_scripts:
+      build: Compile TypeScript and copy CSS/assets to dist.
+      dev: Run a local development server.
+      start: Serve dist with the Node static server.
+      check: Type-check without emitting files.
+      test: Run unit tests if present, preferably with Node's built-in test runner.
+    docker:
+      image_policy: Use a pinned active LTS Node image major at implementation time.
+      selected_image: node:24-alpine
+      container_port: 8080
+      production_command: npm run start
+      output: Serve static dist files.
+    docker_compose:
+      service_name: hiitbuddy
+      ports:
+        - "8080:8080"
+      build: "."
+      restart_policy: unless-stopped
+    makefile:
+      required_commands:
+        - command: make build
+          behavior: docker compose up -d --build
+        - command: make up
+          behavior: docker compose up -d
+        - command: make down
+          behavior: docker compose down
+      optional_default: Print available commands.
+
+  repository_workflow:
+    git:
+      initialized: true
+      hooks_path: ".githooks"
+    commit_conventions:
+      format: "type: subject"
+      scopes: forbidden
+      allowed_types:
+        - feat
+        - fix
+        - docs
+        - style
+        - refactor
+        - perf
+        - test
+        - build
+        - ci
+        - chore
+        - revert
+    hooks:
+      pre_commit:
+        purpose: Verify code before each commit.
+        commands:
+          - npm run check
+          - npm test
+      commit_msg:
+        purpose: Enforce Conventional Commit headers without scopes.
+        command: node scripts/verify-commit-msg.mjs
+
+  url_and_routing:
+    routing: Single root route.
+    query_param: config
+    example_shape: "https://example.test/?config=<base64url-json>"
+    browser_reload: Reconstruct setup from URL config only.
+    reverse_proxy: No app-specific requirements beyond forwarding the static site.
+
+  testing_strategy:
+    unit_tests:
+      priority:
+        - share link encode/decode
+        - config validation
+        - scheduling algorithm
+        - timer remaining-time calculation
+    browser_tests:
+      priority:
+        - setup can add person
+        - setup can add custom exercise
+        - invalid active people/exercise count blocks start
+        - workout shows unique assignments
+        - skip exercise enters rest
+        - skip to round break enters round break and records an abandoned round
+        - rest extension buttons add time
+        - round break finish enters summary
+    visual_checks:
+      viewports:
+        - 1024x768
+        - 1366x1024
+        - 1440x900
+      requirements:
+        - No overlapping text.
+        - Timer readable.
+        - Touch controls reachable.
+        - SVG icons render.
+
+  performance:
+    expectations:
+      - Fast first load.
+      - No network calls after loading static assets.
+      - Timer updates must remain smooth.
+      - SVG icon library should be bundled efficiently and reused by id.

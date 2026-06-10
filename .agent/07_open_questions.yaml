@@ -1,0 +1,77 @@
+resolved_decisions:
+  - id: active_people_more_than_exercises
+    decision: Block workout start.
+    consequence: >
+      The app must require active people count to be less than or equal to the
+      selected exercise count. No waiting slots are introduced in the MVP.
+
+  - id: skipped_round_counting
+    decision: Count as an abandoned round.
+    consequence: >
+      Skip to Round Break does not increment completedRounds. It increments
+      abandonedRounds and proceeds to the normal round break countdown.
+
+  - id: finish_availability
+    decision: Finish is available only during the round break.
+    consequence: Work and interval rest screens do not show Finish in the MVP.
+
+  - id: hyrox_running
+    decision: Do not include running.
+    consequence: The default HYROX set includes only the eight workout stations.
+
+open_questions:
+  - id: exercise_order_editing
+    priority: medium
+    question: >
+      Should users be able to reorder exercises and people on the setup screen?
+      Order affects assignment rotation.
+    current_assumption: Use creation/default order for the first version.
+
+  - id: audio_cues
+    priority: medium
+    question: >
+      Should the app include sounds for phase changes or final countdown
+      seconds?
+    current_assumption: No audio in the MVP.
+
+  - id: screen_wake_lock
+    priority: medium
+    question: >
+      Should the app request a screen wake lock during workouts when the browser
+      supports it?
+    current_assumption: Add as progressive enhancement if implementation effort is small.
+
+  - id: share_link_payload_size
+    priority: low
+    question: >
+      Is it acceptable that very large rosters or custom exercise sets create
+      long URLs, as long as the app does not use local storage or a backend?
+    current_assumption: Yes.
+
+  - id: icon_library_scope
+    priority: low
+    question: >
+      Should the first implementation include only enough icons for default and
+      example custom exercises, or should it start with a larger icon library?
+    current_assumption: Start with default HYROX icons plus a few common extras.
+
+  - id: timer_input_limits
+    priority: low
+    question: >
+      Are the proposed timer bounds of 5 to 3600 seconds for work and 0 to 3600
+      seconds for rests acceptable?
+    current_assumption: Yes.
+
+  - id: summary_details
+    priority: low
+    question: >
+      Should the summary show only completed rounds and elapsed time, or also
+      show derived totals such as estimated work time and total intervals?
+    current_assumption: Keep it simple for MVP.
+
+  - id: wording_for_pool
+    priority: low
+    question: >
+      Is "Pool" the preferred English label for inactive saved people, or would
+      "Bench" or "Roster" feel better?
+    current_assumption: Use "Pool".

@@ -1,0 +1,287 @@
+domain_model:
+  schema_version: 1
+  storage_policy:
+    persistent_storage: URL query parameter only
+    forbidden:
+      - backend database
+      - cookies
+      - localStorage
+      - sessionStorage
+      - IndexedDB
+    runtime_state: In-memory only
+
+entities:
+  workout_config:
+    description: Complete reusable setup that can be encoded into a share URL.
+    fields:
+      schemaVersion:
+        type: number
+        required: true
+        example: 1
+      people:
+        type: Person[]
+        required: true
+      exercises:
+        type: Exercise[]
+        required: true
+      timer:
+        type: TimerSettings
+        required: true
+      selectedExerciseIds:
+        type: string[]
+        required: true
+        description: Ordered list of exercise ids included in the circuit.
+      ui:
+        type: UiPreferences
+        required: false
+        description: Non-persistent display preferences that may be safe to share later.
+
+  person:
+    description: A named person saved in the current configuration.
+    fields:
+      id:
+        type: string
+        required: true
+        generation: crypto.randomUUID if available; fallback to timestamp plus random suffix
+      name:
+        type: string
+        required: true
+        constraints:
+          - Trim whitespace.
+          - Must not be empty.
+          - Prefer max 40 visible characters.
+      active:
+        type: boolean
+        required: true
+        description: true means participating now; false means retained in the pool.
+
+  exercise:
+    description: Exercise station available in the current configuration.
+    fields:
+      id:
+        type: string
+        required: true
+        generation: Built-in ids for defaults; random id for custom exercises.
+      name:
+        type: string
+        required: true
+        constraints:
+          - Trim whitespace.
+          - Must not be empty.
+          - Prefer max 48 visible characters.
+      iconId:
+        type: string
+        required: true
+        description: >
+          References a bundled SVG icon asset. The special auto icon is allowed
+          during setup and is resolved to a concrete bundled SVG icon when a
+          workout starts.
+      builtIn:
+        type: boolean
+        required: true
+      selected:
+        type: boolean
+        required: true
+        description: May be derived from selectedExerciseIds during implementation.
+
+  icon_asset:
+    description: Bundled SVG illustration that can represent an exercise.
+    fields:
+      id:
+        type: string
+        required: true
+      label:
+        type: string
+        required: true
+      tags:
+        type: string[]
+        required: true
+        example:
+          - legs
+          - sled
+          - pull
+      svg:
+        type: string
+        required: true
+        storage: Bundled app asset, not encoded into share links.
+
+  timer_settings:
+    description: User-configurable durations in whole seconds.
+    fields:
+      workSeconds:
+        type: number
+        required: true
+        default: 40
+        min: 5
+        max: 3600
+      intervalRestSeconds:
+        type: number
+        required: true
+        default: 20
+        min: 0
+        max: 3600
+      roundBreakSeconds:
+        type: number
+        required: true
+        default: 90
+        min: 0
+        max: 3600
+
+  ui_preferences:
+    description: Optional future-proof area for display-only settings.
+    fields:
+      theme:
+        type: string
+        required: false
+        allowed:
+          - system
+          - light
+          - dark
+        default: system
+
+  workout_session:
+    description: In-memory state for one running workout.
+    persistence: Never persisted or encoded into the URL.
+    fields:
+      config:
+        type: WorkoutConfig
+        required: true
+      phase:
+        type: SessionPhase
+        required: true
+      roundIndex:
+        type: number
+        required: true
+        zero_based: true
+      intervalIndex:
+        type: number
+        required: true
+        zero_based: true
+      phaseStartedAt:
+        type: DOMHighResTimeStamp
+        required: true
+      phaseDurationSeconds:
+        type: number
+        required: true
+      addedSeconds:
+        type: number
+        required: true
+        default: 0
+      sessionStartedAt:
+        type: DOMHighResTimeStamp
+        required: true
+      completedRounds:
+        type: number
+        required: true
+      abandonedRounds:
+        type: number
+        required: true
+        description: >
+          Rounds where the user chose Skip to Round Break before all intervals
+          were completed.
+        default: 0
+      finishedAt:
+        type: DOMHighResTimeStamp
+        required: false
+
+  assignment:
+    description: Current work interval pairing.
+    fields:
+      personId:
+        type: string
+        required: true
+      exerciseId:
+        type: string
+        required: true
+      roundIndex:
+        type: number
+        required: true
+      intervalIndex:
+        type: number
+        required: true
+
+enums:
+  session_phase:
+    values:
+      setup:
+        description: Configuration screen.
+      work:
+        description: Active exercise interval.
+      interval_rest:
+        description: Short rest between work intervals.
+      round_break:
+        description: Long rest between completed rounds.
+      summary:
+        description: Finished workout screen.
+
+validation:
+  start_workout:
+    required:
+      - At least one active person.
+      - At least one selected exercise.
+      - Active people count must be less than or equal to selected exercise count.
+      - Work duration must be a positive whole number.
+      - Rest and round break durations must be zero or positive whole numbers.
+    messages:
+      no_active_people: Add or activate at least one person.
+      no_exercises: Select or add at least one exercise.
+      too_many_people: Add more exercises or move people to the pool.
+      invalid_timer: Use valid whole-second timer values.
+
+share_link:
+  query_parameter: config
+  payload_contents:
+    include:
+      - schemaVersion
+      - people
+      - exercises
+      - timer
+      - selectedExerciseIds
+    exclude:
+      - Current round
+      - Current countdown value
+      - Runtime phase
+      - Completed rounds
+      - Raw SVG markup
+  encoding:
+    recommended: base64url encoded UTF-8 JSON
+    rationale: >
+      Browser-native APIs can handle JSON and base64url without adding a
+      compression dependency. The payload remains readable after decoding and is
+      sufficient for moderate roster and exercise counts.
+    algorithm:
+      serialize:
+        - Normalize config into a compact JSON object.
+        - JSON.stringify the object.
+        - Encode UTF-8 bytes.
+        - Base64 encode.
+        - Convert to URL-safe base64 by replacing plus with hyphen, slash with underscore, and removing padding.
+        - Store in the config query parameter.
+      parse:
+        - Read config query parameter.
+        - Restore base64 padding if needed.
+        - Convert URL-safe characters back to standard base64.
+        - Decode UTF-8 JSON.
+        - Validate schemaVersion and fields.
+        - Fall back to default config if parsing fails.
+  url_length_note: >
+    Because no storage is used, very large custom configurations can create long
+    URLs. This is acceptable for the MVP but should be monitored if the icon
+    library or custom metadata grows.
+
+default_config:
+  schemaVersion: 1
+  people: []
+  selectedExerciseIds:
+    - skierg
+    - sled_push
+    - sled_pull
+    - burpee_broad_jumps
+    - rowing
+    - farmers_carry
+    - sandbag_lunges
+    - wall_balls
+  timer:
+    workSeconds: 40
+    intervalRestSeconds: 20
+    roundBreakSeconds: 90

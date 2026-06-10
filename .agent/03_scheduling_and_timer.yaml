@@ -1,0 +1,156 @@
+scheduling:
+  objective: >
+    Assign active people to selected exercises so that no two active people use
+    the same exercise during the same work interval and every active person
+    completes every selected exercise once per round.
+
+  constraints:
+    - activePeopleCount >= 1
+    - selectedExerciseCount >= 1
+    - activePeopleCount <= selectedExerciseCount
+    - selected exercises keep their setup order unless a future reorder feature is added
+    - active people keep their setup order unless a future reorder feature is added
+
+  rotation_algorithm:
+    name: Modular station rotation
+    inputs:
+      - activePeople ordered list
+      - selectedExercises ordered list
+      - roundIndex zero-based
+      - intervalIndex zero-based
+    formula: exerciseIndex = (intervalIndex + personIndex + roundIndex) % selectedExerciseCount
+    rationale: >
+      The intervalIndex term rotates each person through all stations. The
+      personIndex term prevents duplicate simultaneous assignments when active
+      people count is less than or equal to selected exercise count. The
+      roundIndex term shifts the starting station each round so the visual order
+      does not feel static.
+    guarantees:
+      - Each active person receives exactly one exercise per work interval.
+      - No exercise is assigned to more than one active person in the same interval.
+      - Across selectedExerciseCount intervals, each active person receives each selected exercise exactly once.
+    invalid_case:
+      condition: activePeopleCount > selectedExerciseCount
+      mvp_behavior: Block workout start with a clear validation message.
+      product_decision: Do not add waiting slots in the MVP.
+
+  round_length:
+    work_intervals_per_round: selectedExerciseCount
+    interval_rests_per_round: selectedExerciseCount - 1
+    final_interval_behavior: >
+      After the final work interval, go directly to the round break instead of
+      showing the short interval rest.
+
+  example:
+    active_people:
+      - Alice
+      - Ben
+      - Cara
+    selected_exercises:
+      - Sled Push
+      - Rowing
+      - Wall Balls
+      - Farmers Carry
+    round_1:
+      interval_1:
+        Alice: Sled Push
+        Ben: Rowing
+        Cara: Wall Balls
+        unused: Farmers Carry
+      interval_2:
+        Alice: Rowing
+        Ben: Wall Balls
+        Cara: Farmers Carry
+        unused: Sled Push
+      interval_3:
+        Alice: Wall Balls
+        Ben: Farmers Carry
+        Cara: Sled Push
+        unused: Rowing
+      interval_4:
+        Alice: Farmers Carry
+        Ben: Sled Push
+        Cara: Rowing
+        unused: Wall Balls
+
+timer:
+  principle: >
+    Countdown display should be derived from a monotonic clock, not from
+    decrementing a number in setInterval. Use requestAnimationFrame or a short
+    interval only as a render trigger.
+
+  phase_durations:
+    work:
+      source: timer.workSeconds
+      default_seconds: 40
+    interval_rest:
+      source: timer.intervalRestSeconds
+      default_seconds: 20
+      extension_buttons_seconds:
+        - 5
+        - 10
+        - 20
+    round_break:
+      source: timer.roundBreakSeconds
+      default_seconds: 90
+      extension_buttons_seconds:
+        - 30
+        - 60
+
+  countdown_calculation:
+    fields:
+      startedAt: DOMHighResTimeStamp
+      baseDurationSeconds: number
+      addedSeconds: number
+    remaining_seconds_formula: ceil(max(0, baseDurationSeconds + addedSeconds - elapsedSeconds))
+    elapsed_seconds_formula: (performance.now() - startedAt) / 1000
+    display_rule: Show whole seconds.
+
+  extension_behavior:
+    - Extension buttons can be pressed repeatedly.
+    - Each press increases addedSeconds for the current phase only.
+    - Extensions do not mutate the configured default duration.
+    - If an extension is pressed near zero, the current phase continues from the newly computed remaining time.
+
+  skip_behavior:
+    skip_exercise:
+      available_in: work
+      behavior:
+        - Stop current work countdown.
+        - If another interval remains in the round, enter interval_rest.
+        - If this was the final interval, enter round_break.
+      analytics: None
+    skip_to_round_break:
+      available_in: work
+      behavior:
+        - Stop current work countdown.
+        - Mark the current round as abandoned.
+        - Enter round_break.
+      completed_round_count_policy: >
+        Do not increment completedRounds. Increment abandonedRounds instead.
+
+  finish_behavior:
+    available_in: round_break
+    behavior:
+      - Stop the round break countdown.
+      - Set finishedAt.
+      - Enter summary.
+    note: >
+      Finish is intentionally available only during the round break.
+
+  visibility_and_sleep:
+    background_tab: >
+      Because the countdown uses performance.now, elapsed time remains correct
+      after tab throttling or temporary backgrounding.
+    screen_wake_lock: >
+      Consider using the Screen Wake Lock API as a progressive enhancement so a
+      tablet display does not sleep during a workout. The app must still work if
+      the API is unavailable or permission is denied.
+
+  accessibility:
+    visual:
+      - Countdown must be readable from several meters away on a tablet.
+      - Phase changes should be visually obvious through text, color, and layout.
+    audio:
+      mvp: Not required unless confirmed.
+      future: Add short cues for final countdown seconds and phase changes.

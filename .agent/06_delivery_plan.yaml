@@ -1,0 +1,154 @@
+delivery_plan:
+  implementation_order:
+    - id: foundation
+      title: Project foundation
+      tasks:
+        - Create npm project with TypeScript.
+        - Add tsconfig.
+        - Add build, dev, start, check, and test scripts.
+        - Add Dockerfile.
+        - Add docker-compose.yml.
+        - Add Makefile with build, up, and down.
+      done_when:
+        - npm run check succeeds.
+        - Docker Compose can build and serve a placeholder page.
+
+    - id: domain
+      title: Domain model and share links
+      tasks:
+        - Implement TypeScript types.
+        - Implement default config.
+        - Implement validation.
+        - Implement base64url share link encode/decode.
+        - Handle invalid config payload fallback.
+      done_when:
+        - Unit tests cover default config, validation, and share links.
+
+    - id: icons
+      title: Exercise icon registry
+      tasks:
+        - Create SVG icon registry.
+        - Add default HYROX station icons.
+        - Add at least Kettlebell Row and Lunges for custom exercise examples.
+        - Ensure icons can render by id.
+      done_when:
+        - Every default exercise has an iconId.
+        - Icon picker can list all registered icons.
+
+    - id: setup_ui
+      title: Setup screen
+      tasks:
+        - Build people active/pool management.
+        - Build Add Person dialog.
+        - Build exercise selection.
+        - Build Add Exercise dialog.
+        - Build icon picker dialog.
+        - Build timer settings controls.
+        - Build Copy Link action.
+        - Build Start Workout validation.
+      done_when:
+        - A complete valid configuration can be created by touch.
+        - Copied link restores the same setup after reload.
+
+    - id: scheduler_timer
+      title: Scheduling and timer engine
+      tasks:
+        - Implement modular station rotation.
+        - Implement session state transitions.
+        - Implement countdown calculation based on performance.now.
+        - Implement rest and round break extension behavior.
+        - Implement skip exercise and skip round behavior.
+      done_when:
+        - Tests prove unique assignments and full round coverage.
+        - Timer transition behavior is deterministic under fake time or isolated functions.
+
+    - id: workout_ui
+      title: Workout runtime UI
+      tasks:
+        - Build assignment grid.
+        - Build phase header.
+        - Build bottom timer band.
+        - Add work controls.
+        - Add interval rest controls.
+        - Add round break controls.
+      done_when:
+        - Workout can run through multiple rounds automatically.
+        - Controls visibly and correctly change by phase.
+
+    - id: summary_ui
+      title: Summary screen
+      tasks:
+        - Show completion state.
+        - Show completed rounds, abandoned rounds, participants, exercises, and elapsed time.
+        - Add Back to Setup.
+        - Add Copy Link.
+      done_when:
+        - Finish from round break ends the session and returns cleanly to setup.
+        - Summary distinguishes completed and abandoned rounds.
+
+    - id: polish_and_verification
+      title: Tablet polish and verification
+      tasks:
+        - Verify layout at tablet landscape sizes.
+        - Verify desktop layout.
+        - Check keyboard and focus behavior for dialogs.
+        - Check no forbidden browser storage is used.
+        - Check Docker and Make commands.
+      done_when:
+        - make build rebuilds and serves the app locally.
+        - make up serves the already built app locally.
+        - make down stops the app.
+        - No major UI overlap or unreadable text remains.
+
+acceptance_criteria:
+  product:
+    - App text is English.
+    - User can configure people and exercises.
+    - User can keep people in a pool without deleting them.
+    - User can delete people fully.
+    - HYROX station exercises are available by default.
+    - User can add a custom exercise with an icon.
+    - User can configure 40/20/90 defaults.
+    - User can copy and reuse setup through a URL.
+    - User can start an endless workout.
+    - During work, each active person has one assignment.
+    - During work, no two active people share one exercise.
+    - Every active person gets every selected exercise once per round.
+    - User can skip current exercise to rest.
+    - User can skip to round break and the round is counted as abandoned.
+    - User can extend interval rest by 5, 10, or 20 seconds.
+    - User can extend round break by 30 or 60 seconds.
+    - User can finish between rounds and see a summary.
+  technical:
+    - No frontend framework is used.
+    - npm is the package manager.
+    - No cookies or client storage APIs are used.
+    - A single Docker container serves the app.
+    - Docker Compose is present.
+    - Makefile exposes build, up, and down.
+    - Dependencies are minimal and justified.
+  design:
+    - Main workflow is comfortable on tablet landscape.
+    - Touch targets are large enough.
+    - Countdown is prominent.
+    - Assignment tiles clearly show person, exercise, and SVG icon.
+    - UI remains usable on desktop.
+
+risk_log:
+  - risk: Very long share URLs for large custom configs.
+    mitigation: Store icon ids, not SVG markup; keep config compact; revisit compression only if needed.
+  - risk: More active people than selected exercises breaks the unique assignment rule.
+    mitigation: Block start in MVP and show a clear validation message.
+  - risk: Tablet screen sleeps during workout.
+    mitigation: Consider Screen Wake Lock API as a progressive enhancement.
+  - risk: Timer drift from setInterval.
+    mitigation: Derive remaining time from performance.now.
+  - risk: Custom SVG library grows and hurts bundle size.
+    mitigation: Use compact inline SVG symbols and avoid unused decorative assets.
+
+definition_of_done_for_first_complete_version:
+  - All MVP features are implemented.
+  - All required Make and Docker workflows work.
+  - Core scheduling and share-link logic have tests.
+  - Tablet landscape UI has been manually or browser-tested.
+  - The app can be used without network access after the initial static load.

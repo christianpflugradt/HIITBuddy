@@ -1,0 +1,107 @@
+specification:
+  product: HIITBuddy
+  purpose: >
+    Product and implementation planning documents for a lightweight,
+    framework-free HIIT circuit training web app.
+  app_language: English
+  document_language: English
+  last_updated: "2026-06-10"
+
+files:
+  - path: ".agent/00_product.yaml"
+    title: Product brief
+    use_for:
+      - Product intent
+      - MVP boundaries
+      - User context
+      - Core requirements
+  - path: ".agent/01_domain_model.yaml"
+    title: Domain model
+    use_for:
+      - Configuration schema
+      - Runtime session state
+      - Share link payload
+      - Entity constraints
+  - path: ".agent/02_workout_flow.yaml"
+    title: Workout flow
+    use_for:
+      - Screens
+      - State transitions
+      - Dialog behavior
+      - Workout controls
+  - path: ".agent/03_scheduling_and_timer.yaml"
+    title: Scheduling and timer behavior
+    use_for:
+      - Person to exercise assignment algorithm
+      - Countdown behavior
+      - Skip behavior
+      - Timer edge cases
+  - path: ".agent/04_interface_and_design.yaml"
+    title: Interface and design system
+    use_for:
+      - Tablet-first layout
+      - Touch controls
+      - Visual style
+      - SVG exercise icon direction
+  - path: ".agent/05_technical_architecture.yaml"
+    title: Technical architecture
+    use_for:
+      - No-framework TypeScript structure
+      - Dependency policy
+      - Docker Compose and Makefile expectations
+      - Build and runtime constraints
+  - path: ".agent/06_delivery_plan.yaml"
+    title: Delivery plan
+    use_for:
+      - Implementation milestones
+      - Acceptance criteria
+      - Testing and verification checklist
+  - path: ".agent/07_open_questions.yaml"
+    title: Open questions
+    use_for:
+      - Decisions to confirm before or during implementation
+      - Known assumptions
+  - path: ".agent/08_execution_state.yaml"
+    title: IST/SOLL execution state
+    use_for:
+      - Current implementation state
+      - Target implementation state
+      - Increment queue for the "go" command
+      - Progress tracking after each implementation step
+  - path: ".agent/09_git_workflow.yaml"
+    title: Git workflow
+    use_for:
+      - Commit conventions
+      - Git hook behavior
+      - Required commit-after-prompt workflow
+
+reading_order:
+  - ".agent/00_product.yaml"
+  - ".agent/01_domain_model.yaml"
+  - ".agent/02_workout_flow.yaml"
+  - ".agent/03_scheduling_and_timer.yaml"
+  - ".agent/04_interface_and_design.yaml"
+  - ".agent/05_technical_architecture.yaml"
+  - ".agent/06_delivery_plan.yaml"
+  - ".agent/07_open_questions.yaml"
+  - ".agent/08_execution_state.yaml"
+  - ".agent/09_git_workflow.yaml"
+
+implementation_posture:
+  default: >
+    Build the smallest complete app that satisfies the workout flow, then
+    improve polish and exercise icon coverage iteratively.
+  dependency_rule: >
+    Add dependencies only when they provide a clear advantage over browser,
+    TypeScript, or Node standard capabilities.
+  persistence_rule: >
+    Do not use a backend database, cookies, localStorage, sessionStorage, or
+    IndexedDB. Keep runtime state in memory and share reusable setup state via
+    the URL configuration parameter only.
+  git_rule: >
+    After a user prompt changes files, verify the repository and commit the
+    result. Use Conventional Commits without scopes.
+  go_rule: >
+    When the user says "go", read .agent/08_execution_state.yaml, implement the
+    next increment with status pending, verify it, and update the current state
+    plus increment status before responding.

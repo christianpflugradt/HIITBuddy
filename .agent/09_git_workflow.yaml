@@ -1,0 +1,48 @@
+git_workflow:
+  last_updated: "2026-06-10"
+  ist_zustand:
+    - Git workflow rules are documented for future agent turns.
+    - Repository-local hooks are defined in .githooks.
+    - pre-commit runs npm run check and npm test.
+    - commit-msg validates Conventional Commit headers without scopes.
+    - Commit message validation uses a dependency-free Node script.
+  soll_zustand:
+    - Git is initialized for the project.
+    - core.hooksPath points to .githooks.
+    - Every file-changing user prompt is finished with a commit.
+    - Commits use Conventional Commits without scopes.
+    - pre-commit verification must pass before commits are created.
+  commit_convention:
+    format: "type: subject"
+    scopes: forbidden
+    breaking_change_marker: allowed_before_colon
+    allowed_types:
+      - feat
+      - fix
+      - docs
+      - style
+      - refactor
+      - perf
+      - test
+      - build
+      - ci
+      - chore
+      - revert
+    examples:
+      valid:
+        - "feat: add workout timer"
+        - "fix: keep cancel buttons valid"
+        - "chore: initialize git workflow"
+      invalid:
+        - "feat(ui): add workout timer"
+        - "fix(dialog): keep cancel buttons valid"
+        - "update stuff"
+  hooks:
+    pre_commit:
+      path: ".githooks/pre-commit"
+      commands:
+        - "npm run check"
+        - "npm test"
+    commit_msg:
+      path: ".githooks/commit-msg"
+      command: "node scripts/verify-commit-msg.mjs <message-file>"

@@ -1,0 +1,221 @@
+workout_flow:
+  top_level_states:
+    - setup
+    - round_start
+    - work
+    - interval_rest
+    - round_break
+    - summary
+
+launch_behavior:
+  with_valid_config_param:
+    - Decode and validate the shared config.
+    - Populate the setup screen from the URL.
+    - Do not auto-start the workout.
+  with_invalid_config_param:
+    - Ignore the invalid payload.
+    - Show the default setup.
+    - Optionally show a non-blocking message: "This shared setup could not be loaded."
+  without_config_param:
+    - Show the default setup.
+
+setup_screen:
+  purpose: Configure the reusable workout setup.
+  flow:
+    order:
+      - People
+      - Exercises
+      - Timer
+    navigation:
+      - Show only the current setup step.
+      - Allow moving forward and backward without losing entered values.
+      - Keep Copy Link and Start Workout on the final Timer step.
+  primary_actions:
+    - label: Start Workout
+      behavior: Validate config and enter the round_start state for round 1.
+    - label: Copy Link
+      behavior: Encode the current config into the config query parameter and copy the full URL.
+  people_management:
+    active_area:
+      label: Active
+      behavior: People in this area participate in the next workout.
+    pool_area:
+      label: Pool
+      behavior: People in this area are retained in the config but excluded from the workout.
+    add_person:
+      trigger_label: Add Person
+      dialog:
+        title: Add Person
+        fields:
+          - id: name
+            label: Name
+            type: text
+            autofocus: true
+        actions:
+          - label: Cancel
+            behavior: Close without changes.
+          - label: OK
+            behavior: Add a new active person if the name is valid.
+    person_actions:
+      - label: Move to Pool
+        visible_when: Person is active.
+        behavior: Set active to false.
+      - label: Activate
+        visible_when: Person is in the pool.
+        behavior: Set active to true.
+      - label: Remove
+        behavior: Delete the person from the config after lightweight confirmation.
+  exercise_management:
+    selected_area:
+      label: Exercises
+      behavior: Selected exercises are included in the circuit in the displayed order.
+    built_in_exercises:
+      behavior: HYROX station exercises are available by default and deselected initially.
+    add_exercise:
+      trigger_label: Add Exercise
+      dialog:
+        title: Add Exercise
+        fields:
+          - id: name
+            label: Exercise name
+            type: text
+            autofocus: true
+          - id: icon
+            label: Icon
+            type: icon_picker_trigger
+            default: Auto
+        actions:
+          - label: Cancel
+            behavior: Close without changes.
+          - label: OK
+            behavior: Add a selected custom exercise if the name is valid.
+    icon_picker:
+      dialog:
+        title: Choose Icon
+        behavior:
+          - Show Auto plus available bundled SVG icons in a touch-friendly grid.
+          - Allow filtering by text or tags when the icon set grows.
+          - Confirm selection and return to the Add Exercise dialog.
+          - Auto uses a question-mark placeholder during setup and resolves to a concrete bundled SVG icon when the workout starts.
+    exercise_actions:
+      - label: Select
+        behavior: Include exercise in the circuit.
+      - label: Deselect
+        behavior: Exclude exercise while retaining it in the current config.
+      - label: Remove
+        visible_when: Exercise is custom.
+        behavior: Delete custom exercise from the config after lightweight confirmation.
+  timer_settings:
+    fields:
+      - label: Work
+        default_seconds: 40
+      - label: Rest
+        default_seconds: 20
+      - label: Round Break
+        default_seconds: 90
+    input_behavior:
+      - Use numeric controls that are easy to adjust with touch.
+      - Store values as whole seconds.
+      - Prevent negative values.
+
+round_start_state:
+  entry:
+    - Start a fixed 30 second countdown before the first work interval.
+    - Compute assignments for round 1, interval 1.
+  displayed_content:
+    - Round number.
+    - Phase label: Get Ready.
+    - Large remaining time.
+    - Assignment grid with the upcoming person, exercise, and SVG icon assignments.
+  controls: []
+  automatic_transition:
+    when_countdown_reaches_zero:
+      - Enter work for round 1, interval 1.
+
+work_state:
+  entry:
+    - Compute assignments for the current round and interval.
+    - Start a countdown using workSeconds.
+  displayed_content:
+    - Round number.
+    - Interval position within the round.
+    - Phase label: Work.
+    - Large remaining time.
+    - Assignment grid with person name, exercise name, and SVG icon.
+  controls:
+    - label: Skip Exercise
+      behavior: Immediately enter interval_rest unless this was the final interval, in which case enter round_break.
+    - label: Skip to Round Break
+      behavior: Mark the current round as abandoned and immediately enter round_break.
+  automatic_transition:
+    when_countdown_reaches_zero:
+      if_more_intervals_remain: interval_rest
+      if_final_interval_of_round: round_break
+
+interval_rest_state:
+  entry:
+    - Start a countdown using intervalRestSeconds.
+  displayed_content:
+    - Round number.
+    - Upcoming interval position.
+    - Phase label: Rest.
+    - Large remaining time.
+    - Preview of next assignments if useful and legible.
+  controls:
+    - label: "+5"
+      behavior: Add 5 seconds to the current rest countdown.
+    - label: "+10"
+      behavior: Add 10 seconds to the current rest countdown.
+    - label: "+20"
+      behavior: Add 20 seconds to the current rest countdown.
+  automatic_transition:
+    when_countdown_reaches_zero:
+      - Advance intervalIndex by 1.
+      - Enter work.
+
+round_break_state:
+  entry:
+    - Increment completedRounds only if the previous round reached the round break after the final work interval.
+    - Increment abandonedRounds if the user reached the round break through Skip to Round Break before the final work interval was completed.
+    - Start a countdown using roundBreakSeconds.
+  displayed_content:
+    - Completed round count.
+    - Next round number.
+    - Phase label: Round Break.
+    - Large remaining time.
+    - Upcoming assignments for the next round when the remaining countdown is 30 seconds or less.
+    - If the configured round break is 30 seconds or less, show upcoming assignments from the start of the break.
+    - Fade upcoming assignments in when they become visible during longer round breaks.
+  controls:
+    - label: "+30"
+      behavior: Add 30 seconds to the current round break countdown.
+    - label: "+60"
+      behavior: Add 60 seconds to the current round break countdown.
+    - label: Finish
+      behavior: End the workout and enter summary.
+  automatic_transition:
+    when_countdown_reaches_zero:
+      - Advance to the next round.
+      - Reset intervalIndex to 0.
+      - Enter work.
+
+summary_screen:
+  purpose: Close the workout loop and return to configuration.
+  displayed_content:
+    - Completion headline, for example: "Workout Complete"
+    - Completed rounds.
+    - Abandoned rounds.
+    - Active participants count.
+    - Selected exercise count.
+    - Approximate elapsed session time.
+  actions:
+    - label: New Workout
+      behavior: Return to setup step 1 with the current configuration intact in memory.
+    - label: Copy Link
+      behavior: Copy the reusable setup link.
+
+navigation_rules:
+  - The app is a single-page experience.
+  - Browser reload returns to setup using the URL config if present.
+  - Runtime workout state is intentionally lost on reload.
+  - The setup screen is the first visible screen; no marketing landing page.
