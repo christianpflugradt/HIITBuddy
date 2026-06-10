@@ -224,15 +224,16 @@ enums:
 validation:
   start_workout:
     required:
-      - At least one active person.
-      - At least one selected exercise.
-      - Active people count must be less than or equal to selected exercise count.
-      - Work duration must be a positive whole number.
-      - Get Ready, rest, and round break durations must be zero or positive whole numbers.
+      - Active people count must be between 1 and 12 inclusive.
+      - Selected exercise count must be at least the active people count.
+      - Selected exercise count must be at most 20.
+      - Timer durations must be whole seconds between 5 and 300 inclusive.
     messages:
-      no_active_people: Add or activate at least one person.
-      no_exercises: Select or add at least one exercise.
-      too_many_people: Add more exercises or move people to the pool.
+      no_active_people: Add or activate 1 to 12 people.
+      too_many_active_people: Move people to the pool. Up to 12 can be active.
+      no_exercises: Select at least one exercise.
+      too_many_people: Select at least as many exercises as active people.
+      too_many_exercises: Select up to 20 exercises.
       invalid_timer: Use valid whole-second timer values.
 
 share_link:

@@ -6,8 +6,9 @@ scheduling:
 
   constraints:
     - activePeopleCount >= 1
-    - selectedExerciseCount >= 1
+    - activePeopleCount <= 12
     - activePeopleCount <= selectedExerciseCount
+    - selectedExerciseCount <= 20
     - selected exercises keep their setup order unless a future reorder feature is added
     - active people keep their setup order unless a future reorder feature is added
 
@@ -30,7 +31,7 @@ scheduling:
       - No exercise is assigned to more than one active person in the same interval.
       - Across selectedExerciseCount intervals, each active person receives each selected exercise exactly once.
     invalid_case:
-      condition: activePeopleCount > selectedExerciseCount
+      condition: activePeopleCount < 1, activePeopleCount > 12, activePeopleCount > selectedExerciseCount, or selectedExerciseCount > 20
       mvp_behavior: Block workout start with a clear validation message.
       product_decision: Do not add waiting slots in the MVP.
 

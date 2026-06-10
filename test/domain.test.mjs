@@ -15,7 +15,7 @@ import {
   encodeConfig,
   readConfigFromUrl
 } from "../dist/domain/share-link.js";
-import { TIMER_LIMITS, validateConfig, validateStartWorkout } from "../dist/domain/validation.js";
+import { START_LIMITS, TIMER_LIMITS, validateConfig, validateStartWorkout } from "../dist/domain/validation.js";
 
 test("default config contains the eight HYROX stations and no running station", () => {
   const config = createDefaultConfig();
@@ -32,6 +32,10 @@ test("default config contains the eight HYROX stations and no running station", 
     workSeconds: { min: 5, max: 300 },
     intervalRestSeconds: { min: 5, max: 300 },
     roundBreakSeconds: { min: 5, max: 300 }
+  });
+  assert.deepEqual(START_LIMITS, {
+    activePeople: { min: 1, max: 12 },
+    selectedExercises: { max: 20 }
   });
   assert.deepEqual(config.selectedExerciseIds, DEFAULT_SELECTED_EXERCISE_IDS);
   assert.equal(config.people.length, 0);
@@ -85,6 +89,48 @@ test("start validation blocks empty people, empty exercises, too many people, an
     noExerciseStart.issues.map((issue) => issue.code),
     ["no_exercises"]
   );
+});
+
+test("start validation enforces active people and selected exercise count limits", () => {
+  const createPerson = (index) => ({
+    id: `person_${index}`,
+    name: `Person ${index}`,
+    active: true
+  });
+  const createExercise = (index) => ({
+    id: `exercise_${index}`,
+    name: `Exercise ${index}`,
+    iconId: "rowing",
+    builtIn: false,
+    selected: true
+  });
+
+  const tooManyActivePeople = createDefaultConfig();
+  tooManyActivePeople.people = Array.from({ length: 13 }, (_, index) => createPerson(index));
+  tooManyActivePeople.exercises = Array.from({ length: 13 }, (_, index) => createExercise(index));
+  tooManyActivePeople.selectedExerciseIds = tooManyActivePeople.exercises.map((exercise) => exercise.id);
+
+  assert.deepEqual(
+    validateStartWorkout(tooManyActivePeople).issues.map((issue) => issue.code),
+    ["too_many_active_people"]
+  );
+
+  const tooManySelectedExercises = createDefaultConfig();
+  tooManySelectedExercises.people = Array.from({ length: 12 }, (_, index) => createPerson(index));
+  tooManySelectedExercises.exercises = Array.from({ length: 21 }, (_, index) => createExercise(index));
+  tooManySelectedExercises.selectedExerciseIds = tooManySelectedExercises.exercises.map((exercise) => exercise.id);
+
+  assert.deepEqual(
+    validateStartWorkout(tooManySelectedExercises).issues.map((issue) => issue.code),
+    ["too_many_exercises"]
+  );
+
+  const validEdge = createDefaultConfig();
+  validEdge.people = Array.from({ length: 12 }, (_, index) => createPerson(index));
+  validEdge.exercises = Array.from({ length: 20 }, (_, index) => createExercise(index));
+  validEdge.selectedExerciseIds = validEdge.exercises.map((exercise) => exercise.id);
+
+  assert.equal(validateStartWorkout(validEdge).valid, true);
 });
 
 test("timer validation enforces five to three hundred seconds for every timer", () => {

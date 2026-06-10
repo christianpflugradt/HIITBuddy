@@ -27,10 +27,22 @@ export const TIMER_LIMITS = {
   }
 } as const;
 
+export const START_LIMITS = {
+  activePeople: {
+    min: 1,
+    max: 12
+  },
+  selectedExercises: {
+    max: 20
+  }
+} as const;
+
 export const START_VALIDATION_MESSAGES = {
-  no_active_people: "Add or activate at least one person.",
-  no_exercises: "Select or add at least one exercise.",
-  too_many_people: "Add more exercises or move people to the pool.",
+  no_active_people: "Add or activate 1 to 12 people.",
+  too_many_active_people: "Move people to the pool. Up to 12 can be active.",
+  no_exercises: "Select at least one exercise.",
+  too_many_people: "Select at least as many exercises as active people.",
+  too_many_exercises: "Select up to 20 exercises.",
   invalid_timer: "Use valid whole-second timer values."
 } as const;
 
@@ -371,12 +383,20 @@ export const validateStartWorkout = (config: WorkoutConfig): StartValidationResu
 
   validateTimerSettings(config.timer, timerIssues);
 
-  if (activePeopleCount === 0) {
+  if (activePeopleCount < START_LIMITS.activePeople.min) {
     addIssue(issues, "no_active_people", START_VALIDATION_MESSAGES.no_active_people, "people");
+  }
+
+  if (activePeopleCount > START_LIMITS.activePeople.max) {
+    addIssue(issues, "too_many_active_people", START_VALIDATION_MESSAGES.too_many_active_people, "people");
   }
 
   if (selectedExerciseCount === 0) {
     addIssue(issues, "no_exercises", START_VALIDATION_MESSAGES.no_exercises, "selectedExerciseIds");
+  }
+
+  if (selectedExerciseCount > START_LIMITS.selectedExercises.max) {
+    addIssue(issues, "too_many_exercises", START_VALIDATION_MESSAGES.too_many_exercises, "selectedExerciseIds");
   }
 
   if (activePeopleCount > selectedExerciseCount && selectedExerciseCount > 0) {

@@ -79,7 +79,9 @@ ist_zustand:
     - Copy Link success feedback says "Settings copied".
     - People setup with active/pool handling.
     - Active and Pool people sections use very subtle different background tones.
+    - Start validation requires 1 to 12 active people.
     - Exercise setup with built-in selection and custom exercises.
+    - Selected exercises are constrained from active people count up to 20 for workout start, and setup selection caps at 20.
     - Timer setup with copy link and start validation.
     - Timer setup uses four large touch-first stepper cards with direct numeric editing.
     - All timer settings are constrained to whole seconds from 5 through 300 in validation, setup state, and timer inputs.

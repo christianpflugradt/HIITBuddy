@@ -138,15 +138,15 @@ terminology:
   round_break: Longer break between rounds.
   round: >
     A full rotation where every active person performs every selected exercise
-    exactly once, assuming the active people count does not exceed the selected
-    exercise count.
+    exactly once, assuming 1 to 12 active people and a selected exercise count
+    from the active people count up to 20.
   assignment: The pairing of one active person with one exercise for the current work interval.
 
 product_assumptions:
   - >
-    Active people count must be less than or equal to selected exercise count in
-    the MVP. This is required to guarantee unique simultaneous exercise
-    assignments without adding wait stations.
+    Workout start requires 1 to 12 active people and selected exercises from the
+    active people count up to 20. This is required to guarantee unique
+    simultaneous exercise assignments without adding wait stations.
   - >
     A round contains one work interval per selected exercise. If there are fewer
     active people than exercises, some exercise stations are unused during each

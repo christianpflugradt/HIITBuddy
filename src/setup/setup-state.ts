@@ -1,5 +1,5 @@
 import { type Exercise, type Person, type TimerSettings, type WorkoutConfig } from "../domain/types.js";
-import { TIMER_LIMITS, validateStartWorkout, type StartValidationResult } from "../domain/validation.js";
+import { START_LIMITS, TIMER_LIMITS, validateStartWorkout, type StartValidationResult } from "../domain/validation.js";
 
 const createId = (prefix: string): string => {
   const cryptoApi = globalThis.crypto;
@@ -42,12 +42,24 @@ export const addPerson = (config: WorkoutConfig, name: string): WorkoutConfig =>
   }
 
   const nextConfig = cloneConfig(config);
-  nextConfig.people.push(createPerson(trimmedName));
+  const active = nextConfig.people.filter((person) => person.active).length < START_LIMITS.activePeople.max;
+  nextConfig.people.push(createPerson(trimmedName, active));
   return nextConfig;
 };
 
 export const setPersonActive = (config: WorkoutConfig, personId: string, active: boolean): WorkoutConfig => {
   const nextConfig = cloneConfig(config);
+  const targetPerson = nextConfig.people.find((person) => person.id === personId);
+
+  if (
+    active &&
+    targetPerson &&
+    !targetPerson.active &&
+    nextConfig.people.filter((person) => person.active).length >= START_LIMITS.activePeople.max
+  ) {
+    return config;
+  }
+
   nextConfig.people = nextConfig.people.map((person) => (person.id === personId ? { ...person, active } : person));
   return nextConfig;
 };
@@ -66,9 +78,17 @@ export const addCustomExercise = (config: WorkoutConfig, name: string, iconId: s
   }
 
   const nextConfig = cloneConfig(config);
-  const exercise = createCustomExercise(trimmedName, iconId.trim());
+  const selected = nextConfig.selectedExerciseIds.length < START_LIMITS.selectedExercises.max;
+  const exercise = {
+    ...createCustomExercise(trimmedName, iconId.trim()),
+    selected
+  };
   nextConfig.exercises.push(exercise);
-  nextConfig.selectedExerciseIds.push(exercise.id);
+
+  if (selected) {
+    nextConfig.selectedExerciseIds.push(exercise.id);
+  }
+
   return nextConfig;
 };
 
@@ -77,6 +97,10 @@ export const setExerciseSelected = (config: WorkoutConfig, exerciseId: string, s
   const selectedIds = new Set(nextConfig.selectedExerciseIds);
 
   if (selected) {
+    if (!selectedIds.has(exerciseId) && selectedIds.size >= START_LIMITS.selectedExercises.max) {
+      return config;
+    }
+
     selectedIds.add(exerciseId);
   } else {
     selectedIds.delete(exerciseId);

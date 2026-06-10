@@ -83,6 +83,9 @@ interface_and_design:
         - Final step offers Back, Copy, and Start.
       feedback:
         copy_success_message: Settings copied
+      start_limits:
+        active_people_max: 12
+        selected_exercises_max: 20
       exercise_matrix:
         target_visible_count: At least 20 exercises should fit without scrolling in a desktop or tablet-landscape viewport.
         desktop_columns: 3

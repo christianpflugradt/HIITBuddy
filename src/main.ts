@@ -1,7 +1,7 @@
 import { createDefaultConfig } from "./config/default-config.js";
 import { CONFIG_QUERY_PARAMETER, createShareUrl, readConfigFromUrl } from "./domain/share-link.js";
 import { type Exercise, type Person, type TimerSettings, type WorkoutConfig, type WorkoutSession } from "./domain/types.js";
-import { START_VALIDATION_MESSAGES, TIMER_LIMITS } from "./domain/validation.js";
+import { START_LIMITS, START_VALIDATION_MESSAGES, TIMER_LIMITS } from "./domain/validation.js";
 import {
   AUTO_ICON_ID,
   CONCRETE_EXERCISE_ICON_IDS,
@@ -113,11 +113,11 @@ const getExercisesForDisplay = () => [
 const getCurrentSetupStep = () => setupSteps[setupStepIndex] ?? setupSteps[0]!;
 
 const getSetupStepForIssue = (code: string): number => {
-  if (code === "no_active_people" || code === "too_many_people") {
+  if (code === "no_active_people" || code === "too_many_active_people") {
     return 0;
   }
 
-  if (code === "no_exercises") {
+  if (code === "no_exercises" || code === "too_many_people" || code === "too_many_exercises") {
     return 1;
   }
 
@@ -885,8 +885,12 @@ const handleAction = (target: HTMLElement) => {
       setStatus("");
       break;
     case "activate-person":
-      config = setPersonActive(config, target.dataset.personId ?? "", true);
-      setStatus("");
+      if (getPersonCounts().active >= START_LIMITS.activePeople.max) {
+        setStatus(START_VALIDATION_MESSAGES.too_many_active_people, "danger");
+      } else {
+        config = setPersonActive(config, target.dataset.personId ?? "", true);
+        setStatus("");
+      }
       break;
     case "remove-person":
       config = removePerson(config, target.dataset.personId ?? "");
@@ -961,8 +965,17 @@ document.addEventListener("change", (event) => {
   const target = event.target as HTMLInputElement;
 
   if (target.dataset.action === "toggle-exercise") {
-    config = setExerciseSelected(config, target.dataset.exerciseId ?? "", target.checked);
-    setStatus("");
+    const exerciseId = target.dataset.exerciseId ?? "";
+    const reachedLimit =
+      target.checked &&
+      !config.selectedExerciseIds.includes(exerciseId) &&
+      getSelectedExerciseCount() >= START_LIMITS.selectedExercises.max;
+
+    config = setExerciseSelected(config, exerciseId, target.checked);
+    setStatus(
+      reachedLimit ? START_VALIDATION_MESSAGES.too_many_exercises : "",
+      reachedLimit ? "danger" : "neutral"
+    );
   }
 });
 

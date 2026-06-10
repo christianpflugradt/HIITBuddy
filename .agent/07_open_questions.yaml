@@ -2,8 +2,8 @@ resolved_decisions:
   - id: active_people_more_than_exercises
     decision: Block workout start.
     consequence: >
-      The app must require active people count to be less than or equal to the
-      selected exercise count. No waiting slots are introduced in the MVP.
+      The app must require 1 to 12 active people and selected exercises from
+      active people count up to 20. No waiting slots are introduced in the MVP.
 
   - id: skipped_round_counting
     decision: Count as an abandoned round.

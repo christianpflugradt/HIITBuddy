@@ -135,6 +135,14 @@ setup_screen:
       - Store values as whole seconds.
       - Prevent negative values.
 
+  start_constraints:
+    active_people:
+      min: 1
+      max: 12
+    selected_exercises:
+      min: active_people_count
+      max: 20
+
 round_start_state:
   entry:
     - Start a configurable Get Ready countdown before the first work interval.
