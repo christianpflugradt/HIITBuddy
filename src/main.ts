@@ -570,6 +570,15 @@ const renderWorkoutScreen = (workoutSession: WorkoutSession) => {
 const renderStartScreen = () => `
   <section class="start-shell" aria-labelledby="start-title">
     <div class="start-content">
+      <div class="start-visual" aria-hidden="true">
+        <span class="start-connector start-connector-horizontal"></span>
+        <span class="start-connector start-connector-vertical"></span>
+        <span class="start-station start-station-a"></span>
+        <span class="start-station start-station-b"></span>
+        <span class="start-station start-station-c"></span>
+        <span class="start-station start-station-d"></span>
+        <span class="start-timer-mark"></span>
+      </div>
       <h1 id="start-title">HIITBuddy</h1>
       <button class="button primary start-button" type="button" data-action="new-workout">New Workout</button>
     </div>

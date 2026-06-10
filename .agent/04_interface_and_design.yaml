@@ -69,6 +69,7 @@ interface_and_design:
         - One primary New Workout button.
       style:
         - Minimal, centered, touch-friendly, and visually calm.
+        - May include a small text-free CSS circuit/timer drawing when it supports the brand feel without adding controls.
         - No explanatory copy, feature descriptions, panels, or secondary actions.
     desktop_and_landscape_tablet:
       structure:

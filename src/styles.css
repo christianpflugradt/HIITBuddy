@@ -63,8 +63,135 @@ button {
 
 .start-content {
   display: grid;
-  gap: 2rem;
+  gap: 1.4rem;
   justify-items: center;
+}
+
+.start-visual {
+  position: relative;
+  width: min(62vw, 26rem);
+  aspect-ratio: 16 / 9;
+  pointer-events: none;
+}
+
+.start-visual::before {
+  position: absolute;
+  inset: 13% 8%;
+  border: 2px solid rgb(21 23 26 / 10%);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, transparent 49.5%, rgb(21 23 26 / 7%) 49.5% 50.5%, transparent 50.5%),
+    linear-gradient(180deg, transparent 49.5%, rgb(21 23 26 / 7%) 49.5% 50.5%, transparent 50.5%),
+    #fbfbf8;
+  content: "";
+}
+
+.start-connector {
+  position: absolute;
+  border-radius: 999px;
+  background: var(--color-action);
+  opacity: 0.72;
+}
+
+.start-connector-horizontal {
+  top: calc(50% - 0.18rem);
+  left: 18%;
+  width: 64%;
+  height: 0.36rem;
+}
+
+.start-connector-vertical {
+  top: 23%;
+  left: calc(50% - 0.18rem);
+  width: 0.36rem;
+  height: 54%;
+}
+
+.start-station {
+  position: absolute;
+  display: grid;
+  width: 4.6rem;
+  height: 3.8rem;
+  border: 1px solid rgb(21 23 26 / 8%);
+  border-radius: 8px;
+  place-items: center;
+  background: var(--color-surface);
+  box-shadow: 0 10px 24px rgb(21 23 26 / 8%);
+}
+
+.start-station::before,
+.start-station::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: var(--color-ink);
+}
+
+.start-station::before {
+  width: 2.3rem;
+  height: 0.34rem;
+}
+
+.start-station::after {
+  width: 0.5rem;
+  height: 1.35rem;
+  box-shadow: 1.8rem 0 0 var(--color-ink);
+}
+
+.start-station-a {
+  top: 8%;
+  left: 8%;
+}
+
+.start-station-b {
+  top: 8%;
+  right: 8%;
+}
+
+.start-station-c {
+  bottom: 8%;
+  left: 8%;
+}
+
+.start-station-d {
+  right: 8%;
+  bottom: 8%;
+}
+
+.start-timer-mark {
+  position: absolute;
+  top: calc(50% - 2.15rem);
+  left: calc(50% - 2.15rem);
+  width: 4.3rem;
+  height: 4.3rem;
+  border: 0.5rem solid var(--color-energy);
+  border-radius: 8px;
+  background: var(--color-surface);
+  box-shadow: 0 12px 28px rgb(21 23 26 / 10%);
+}
+
+.start-timer-mark::before,
+.start-timer-mark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  border-radius: 999px;
+  background: var(--color-ink);
+  transform-origin: center bottom;
+}
+
+.start-timer-mark::before {
+  top: 0.65rem;
+  width: 0.28rem;
+  height: 1.35rem;
+  transform: translateX(-50%);
+}
+
+.start-timer-mark::after {
+  top: 1.35rem;
+  width: 0.28rem;
+  height: 1.05rem;
+  transform: translateX(-50%) rotate(55deg);
 }
 
 .start-content h1 {
@@ -993,6 +1120,31 @@ input:focus-visible,
 }
 
 @media (max-width: 620px) {
+  .start-visual {
+    width: min(92vw, 22rem);
+  }
+
+  .start-station {
+    width: 3.6rem;
+    height: 3rem;
+  }
+
+  .start-station::before {
+    width: 1.8rem;
+  }
+
+  .start-station::after {
+    height: 1.05rem;
+    box-shadow: 1.35rem 0 0 var(--color-ink);
+  }
+
+  .start-timer-mark {
+    top: calc(50% - 1.75rem);
+    left: calc(50% - 1.75rem);
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
   .start-content h1 {
     font-size: 3.4rem;
   }

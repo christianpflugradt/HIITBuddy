@@ -72,7 +72,7 @@ ist_zustand:
     - Auto question-mark icon for new custom exercises, resolved to a concrete random bundled icon at workout start unless the user chooses a specific icon.
     - Icon rendering, lookup, availability, and search helpers.
     - Icon-registry tests covering default exercise icon coverage and SVG constraints.
-    - Minimal HIITBuddy start screen with New Workout as the only primary action.
+    - Minimal HIITBuddy start screen with a text-free CSS circuit/timer drawing and New Workout as the only primary action.
     - Sequential three-step setup UI for people, exercise selection, and timer/start actions.
     - People setup with active/pool handling.
     - Exercise setup with built-in selection and custom exercises.
