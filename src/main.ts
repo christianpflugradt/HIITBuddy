@@ -2,12 +2,8 @@ import { createDefaultConfig } from "./config/default-config.js";
 import { CONFIG_QUERY_PARAMETER, createShareUrl, readConfigFromUrl } from "./domain/share-link.js";
 import { type Exercise, type Person, type TimerSettings, type WorkoutConfig, type WorkoutSession } from "./domain/types.js";
 import { START_LIMITS, START_VALIDATION_MESSAGES, TIMER_LIMITS } from "./domain/validation.js";
-import {
-  AUTO_ICON_ID,
-  CONCRETE_EXERCISE_ICON_IDS,
-  findIconAssets,
-  renderExerciseIcon
-} from "./icons/icon-registry.js";
+import { resolveAutoExerciseIcons } from "./icons/auto-icon-resolution.js";
+import { AUTO_ICON_ID, findIconAssets, renderExerciseIcon } from "./icons/icon-registry.js";
 import {
   addCustomExercise,
   addPerson,
@@ -125,32 +121,6 @@ const getSetupStepForIssue = (code: string): number => {
 };
 
 const renderIcon = (iconId: string, className = "exercise-icon") => renderExerciseIcon(iconId, { className });
-
-const getRandomConcreteIconId = () => {
-  const fallbackIconId = CONCRETE_EXERCISE_ICON_IDS[0] ?? AUTO_ICON_ID;
-  const cryptoApi = globalThis.crypto;
-
-  if (cryptoApi && "getRandomValues" in cryptoApi) {
-    const [randomValue] = cryptoApi.getRandomValues(new Uint32Array(1));
-    const index = (randomValue ?? 0) % CONCRETE_EXERCISE_ICON_IDS.length;
-    return CONCRETE_EXERCISE_ICON_IDS[index] ?? fallbackIconId;
-  }
-
-  const index = Math.floor(Math.random() * CONCRETE_EXERCISE_ICON_IDS.length);
-  return CONCRETE_EXERCISE_ICON_IDS[index] ?? fallbackIconId;
-};
-
-const resolveAutoExerciseIcons = (workoutConfig: WorkoutConfig): WorkoutConfig => ({
-  ...workoutConfig,
-  people: workoutConfig.people.map((person) => ({ ...person })),
-  exercises: workoutConfig.exercises.map((exercise) => ({
-    ...exercise,
-    iconId: exercise.iconId === AUTO_ICON_ID ? getRandomConcreteIconId() : exercise.iconId
-  })),
-  timer: { ...workoutConfig.timer },
-  selectedExerciseIds: [...workoutConfig.selectedExerciseIds],
-  ...(workoutConfig.ui ? { ui: { ...workoutConfig.ui } } : {})
-});
 
 const getSessionSnapshot = (workoutSession: WorkoutSession) =>
   getTimerSnapshot(

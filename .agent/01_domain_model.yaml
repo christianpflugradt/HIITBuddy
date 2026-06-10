@@ -75,7 +75,9 @@ entities:
         description: >
           References a bundled SVG icon asset. The special auto icon is allowed
           during setup and is resolved to a concrete bundled SVG icon when a
-          workout starts.
+          workout starts. Auto resolution must exclude concrete icons already
+          used by selected workout exercises and must not duplicate another
+          auto-resolved workout icon.
       builtIn:
         type: boolean
         required: true

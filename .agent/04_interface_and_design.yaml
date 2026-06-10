@@ -231,6 +231,7 @@ interface_and_design:
       behavior:
         - Exercise names are always free text.
         - Auto shows a question-mark setup icon and resolves to a concrete bundled SVG at workout start.
+        - Auto resolution must avoid duplicate icons within the selected workout.
         - The user can override Auto by opening the icon picker and choosing a specific icon.
     icon_picker:
       title: Choose Icon

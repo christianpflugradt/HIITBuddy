@@ -107,6 +107,7 @@ setup_screen:
           - Allow filtering by text or tags when the icon set grows.
           - Confirm selection and return to the Add Exercise dialog.
           - Auto uses a question-mark placeholder during setup and resolves to a concrete bundled SVG icon when the workout starts.
+          - Auto-resolved workout icons must be unique and must differ from all other selected workout exercise icons.
     exercise_actions:
       - label: Select
         behavior: Include exercise in the circuit.

@@ -30,9 +30,53 @@ export const CONCRETE_EXERCISE_ICON_IDS = EXERCISE_ICON_IDS.filter((iconId) => i
 
 const iconDefinitionById = new Map(SVG_ICON_DEFINITIONS.map((definition) => [definition.id, definition]));
 
+const getRandomIndex = (length: number): number => {
+  if (length <= 0) {
+    throw new RangeError("Cannot pick a random icon from an empty set.");
+  }
+
+  const cryptoApi = globalThis.crypto;
+
+  if (cryptoApi && "getRandomValues" in cryptoApi) {
+    const [randomValue] = cryptoApi.getRandomValues(new Uint32Array(1));
+    return (randomValue ?? 0) % length;
+  }
+
+  return Math.floor(Math.random() * length);
+};
+
 export const getIconDefinition = (iconId: string): SvgIconDefinition | undefined => iconDefinitionById.get(iconId);
 
 export const hasIcon = (iconId: string): boolean => iconDefinitionById.has(iconId);
+
+export const getUniqueRandomConcreteIconIds = (
+  count: number,
+  reservedIconIds: Iterable<string> = []
+): string[] => {
+  if (!Number.isInteger(count) || count < 0) {
+    throw new RangeError("Icon count must be a non-negative whole number.");
+  }
+
+  const reserved = new Set(reservedIconIds);
+  const availableIconIds = CONCRETE_EXERCISE_ICON_IDS.filter((iconId) => !reserved.has(iconId));
+
+  if (availableIconIds.length < count) {
+    throw new RangeError("Not enough unique exercise icons are available.");
+  }
+
+  const selectedIconIds: string[] = [];
+
+  while (selectedIconIds.length < count) {
+    const index = getRandomIndex(availableIconIds.length);
+    const [iconId] = availableIconIds.splice(index, 1);
+
+    if (iconId) {
+      selectedIconIds.push(iconId);
+    }
+  }
+
+  return selectedIconIds;
+};
 
 export const getIconAssets = (): IconAsset[] =>
   SVG_ICON_DEFINITIONS.map((definition) => ({

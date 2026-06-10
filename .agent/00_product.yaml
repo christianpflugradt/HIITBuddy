@@ -68,7 +68,8 @@ mvp_features:
     - Delete people completely from the configuration.
     - Select predefined HYROX station exercises.
     - Add custom exercises by name.
-    - Assign an SVG icon to each custom exercise, or keep Auto for random icon resolution at workout start.
+    - Assign an SVG icon to each custom exercise, or keep Auto for unique random icon resolution at workout start.
+    - Auto-resolved icons must not duplicate any other selected workout exercise icon.
     - Configure the one-time Get Ready countdown duration, defaulting to 30 seconds.
     - Configure work interval duration, defaulting to 40 seconds.
     - Configure interval rest duration, defaulting to 20 seconds.

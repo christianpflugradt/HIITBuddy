@@ -69,7 +69,8 @@ ist_zustand:
     - Session module for work, interval rest, round break, summary, skip, abandoned round, and finish transitions.
     - Workout-core tests for unique assignments, full round coverage, skips, extensions, and phase advancement.
     - SVG icon registry with text-free inline icons for the eight HYROX stations plus a custom-exercise icon pool.
-    - Auto question-mark icon for new custom exercises, resolved to a concrete random bundled icon at workout start unless the user chooses a specific icon.
+    - Auto question-mark icon for new custom exercises, resolved to a unique concrete random bundled icon at workout start unless the user chooses a specific icon.
+    - Auto icon resolution excludes all other selected workout exercise icons and prevents duplicates among auto-resolved icons.
     - Icon rendering, lookup, availability, and search helpers.
     - Icon-registry tests covering default exercise icon coverage and SVG constraints.
     - Minimal HIITBuddy start screen with a text-free CSS circuit/timer drawing and New Workout as the only primary action for ordinary entry.

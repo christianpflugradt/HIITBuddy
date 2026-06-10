@@ -9,6 +9,7 @@ import {
   findIconAssets,
   getIconAsset,
   getIconAssets,
+  getUniqueRandomConcreteIconIds,
   hasIcon,
   renderExerciseIcon
 } from "../dist/icons/icon-registry.js";
@@ -58,6 +59,24 @@ test("every default exercise references an available icon", () => {
   for (const exercise of DEFAULT_EXERCISES) {
     assert.equal(hasIcon(exercise.iconId), true, `${exercise.name} icon is missing`);
   }
+});
+
+test("unique random concrete icon selection excludes reserved icons and duplicates", () => {
+  const reservedIconIds = CONCRETE_EXERCISE_ICON_IDS.slice(0, 3);
+  const selectedIconIds = getUniqueRandomConcreteIconIds(5, reservedIconIds);
+
+  assert.equal(selectedIconIds.length, 5);
+  assert.equal(new Set(selectedIconIds).size, selectedIconIds.length);
+
+  for (const iconId of selectedIconIds) {
+    assert.equal(reservedIconIds.includes(iconId), false);
+    assert.equal(CONCRETE_EXERCISE_ICON_IDS.includes(iconId), true);
+  }
+
+  assert.throws(
+    () => getUniqueRandomConcreteIconIds(CONCRETE_EXERCISE_ICON_IDS.length + 1),
+    /Not enough unique exercise icons/
+  );
 });
 
 test("rendered icons are inline SVGs without text or external image references", () => {
