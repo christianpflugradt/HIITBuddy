@@ -48,7 +48,7 @@ interface_and_design:
       viewport: Small phone
 
   layout_principles:
-    - The first screen is a minimal HIITBuddy start screen with only a New Workout action.
+    - The first screen is a minimal HIITBuddy start screen with only a New Workout action unless a shared config link opens setup directly.
     - Include exactly the elements necessary for the current workflow.
     - Use dense but readable operational layouts.
     - Avoid decorative panels that do not carry information.

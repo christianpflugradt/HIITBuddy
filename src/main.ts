@@ -1,5 +1,5 @@
 import { createDefaultConfig } from "./config/default-config.js";
-import { createShareUrl, readConfigFromUrl } from "./domain/share-link.js";
+import { CONFIG_QUERY_PARAMETER, createShareUrl, readConfigFromUrl } from "./domain/share-link.js";
 import { type Exercise, type Person, type TimerSettings, type WorkoutConfig, type WorkoutSession } from "./domain/types.js";
 import { START_VALIDATION_MESSAGES } from "./domain/validation.js";
 import {
@@ -47,6 +47,14 @@ if (!app) {
   throw new Error("HIITBuddy app root was not found.");
 }
 
+const hasConfigQueryParameter = (() => {
+  try {
+    return new URL(window.location.href).searchParams.has(CONFIG_QUERY_PARAMETER);
+  } catch {
+    return false;
+  }
+})();
+
 let config: WorkoutConfig = (() => {
   try {
     return readConfigFromUrl(window.location.href);
@@ -61,7 +69,7 @@ let selectedDialogIconId = AUTO_ICON_ID;
 let iconSearchQuery = "";
 let pendingExerciseName = "";
 let session: WorkoutSession | null = null;
-let appMode: AppMode = "start";
+let appMode: AppMode = hasConfigQueryParameter ? "setup" : "start";
 let animationFrameId: number | null = null;
 let lastRenderedSecond: number | null = null;
 let lastRoundBreakPreviewVisible: boolean | null = null;
