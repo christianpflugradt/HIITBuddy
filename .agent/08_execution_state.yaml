@@ -40,7 +40,7 @@ ist_zustand:
     uses a sequential People, Exercises, Timer flow so only one configuration
     area is visible at a time. The Timer setup step uses large touch-first
     stepper cards instead of a narrow office-like form. The workout starts with
-    a fixed 30 second assignment-preview countdown before the first work interval.
+    a configurable Get Ready assignment-preview countdown before the first work interval.
   implemented:
     - Structured product specification in .agent/*.yaml.
     - Core product decisions resolved for participant/exercise count, skipped rounds, finish availability, and HYROX default stations.
@@ -59,7 +59,7 @@ ist_zustand:
     - Makefile with build, up, and down entry points; build rebuilds and starts the Docker Compose service.
     - .dockerignore for node_modules, dist, and local metadata.
     - Domain TypeScript types for people, exercises, timer settings, workout config, sessions, and assignments.
-    - Default HYROX station catalog with all exercises initially deselected, 40/20/90 timer defaults, and no running station.
+    - Default HYROX station catalog with all exercises initially deselected, 30/40/20/90 timer defaults, and no running station.
     - Config and start-workout validation helpers.
     - Base64url share-link encode/decode helpers using the config query parameter.
     - Domain tests for defaults, validation, and share-link round trips.
@@ -75,12 +75,12 @@ ist_zustand:
     - People setup with active/pool handling.
     - Exercise setup with built-in selection and custom exercises.
     - Timer setup with copy link and start validation.
-    - Timer setup uses three large touch-first stepper cards with direct numeric editing.
+    - Timer setup uses four large touch-first stepper cards with direct numeric editing.
     - Add Person, Add Exercise, and Icon Picker dialogs.
     - Add Exercise dialog uses a square icon button next to the free-text name field, with icon labels shown only in the Icon Picker.
     - Setup-state tests for people, exercises, timers, and start validation.
     - Live workout UI with phase header, assignment cards, large countdown, timer band, and phase-specific controls.
-    - Fixed 30 second Get Ready countdown before the first work interval with visible upcoming assignments.
+    - Configurable one-time Get Ready countdown before the first work interval with visible upcoming assignments.
     - Work controls for Skip Exercise and Round Break.
     - Rest controls for +5, +10, and +20 seconds.
     - Round Break controls for +30, +60, and Finish.
@@ -122,11 +122,11 @@ soll_zustand:
     - Configure active people and pooled inactive people.
     - Select built-in HYROX station exercises.
     - Add custom exercises with bundled SVG icons or Auto icon resolution.
-    - Configure work, rest, and round-break durations with 40/20/90 defaults.
+    - Configure Get Ready, work, rest, and round-break durations with 30/40/20/90 defaults.
     - Navigate setup forward and backward one step at a time without losing values.
     - Copy and load setup state through a base64url config query parameter.
     - Start an endless circuit workout.
-    - Show a fixed 30 second first-round preparation countdown before work begins.
+    - Show a configurable one-time first-round preparation countdown before work begins.
     - Assign every active person to a unique exercise during each work interval.
     - Block workout start when active people exceed selected exercises.
     - Rotate assignments so every active person completes every selected exercise once per round.

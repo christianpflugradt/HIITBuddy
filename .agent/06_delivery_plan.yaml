@@ -108,7 +108,7 @@ acceptance_criteria:
     - User can delete people fully.
     - HYROX station exercises are available by default.
     - User can add a custom exercise with an icon.
-    - User can configure 40/20/90 defaults.
+    - User can configure 30/40/20/90 defaults for Get Ready, work, rest, and round break.
     - User can copy and reuse setup through a URL.
     - User can start an endless workout.
     - During work, each active person has one assignment.

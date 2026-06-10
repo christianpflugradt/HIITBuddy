@@ -304,6 +304,7 @@ const renderExercise = (exercise: Exercise) => {
 };
 
 const timerControlMeta: Record<keyof TimerSettings, { label: string; min: number; step: number }> = {
+  getReadySeconds: { label: "Get Ready", min: 0, step: 5 },
   workSeconds: { label: "Work", min: 5, step: 5 },
   intervalRestSeconds: { label: "Rest", min: 0, step: 5 },
   roundBreakSeconds: { label: "Round Break", min: 0, step: 30 }
@@ -604,6 +605,7 @@ const renderExercisesPanel = () => `
 const renderTimerPanel = () => `
   <aside class="panel timer-panel setup-panel" aria-label="Timer">
     <div class="timer-grid">
+      ${renderTimerField("getReadySeconds")}
       ${renderTimerField("workSeconds")}
       ${renderTimerField("intervalRestSeconds")}
       ${renderTimerField("roundBreakSeconds")}

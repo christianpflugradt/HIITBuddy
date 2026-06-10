@@ -80,6 +80,10 @@ timer:
     interval only as a render trigger.
 
   phase_durations:
+    round_start:
+      source: timer.getReadySeconds
+      default_seconds: 30
+      usage: One-time startup countdown before the first work interval only.
     work:
       source: timer.workSeconds
       default_seconds: 40
@@ -93,6 +97,7 @@ timer:
     round_break:
       source: timer.roundBreakSeconds
       default_seconds: 90
+      preview_threshold_seconds: 30
       extension_buttons_seconds:
         - 30
         - 60

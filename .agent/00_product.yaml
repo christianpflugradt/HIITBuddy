@@ -68,6 +68,7 @@ mvp_features:
     - Select predefined HYROX station exercises.
     - Add custom exercises by name.
     - Assign an SVG icon to each custom exercise, or keep Auto for random icon resolution at workout start.
+    - Configure the one-time Get Ready countdown duration, defaulting to 30 seconds.
     - Configure work interval duration, defaulting to 40 seconds.
     - Configure interval rest duration, defaulting to 20 seconds.
     - Configure round break duration, defaulting to 90 seconds.
@@ -75,7 +76,7 @@ mvp_features:
     - Start the workout when the configuration is valid.
   workout:
     - Show the current round number.
-    - Show the current phase: work, interval rest, or round break.
+    - Show the current phase: get ready, work, interval rest, or round break.
     - Show a large countdown.
     - Show one assignment tile per active person during work intervals.
     - Include exercise icon, exercise name, and person name in each assignment.

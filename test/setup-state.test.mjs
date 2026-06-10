@@ -65,8 +65,10 @@ test("setup state protects built-in exercises from removal", () => {
 test("timer updates and start validation reflect setup state", () => {
   let config = createDefaultConfig();
 
+  config = updateTimerSetting(config, "getReadySeconds", "35");
   config = updateTimerSetting(config, "workSeconds", "45");
   config = updateTimerSetting(config, "intervalRestSeconds", 10);
+  assert.equal(config.timer.getReadySeconds, 35);
   assert.equal(config.timer.workSeconds, 45);
   assert.equal(config.timer.intervalRestSeconds, 10);
 

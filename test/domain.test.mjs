@@ -22,6 +22,7 @@ test("default config contains the eight HYROX stations and no running station", 
 
   assert.equal(DEFAULT_EXERCISES.length, 8);
   assert.deepEqual(DEFAULT_TIMER_SETTINGS, {
+    getReadySeconds: 30,
     workSeconds: 40,
     intervalRestSeconds: 20,
     roundBreakSeconds: 90
@@ -129,6 +130,7 @@ test("share link codec round-trips config data and falls back on invalid payload
   ];
   config.selectedExerciseIds = ["sled_push", "rowing"];
   config.timer = {
+    getReadySeconds: 25,
     workSeconds: 45,
     intervalRestSeconds: 15,
     roundBreakSeconds: 120
@@ -145,6 +147,18 @@ test("share link codec round-trips config data and falls back on invalid payload
   assert.equal(encoded.includes("/"), false);
   assert.equal(encoded.includes("="), false);
   assert.deepEqual(decodeConfigOrDefault("not valid base64").selectedExerciseIds, DEFAULT_SELECTED_EXERCISE_IDS);
+});
+
+test("share link codec restores legacy timer payloads without get ready seconds", () => {
+  const legacyConfig = createDefaultConfig();
+  delete legacyConfig.timer.getReadySeconds;
+
+  const encoded = Buffer.from(JSON.stringify(legacyConfig), "utf8").toString("base64url");
+  const decoded = decodeConfig(encoded);
+
+  assert.ok(decoded);
+  assert.equal(decoded.timer.getReadySeconds, 30);
+  assert.equal(decoded.timer.workSeconds, 40);
 });
 
 test("share URL helpers write and read the config query parameter", () => {

@@ -108,6 +108,13 @@ entities:
   timer_settings:
     description: User-configurable durations in whole seconds.
     fields:
+      getReadySeconds:
+        type: number
+        required: true
+        default: 30
+        min: 0
+        max: 3600
+        usage: One-time startup countdown before the first work interval only.
       workSeconds:
         type: number
         required: true
@@ -221,7 +228,7 @@ validation:
       - At least one selected exercise.
       - Active people count must be less than or equal to selected exercise count.
       - Work duration must be a positive whole number.
-      - Rest and round break durations must be zero or positive whole numbers.
+      - Get Ready, rest, and round break durations must be zero or positive whole numbers.
     messages:
       no_active_people: Add or activate at least one person.
       no_exercises: Select or add at least one exercise.
@@ -282,6 +289,7 @@ default_config:
     - sandbag_lunges
     - wall_balls
   timer:
+    getReadySeconds: 30
     workSeconds: 40
     intervalRestSeconds: 20
     roundBreakSeconds: 90

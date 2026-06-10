@@ -1,4 +1,5 @@
 export const SCHEMA_VERSION = 1;
+export const DEFAULT_GET_READY_SECONDS = 30;
 
 export type Person = {
   id: string;
@@ -15,6 +16,7 @@ export type Exercise = {
 };
 
 export type TimerSettings = {
+  getReadySeconds: number;
   workSeconds: number;
   intervalRestSeconds: number;
   roundBreakSeconds: number;

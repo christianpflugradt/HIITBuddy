@@ -53,6 +53,7 @@ const toSharePayload = (config: WorkoutConfig): WorkoutConfig => {
       selected: exercise.selected
     })),
     timer: {
+      getReadySeconds: config.timer.getReadySeconds,
       workSeconds: config.timer.workSeconds,
       intervalRestSeconds: config.timer.intervalRestSeconds,
       roundBreakSeconds: config.timer.roundBreakSeconds

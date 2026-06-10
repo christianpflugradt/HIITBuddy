@@ -1,5 +1,6 @@
 import {
   SCHEMA_VERSION,
+  DEFAULT_GET_READY_SECONDS,
   type Exercise,
   type Person,
   type TimerSettings,
@@ -8,6 +9,10 @@ import {
 } from "./types.js";
 
 export const TIMER_LIMITS = {
+  getReadySeconds: {
+    min: 0,
+    max: 3600
+  },
   workSeconds: {
     min: 5,
     max: 3600
@@ -90,11 +95,13 @@ const validateTimerSettings = (value: unknown, issues: ValidationIssue[], path =
     return null;
   }
 
+  const getReadySeconds = value["getReadySeconds"] ?? DEFAULT_GET_READY_SECONDS;
   const workSeconds = value["workSeconds"];
   const intervalRestSeconds = value["intervalRestSeconds"];
   const roundBreakSeconds = value["roundBreakSeconds"];
 
   if (
+    !isWholeNumberInRange(getReadySeconds, TIMER_LIMITS.getReadySeconds.min, TIMER_LIMITS.getReadySeconds.max) ||
     !isWholeNumberInRange(workSeconds, TIMER_LIMITS.workSeconds.min, TIMER_LIMITS.workSeconds.max) ||
     !isWholeNumberInRange(
       intervalRestSeconds,
@@ -108,6 +115,7 @@ const validateTimerSettings = (value: unknown, issues: ValidationIssue[], path =
   }
 
   return {
+    getReadySeconds,
     workSeconds,
     intervalRestSeconds,
     roundBreakSeconds

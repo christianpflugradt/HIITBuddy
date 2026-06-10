@@ -4,8 +4,7 @@ import { isFinalIntervalOfRound } from "./scheduler.js";
 
 export type RoundBreakReason = "completed" | "abandoned";
 
-export const ROUND_START_SECONDS = 30;
-export const ROUND_BREAK_ASSIGNMENT_PREVIEW_SECONDS = ROUND_START_SECONDS;
+export const ROUND_BREAK_ASSIGNMENT_PREVIEW_SECONDS = 30;
 
 export const shouldShowRoundBreakAssignmentPreview = ({
   phase,
@@ -23,7 +22,7 @@ export const shouldShowRoundBreakAssignmentPreview = ({
 export const getPhaseDurationSeconds = (config: WorkoutConfig, phase: SessionPhase): number => {
   switch (phase) {
     case "round_start":
-      return ROUND_START_SECONDS;
+      return config.timer.getReadySeconds;
     case "work":
       return config.timer.workSeconds;
     case "interval_rest":

@@ -107,6 +107,9 @@ setup_screen:
         behavior: Delete custom exercise from the config after lightweight confirmation.
   timer_settings:
     fields:
+      - label: Get Ready
+        default_seconds: 30
+        applies_to: One-time startup countdown before the first work interval only.
       - label: Work
         default_seconds: 40
       - label: Rest
@@ -120,7 +123,9 @@ setup_screen:
 
 round_start_state:
   entry:
-    - Start a fixed 30 second countdown before the first work interval.
+    - Start a configurable Get Ready countdown before the first work interval.
+    - Use timer.getReadySeconds, defaulting to 30 seconds.
+    - This countdown happens only once at the start of the workout, not between rounds.
     - Compute assignments for round 1, interval 1.
   displayed_content:
     - Round number.

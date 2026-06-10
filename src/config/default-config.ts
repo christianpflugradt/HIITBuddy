@@ -1,6 +1,7 @@
-import { SCHEMA_VERSION, type Exercise, type TimerSettings, type WorkoutConfig } from "../domain/types.js";
+import { DEFAULT_GET_READY_SECONDS, SCHEMA_VERSION, type Exercise, type TimerSettings, type WorkoutConfig } from "../domain/types.js";
 
 export const DEFAULT_TIMER_SETTINGS: TimerSettings = {
+  getReadySeconds: DEFAULT_GET_READY_SECONDS,
   workSeconds: 40,
   intervalRestSeconds: 20,
   roundBreakSeconds: 90

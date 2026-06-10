@@ -14,7 +14,6 @@ import {
   createWorkoutSession,
   extendCurrentPhase,
   finishWorkout,
-  ROUND_START_SECONDS,
   shouldShowRoundBreakAssignmentPreview,
   skipCurrentExercise,
   skipToRoundBreak
@@ -101,15 +100,15 @@ test("timer snapshot uses monotonic elapsed time and repeatable extensions", () 
 
 test("session advances through start, work, rest, completed round break, and next round", () => {
   const config = createConfigWithPeople();
+  config.timer.getReadySeconds = 12;
   const initial = createWorkoutSession(config, 0);
 
-  assert.equal(ROUND_START_SECONDS, 30);
   assert.equal(initial.phase, "round_start");
-  assert.equal(initial.phaseDurationSeconds, 30);
+  assert.equal(initial.phaseDurationSeconds, 12);
   assert.equal(initial.roundIndex, 0);
   assert.equal(initial.intervalIndex, 0);
 
-  const firstWork = advanceAfterCountdown(initial, 30_000);
+  const firstWork = advanceAfterCountdown(initial, 12_000);
   assert.equal(firstWork.phase, "work");
   assert.equal(firstWork.phaseDurationSeconds, 40);
 
