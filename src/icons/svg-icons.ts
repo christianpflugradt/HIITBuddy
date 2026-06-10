@@ -434,5 +434,384 @@ export const SVG_ICON_DEFINITIONS: SvgIconDefinition[] = [
       <path d="M27 25 22 16" />
       <path d="M37 25 42 16" />
     `
+  },
+  {
+    id: "burpees",
+    label: "Burpees",
+    tags: ["bodyweight", "floor", "jump", "conditioning"],
+    body: `
+      <path d="M8 52h48" />
+      <circle cx="18" cy="35" r="4" />
+      <path d="M22 37 36 42 50 39" />
+      <path d="M29 39 23 51" />
+      <path d="M44 40 52 50" />
+      <path d="M16 39 11 47" />
+      <path d="M33 17c4-4 10-4 14 0" />
+      <path d="M47 17h-7" />
+      <path d="M47 17v7" />
+    `
+  },
+  {
+    id: "jumping_jacks",
+    label: "Jumping Jacks",
+    tags: ["bodyweight", "cardio", "jump"],
+    body: `
+      <circle cx="32" cy="14" r="4" />
+      <path d="M32 18v20" />
+      <path d="M25 25 12 16" />
+      <path d="M39 25 52 16" />
+      <path d="M29 38 20 53" />
+      <path d="M35 38 44 53" />
+      <path d="M16 24c3 3 7 5 11 6" />
+      <path d="M48 24c-3 3-7 5-11 6" />
+    `
+  },
+  {
+    id: "high_knees",
+    label: "High Knees",
+    tags: ["bodyweight", "cardio", "legs"],
+    body: `
+      <circle cx="30" cy="13" r="4" />
+      <path d="M30 17 27 32 37 39" />
+      <path d="M27 31 18 44" />
+      <path d="M37 39 48 39" />
+      <path d="M48 39 55 48" />
+      <path d="M31 25 42 28" />
+      <path d="M27 25 17 30" />
+      <path d="M13 50h15" />
+      <path d="M43 50h13" />
+    `
+  },
+  {
+    id: "lateral_shuffle",
+    label: "Lateral Shuffle",
+    tags: ["bodyweight", "agility", "cardio", "legs"],
+    body: `
+      <path d="M10 52h44" />
+      <path d="M14 43h18" />
+      <path d="M50 43H32" />
+      <path d="M18 39 14 43l4 4" />
+      <path d="M46 39 50 43l-4 4" />
+      <circle cx="31" cy="16" r="4" />
+      <path d="M31 20 28 34 39 39" />
+      <path d="M28 34 17 49" />
+      <path d="M39 39 50 50" />
+      <path d="M28 27 18 25" />
+      <path d="M36 27 46 24" />
+    `
+  },
+  {
+    id: "wall_sit",
+    label: "Wall Sit",
+    tags: ["bodyweight", "legs", "hold", "wall"],
+    body: `
+      <path d="M50 8v48" />
+      <path d="M10 52h44" />
+      <circle cx="34" cy="18" r="4" />
+      <path d="M36 22 42 35" />
+      <path d="M42 35H27" />
+      <path d="M27 35 17 47" />
+      <path d="M42 35 49 47" />
+      <path d="M24 47h17" />
+      <path d="M37 25 49 23" />
+      <path d="M33 26 24 26" />
+    `
+  },
+  {
+    id: "calf_raises",
+    label: "Calf Raises",
+    tags: ["bodyweight", "legs", "calves"],
+    body: `
+      <circle cx="32" cy="13" r="4" />
+      <path d="M32 17v22" />
+      <path d="M24 25h16" />
+      <path d="M27 39 23 53" />
+      <path d="M37 39 41 53" />
+      <path d="M18 53h14" />
+      <path d="M36 53h14" />
+      <path d="M20 47c3-3 8-3 12 0" />
+      <path d="M34 47c4-3 9-3 13 0" />
+    `
+  },
+  {
+    id: "glute_bridge",
+    label: "Glute Bridge",
+    tags: ["bodyweight", "floor", "hips", "legs"],
+    body: `
+      <path d="M8 52h48" />
+      <circle cx="17" cy="39" r="4" />
+      <path d="M21 39 32 31 45 39" />
+      <path d="M45 39 55 39" />
+      <path d="M30 31 23 50" />
+      <path d="M44 39 45 50" />
+      <path d="M15 43 11 50" />
+      <path d="M28 32c4-5 12-5 16 0" />
+    `
+  },
+  {
+    id: "hip_thrust",
+    label: "Hip Thrust",
+    tags: ["bench", "hips", "legs", "strength"],
+    body: `
+      <rect x="8" y="37" width="18" height="9" rx="2" />
+      <path d="M8 52h48" />
+      <circle cx="22" cy="27" r="4" />
+      <path d="M25 30 38 34 52 42" />
+      <path d="M38 34 31 51" />
+      <path d="M52 42 54 51" />
+      <path d="M24 33 16 42" />
+      <path d="M36 30h14" />
+      <path d="M39 27v6" />
+      <path d="M47 27v6" />
+    `
+  },
+  {
+    id: "russian_twists",
+    label: "Russian Twists",
+    tags: ["core", "rotation", "floor", "ball"],
+    body: `
+      <path d="M8 52h48" />
+      <circle cx="29" cy="23" r="4" />
+      <path d="M31 27 38 40" />
+      <path d="M38 40 50 45" />
+      <path d="M30 34 20 47" />
+      <path d="M36 42 26 51" />
+      <circle cx="49" cy="38" r="5" />
+      <path d="M18 29c-5 5-6 12-2 18" />
+      <path d="M43 23c5 4 7 10 5 16" />
+    `
+  },
+  {
+    id: "v_ups",
+    label: "V-Ups",
+    tags: ["core", "bodyweight", "floor", "abs"],
+    body: `
+      <path d="M8 52h48" />
+      <circle cx="24" cy="30" r="4" />
+      <path d="M27 32 37 42" />
+      <path d="M37 42 51 28" />
+      <path d="M35 41 20 50" />
+      <path d="M21 34 13 45" />
+      <path d="M46 29 54 18" />
+      <path d="M22 27 14 22" />
+      <path d="M30 28 40 20" />
+    `
+  },
+  {
+    id: "hollow_hold",
+    label: "Hollow Hold",
+    tags: ["core", "bodyweight", "floor", "hold"],
+    body: `
+      <path d="M8 52h48" />
+      <circle cx="24" cy="36" r="4" />
+      <path d="M28 36c7-5 17-5 24 0" />
+      <path d="M23 40 16 48" />
+      <path d="M29 35 41 20" />
+      <path d="M44 20h10" />
+      <path d="M37 38 50 49" />
+      <path d="M18 30c-3-5-2-10 2-14" />
+    `
+  },
+  {
+    id: "back_extensions",
+    label: "Back Extensions",
+    tags: ["posterior", "core", "back", "floor"],
+    body: `
+      <path d="M8 52h48" />
+      <circle cx="19" cy="35" r="4" />
+      <path d="M23 36 39 32 53 37" />
+      <path d="M29 35 22 50" />
+      <path d="M43 34 51 50" />
+      <path d="M17 39 12 49" />
+      <path d="M31 28c5-8 13-10 21-5" />
+      <path d="M51 23h-8" />
+    `
+  },
+  {
+    id: "bench_dips",
+    label: "Bench Dips",
+    tags: ["bench", "triceps", "push", "bodyweight"],
+    body: `
+      <rect x="9" y="33" width="26" height="8" rx="2" />
+      <path d="M9 52h46" />
+      <circle cx="41" cy="20" r="4" />
+      <path d="M40 24 36 36 44 43" />
+      <path d="M36 36 28 36" />
+      <path d="M44 43 56 47" />
+      <path d="M39 31 31 39" />
+      <path d="M44 31 37 39" />
+      <path d="M28 41v11" />
+      <path d="M52 47v5" />
+    `
+  },
+  {
+    id: "handstand_push_ups",
+    label: "Handstand Push Ups",
+    tags: ["bodyweight", "push", "shoulders", "wall"],
+    body: `
+      <path d="M50 8v48" />
+      <path d="M10 52h46" />
+      <circle cx="31" cy="43" r="4" />
+      <path d="M31 39 30 24" />
+      <path d="M24 39 30 30" />
+      <path d="M38 39 30 30" />
+      <path d="M28 24 22 12" />
+      <path d="M32 24 39 12" />
+      <path d="M22 12h8" />
+      <path d="M39 12h9" />
+    `
+  },
+  {
+    id: "ring_rows",
+    label: "Ring Rows",
+    tags: ["rings", "pull", "bodyweight", "back"],
+    body: `
+      <path d="M18 8v19" />
+      <path d="M46 8v19" />
+      <circle cx="18" cy="32" r="5" />
+      <circle cx="46" cy="32" r="5" />
+      <circle cx="30" cy="36" r="4" />
+      <path d="M34 38 48 43" />
+      <path d="M26 38 14 43" />
+      <path d="M29 40 20 52" />
+      <path d="M34 41 45 52" />
+      <path d="M13 52h39" />
+    `
+  },
+  {
+    id: "rope_climb",
+    label: "Rope Climb",
+    tags: ["rope", "pull", "climb", "upper"],
+    body: `
+      <path d="M43 8v48" />
+      <circle cx="30" cy="17" r="4" />
+      <path d="M31 21 36 35 28 44" />
+      <path d="M35 27 43 21" />
+      <path d="M37 35 43 31" />
+      <path d="M29 27 20 35" />
+      <path d="M28 44 19 53" />
+      <path d="M28 44 38 53" />
+      <path d="M43 16c-4 3-4 7 0 10" />
+      <path d="M43 36c-4 3-4 7 0 10" />
+    `
+  },
+  {
+    id: "tire_flips",
+    label: "Tire Flips",
+    tags: ["power", "flip", "legs", "strength"],
+    body: `
+      <circle cx="44" cy="42" r="13" />
+      <circle cx="44" cy="42" r="6" />
+      <path d="M8 54h48" />
+      <circle cx="22" cy="19" r="4" />
+      <path d="M22 23 18 36 29 42" />
+      <path d="M29 42 38 32" />
+      <path d="M18 36 12 51" />
+      <path d="M28 42 32 54" />
+      <path d="M28 27 38 24" />
+    `
+  },
+  {
+    id: "goblet_squats",
+    label: "Goblet Squats",
+    tags: ["kettlebell", "squat", "legs", "strength"],
+    body: `
+      <circle cx="32" cy="13" r="4" />
+      <path d="M32 17 29 32 39 39" />
+      <path d="M29 32 19 44" />
+      <path d="M39 39 50 48" />
+      <path d="M19 44h14" />
+      <path d="M50 48h7" />
+      <path d="M24 25h16" />
+      <path d="M27 27c0-4 3-7 7-7s7 3 7 7" />
+      <rect x="27" y="25" width="14" height="15" rx="7" />
+    `
+  },
+  {
+    id: "front_squats",
+    label: "Front Squats",
+    tags: ["barbell", "squat", "legs", "strength"],
+    body: `
+      <path d="M15 24h34" />
+      <circle cx="32" cy="14" r="4" />
+      <path d="M32 18 29 33 39 39" />
+      <path d="M29 33 19 45" />
+      <path d="M39 39 50 49" />
+      <path d="M19 45h14" />
+      <path d="M50 49h7" />
+      <path d="M24 24 29 31" />
+      <path d="M40 24 35 31" />
+      <path d="M11 20v8" />
+      <path d="M53 20v8" />
+    `
+  },
+  {
+    id: "overhead_squats",
+    label: "Overhead Squats",
+    tags: ["barbell", "squat", "overhead", "strength"],
+    body: `
+      <path d="M12 12h40" />
+      <path d="M8 8v8" />
+      <path d="M56 8v8" />
+      <circle cx="32" cy="22" r="4" />
+      <path d="M32 26 29 38 39 43" />
+      <path d="M29 38 19 49" />
+      <path d="M39 43 50 52" />
+      <path d="M19 49h14" />
+      <path d="M50 52h7" />
+      <path d="M25 15 31 26" />
+      <path d="M39 15 33 26" />
+    `
+  },
+  {
+    id: "clean_and_press",
+    label: "Clean and Press",
+    tags: ["barbell", "press", "power", "strength"],
+    body: `
+      <path d="M14 14h36" />
+      <path d="M10 10v8" />
+      <path d="M54 10v8" />
+      <circle cx="32" cy="25" r="4" />
+      <path d="M32 29 30 42 38 49" />
+      <path d="M30 42 22 54" />
+      <path d="M38 49 47 54" />
+      <path d="M25 17 30 30" />
+      <path d="M39 17 34 30" />
+      <path d="M20 44h24" />
+    `
+  },
+  {
+    id: "snatch",
+    label: "Snatch",
+    tags: ["barbell", "power", "overhead", "strength"],
+    body: `
+      <path d="M12 10h40" />
+      <path d="M8 6v8" />
+      <path d="M56 6v8" />
+      <circle cx="30" cy="22" r="4" />
+      <path d="M30 26 28 39 38 46" />
+      <path d="M28 39 18 52" />
+      <path d="M38 46 49 53" />
+      <path d="M25 14 29 26" />
+      <path d="M39 14 33 26" />
+      <path d="M19 52h15" />
+    `
+  },
+  {
+    id: "lateral_raises",
+    label: "Lateral Raises",
+    tags: ["dumbbell", "shoulders", "strength", "arms"],
+    body: `
+      <circle cx="32" cy="16" r="4" />
+      <path d="M32 20v21" />
+      <path d="M24 28 12 25" />
+      <path d="M40 28 52 25" />
+      <path d="M27 41 22 54" />
+      <path d="M37 41 42 54" />
+      <path d="M8 22v6" />
+      <path d="M14 22v6" />
+      <path d="M50 22v6" />
+      <path d="M56 22v6" />
+    `
   }
 ];

@@ -42,10 +42,34 @@ test("icon registry contains HYROX defaults plus custom exercise examples", () =
     "medicine_ball_slams",
     "step_ups",
     "bike",
-    "thrusters"
+    "thrusters",
+    "burpees",
+    "jumping_jacks",
+    "high_knees",
+    "lateral_shuffle",
+    "wall_sit",
+    "calf_raises",
+    "glute_bridge",
+    "hip_thrust",
+    "russian_twists",
+    "v_ups",
+    "hollow_hold",
+    "back_extensions",
+    "bench_dips",
+    "handstand_push_ups",
+    "ring_rows",
+    "rope_climb",
+    "tire_flips",
+    "goblet_squats",
+    "front_squats",
+    "overhead_squats",
+    "clean_and_press",
+    "snatch",
+    "lateral_raises"
   ];
 
   assert.deepEqual(EXERCISE_ICON_IDS, expectedIds);
+  assert.equal(EXERCISE_ICON_IDS.length, 50);
   assert.equal(getIconAssets().length, expectedIds.length);
   assert.equal(AUTO_ICON_ID, "auto");
   assert.equal(CONCRETE_EXERCISE_ICON_IDS.includes(AUTO_ICON_ID), false);
@@ -113,7 +137,7 @@ test("icon search matches labels, ids, and tags", () => {
   );
   assert.deepEqual(
     findIconAssets("kettlebell").map((icon) => icon.id),
-    ["kettlebell_row", "kettlebell_swings"]
+    ["kettlebell_row", "kettlebell_swings", "goblet_squats"]
   );
   assert.deepEqual(
     findIconAssets("auto").map((icon) => icon.id),

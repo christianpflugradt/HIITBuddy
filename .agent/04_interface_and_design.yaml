@@ -333,7 +333,8 @@ interface_and_design:
         label: Thrusters
         visual: Figure combining squat and press.
     future_icon_library:
-      target_size: 50 to 100 icons
+      current_size: 50 icons including Auto
+      future_target_size: 50 to 100 icons
       organization:
         - strength
         - cardio

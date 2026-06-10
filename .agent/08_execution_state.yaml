@@ -68,7 +68,7 @@ ist_zustand:
     - Timer module for monotonic countdown snapshots and repeatable extensions.
     - Session module for work, interval rest, round break, summary, skip, abandoned round, and finish transitions.
     - Workout-core tests for unique assignments, full round coverage, skips, extensions, and phase advancement.
-    - SVG icon registry with text-free inline icons for the eight HYROX stations plus a custom-exercise icon pool.
+    - SVG icon registry with 50 text-free inline icons including Auto, covering the eight HYROX stations plus a custom-exercise icon pool.
     - Auto question-mark icon for new custom exercises, resolved to a unique concrete random bundled icon at workout start unless the user chooses a specific icon.
     - Auto icon resolution excludes all other selected workout exercise icons and prevents duplicates among auto-resolved icons.
     - Icon rendering, lookup, availability, and search helpers.
