@@ -69,7 +69,7 @@ interface_and_design:
         - Main stage shows exactly one setup panel at a time.
         - Step 1 is People and shows alphabetically sorted Active and Pool sections.
         - Step 2 is Exercises and shows built-in selections plus custom additions in a compact multi-column matrix.
-        - Step 3 is Timer and shows the three duration controls.
+        - Step 3 is Timer and shows the three duration controls as large touch-first cards.
         - Bottom navigation offers Back and Next until the final step.
         - Final step offers Back, Copy, and Start.
       exercise_matrix:
@@ -149,11 +149,16 @@ interface_and_design:
           - move to pool
         requirement: Use a familiar symbol or lucide icon equivalent if an icon library is introduced.
     numeric_inputs:
-      preferred: Stepper style controls with direct numeric editing.
+      preferred: Large tablet stepper controls with direct numeric editing.
       fields:
         - Work
         - Rest
         - Round Break
+      timer_screen:
+        - Use the available tablet-landscape width instead of a narrow centered form.
+        - Present Work, Rest, and Round Break as three large touch targets.
+        - Each timer value has direct minus and plus controls plus an editable numeric value.
+        - Avoid office-like form chrome on the timer step.
     segmented_or_toggle_controls:
       usage:
         - selected versus unselected exercises

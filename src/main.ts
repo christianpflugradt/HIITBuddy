@@ -303,12 +303,29 @@ const renderExercise = (exercise: Exercise) => {
   `;
 };
 
-const renderTimerField = (key: keyof TimerSettings, label: string) => `
-  <label class="timer-field">
-    <span>${label}</span>
-    <input type="number" inputmode="numeric" min="${key === "workSeconds" ? "5" : "0"}" max="3600" step="5" value="${config.timer[key]}" data-action="timer-change" data-timer-key="${key}">
-  </label>
-`;
+const timerControlMeta: Record<keyof TimerSettings, { label: string; min: number; step: number }> = {
+  workSeconds: { label: "Work", min: 5, step: 5 },
+  intervalRestSeconds: { label: "Rest", min: 0, step: 5 },
+  roundBreakSeconds: { label: "Round Break", min: 0, step: 30 }
+};
+
+const renderTimerField = (key: keyof TimerSettings) => {
+  const meta = timerControlMeta[key];
+
+  return `
+    <article class="timer-card">
+      <header class="timer-card-head">
+        <span class="timer-label">${meta.label}</span>
+        <span class="timer-unit">sec</span>
+      </header>
+      <div class="timer-control">
+        <button class="timer-step" type="button" aria-label="Decrease ${meta.label}" data-action="timer-step" data-timer-key="${key}" data-step="-${meta.step}">-</button>
+        <input class="timer-value" type="number" inputmode="numeric" aria-label="${meta.label} seconds" min="${meta.min}" max="3600" step="${meta.step}" value="${config.timer[key]}" data-action="timer-change" data-timer-key="${key}">
+        <button class="timer-step" type="button" aria-label="Increase ${meta.label}" data-action="timer-step" data-timer-key="${key}" data-step="${meta.step}">+</button>
+      </div>
+    </article>
+  `;
+};
 
 const renderIconOptions = () => {
   const icons = findIconAssets(iconSearchQuery);
@@ -585,14 +602,11 @@ const renderExercisesPanel = () => `
 `;
 
 const renderTimerPanel = () => `
-  <aside class="panel timer-panel setup-panel" aria-labelledby="timer-title">
-    <div class="panel-header compact">
-      <h2 id="timer-title">Timer</h2>
-    </div>
+  <aside class="panel timer-panel setup-panel" aria-label="Timer">
     <div class="timer-grid">
-      ${renderTimerField("workSeconds", "Work")}
-      ${renderTimerField("intervalRestSeconds", "Rest")}
-      ${renderTimerField("roundBreakSeconds", "Round")}
+      ${renderTimerField("workSeconds")}
+      ${renderTimerField("intervalRestSeconds")}
+      ${renderTimerField("roundBreakSeconds")}
     </div>
   </aside>
 `;
@@ -809,6 +823,17 @@ const handleAction = (target: HTMLElement) => {
       setupStepIndex = Math.min(setupSteps.length - 1, setupStepIndex + 1);
       setStatus("");
       break;
+    case "timer-step": {
+      const timerKey = target.dataset.timerKey as keyof TimerSettings;
+      const step = Number.parseInt(target.dataset.step ?? "0", 10);
+      const meta = timerControlMeta[timerKey];
+
+      if (meta && Number.isFinite(step)) {
+        config = updateTimerSetting(config, timerKey, Math.max(meta.min, config.timer[timerKey] + step));
+        setStatus("");
+      }
+      break;
+    }
     case "open-exercise-dialog":
       pendingExerciseName = "";
       selectedDialogIconId = AUTO_ICON_ID;

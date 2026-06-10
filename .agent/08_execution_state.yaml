@@ -38,8 +38,9 @@ ist_zustand:
     a broader custom-exercise icon pool with Auto placeholder support. The app currently supports setup, live workout,
     and summary screens served by a small Node static server. The setup UI now
     uses a sequential People, Exercises, Timer flow so only one configuration
-    area is visible at a time. The workout starts with a fixed 30 second
-    assignment-preview countdown before the first work interval.
+    area is visible at a time. The Timer setup step uses large touch-first
+    stepper cards instead of a narrow office-like form. The workout starts with
+    a fixed 30 second assignment-preview countdown before the first work interval.
   implemented:
     - Structured product specification in .agent/*.yaml.
     - Core product decisions resolved for participant/exercise count, skipped rounds, finish availability, and HYROX default stations.
@@ -74,6 +75,7 @@ ist_zustand:
     - People setup with active/pool handling.
     - Exercise setup with built-in selection and custom exercises.
     - Timer setup with copy link and start validation.
+    - Timer setup uses three large touch-first stepper cards with direct numeric editing.
     - Add Person, Add Exercise, and Icon Picker dialogs.
     - Add Exercise dialog uses a square icon button next to the free-text name field, with icon labels shown only in the Icon Picker.
     - Setup-state tests for people, exercises, timers, and start validation.
@@ -108,6 +110,7 @@ ist_zustand:
     - Runtime state is in memory only.
     - Share setup state only through a base64url URL parameter.
     - Setup should show one configuration area at a time: People, then Exercises, then Timer.
+    - Timer setup should use the available tablet-landscape area with large touch controls rather than a narrow office-like form.
     - After each file-changing user prompt, verify and create a Git commit.
     - Commit messages must use Conventional Commits without scopes.
 
