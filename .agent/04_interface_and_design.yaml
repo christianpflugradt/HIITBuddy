@@ -135,9 +135,10 @@ interface_and_design:
         - Buttons change by phase without causing layout jumps.
   summary_screen_layout:
     structure:
-      - Clear completion headline.
+      - Clear English completion headline.
+      - Subtle CSS-only completion animation.
       - Compact session facts.
-      - New Workout and Copy Link actions.
+      - New Workout as the only action.
       - New Workout returns to the first setup step.
 
   controls:

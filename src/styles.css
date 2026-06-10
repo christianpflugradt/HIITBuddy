@@ -1025,35 +1025,100 @@ input:focus-visible,
 }
 
 .summary-shell {
+  position: relative;
   display: grid;
-  gap: 1rem;
+  gap: 0.9rem;
   place-content: center;
+  justify-items: center;
   min-height: 100vh;
   padding: 1rem;
+  overflow: hidden;
   text-align: center;
+}
+
+.summary-celebration {
+  position: relative;
+  display: grid;
+  width: 5.4rem;
+  height: 5.4rem;
+  place-items: center;
+}
+
+.summary-celebration::before,
+.summary-celebration::after {
+  position: absolute;
+  content: "";
+}
+
+.summary-celebration::before {
+  inset: 0.55rem;
+  border: 2px solid rgb(21 23 26 / 14%);
+  border-radius: 999px;
+  animation: summary-ring 780ms cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+
+.summary-celebration::after {
+  inset: -0.15rem;
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      from -12deg,
+      transparent 0deg 16deg,
+      rgb(163 230 53 / 72%) 16deg 24deg,
+      transparent 24deg 72deg,
+      rgb(20 184 166 / 62%) 72deg 80deg,
+      transparent 80deg 148deg,
+      rgb(245 185 66 / 72%) 148deg 156deg,
+      transparent 156deg 224deg,
+      rgb(37 99 235 / 52%) 224deg 232deg,
+      transparent 232deg 360deg
+    );
+  -webkit-mask: radial-gradient(circle, transparent 0 58%, #000 59% 64%, transparent 65%);
+  mask: radial-gradient(circle, transparent 0 58%, #000 59% 64%, transparent 65%);
+  animation: summary-spark 900ms ease-out both;
+}
+
+.summary-check {
+  position: relative;
+  z-index: 1;
+  width: 2rem;
+  height: 3rem;
+  border-right: 0.38rem solid var(--color-ink);
+  border-bottom: 0.38rem solid var(--color-ink);
+  transform: rotate(45deg) scale(0.88);
+  transform-origin: 60% 65%;
+  animation: summary-check 520ms cubic-bezier(0.2, 1.25, 0.35, 1) 160ms both;
 }
 
 .summary-shell h1 {
   margin-bottom: 0;
+  font-size: clamp(3.2rem, 8vw, 6.6rem);
+  line-height: 0.9;
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(8rem, 1fr));
-  gap: 0.8rem;
-  width: min(100vw - 2rem, 56rem);
+  grid-template-columns: repeat(5, minmax(6.8rem, 1fr));
+  gap: 0;
+  width: min(100vw - 2rem, 62rem);
   margin: 0;
+  padding: 0.35rem 0;
+  border-top: 1px solid rgb(21 23 26 / 12%);
+  border-bottom: 1px solid rgb(21 23 26 / 12%);
 }
 
 .summary-grid div {
-  border-radius: 8px;
-  padding: 1rem;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-panel);
+  min-width: 0;
+  padding: 0.9rem 0.75rem;
+  background: transparent;
+}
+
+.summary-grid div + div {
+  border-left: 1px solid rgb(21 23 26 / 9%);
 }
 
 .summary-grid .wide {
-  grid-column: span 4;
+  grid-column: auto;
 }
 
 .summary-grid dt {
@@ -1064,24 +1129,66 @@ input:focus-visible,
 
 .summary-grid dd {
   margin: 0;
-  font-size: 3rem;
+  font-size: clamp(2.25rem, 4.8vw, 3.6rem);
   font-weight: 950;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .summary-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.7rem;
-  width: min(100vw - 2rem, 32rem);
+  grid-template-columns: 1fr;
+  width: min(100vw - 2rem, 18rem);
   justify-self: center;
 }
 
-.summary-shell .status {
-  width: min(100vw - 2rem, 32rem);
-  justify-self: center;
-  text-align: left;
+@keyframes summary-ring {
+  from {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes summary-spark {
+  from {
+    opacity: 0;
+    transform: rotate(-24deg) scale(0.55);
+  }
+
+  72% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.76;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes summary-check {
+  from {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.35);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(45deg) scale(0.88);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary-celebration::before,
+  .summary-celebration::after,
+  .summary-check {
+    animation: none;
+  }
 }
 
 @media (max-width: 980px) {
@@ -1274,6 +1381,19 @@ input:focus-visible,
   .summary-grid,
   .summary-actions {
     grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    width: min(100vw - 2rem, 26rem);
+    border-bottom: 0;
+  }
+
+  .summary-grid div {
+    border-bottom: 1px solid rgb(21 23 26 / 10%);
+  }
+
+  .summary-grid div + div {
+    border-left: 0;
   }
 
   .summary-grid .wide {

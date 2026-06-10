@@ -689,8 +689,11 @@ const renderSummaryScreen = (workoutSession: WorkoutSession) => {
 
   return `
   <section class="summary-shell" aria-labelledby="finished-title">
+    <div class="summary-celebration" aria-hidden="true">
+      <span class="summary-check"></span>
+    </div>
     <p class="eyebrow">HIITBuddy</p>
-    <h1 id="finished-title">Finished</h1>
+    <h1 id="finished-title">Strong Finish</h1>
     <dl class="summary-grid">
       <div>
         <dt>Completed</dt>
@@ -714,10 +717,8 @@ const renderSummaryScreen = (workoutSession: WorkoutSession) => {
       </div>
     </dl>
     <div class="summary-actions">
-      <button class="button ghost" type="button" data-action="copy-link">Copy</button>
       <button class="button primary" type="button" data-action="new-workout">New Workout</button>
     </div>
-    <div class="status ${statusTone}" role="status" aria-live="polite">${escapeHtml(statusMessage)}</div>
   </section>
 `;
 };

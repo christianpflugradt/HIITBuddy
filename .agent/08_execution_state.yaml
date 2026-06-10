@@ -93,7 +93,7 @@ ist_zustand:
     - Round Break upcoming assignment preview in the final 30 seconds, or from the start when the break duration is 30 seconds or less.
     - Assignment tile layout follows participant-count patterns: 1-3 in one row, 4-6 in two columns, 7 as 3/2/2, and 8+ in three columns.
     - Workout screens use compact density for larger participant groups so training views fit in one tablet-landscape viewport without scrolling.
-    - Summary UI with completed rounds, abandoned rounds, active people, selected exercises, elapsed time, Copy, and New Workout returning to setup step 1.
+    - Summary UI with completed rounds, abandoned rounds, active people, selected exercises, elapsed time, a subtle CSS-only completion animation, and New Workout returning to setup step 1.
     - Summary helpers and tests for compact elapsed-time formatting and summary facts.
     - Reduced structural UI chrome so setup and workout headers/stages avoid unnecessary frames, borders, and shadows.
     - Git workflow specification with commit-after-prompt rule.
