@@ -100,6 +100,7 @@ interface_and_design:
       - Main area with assignment tiles in a responsive grid.
       - Bottom timer band with large countdown and phase-specific controls.
       - The first workout phase is a configurable Get Ready countdown with upcoming assignments visible.
+      - Get Ready assignment icons use the break color, not the work/action color.
       - Round Break shows upcoming assignments only in the final 30 seconds, fading them in without adding explanatory text.
       - Every workout screen from Get Ready through Round Break must fit into one viewport on tablet landscape; scrolling must not be required during training.
       - For larger groups, shrink assignment tiles, icons, and text before allowing the workout surface to overflow.

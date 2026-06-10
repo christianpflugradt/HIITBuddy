@@ -785,8 +785,8 @@ input:focus-visible,
 }
 
 .workout-shell.round_start .phase-meta {
-  background: rgb(37 99 235 / 10%);
-  color: var(--color-action);
+  background: rgb(245 185 66 / 18%);
+  color: #7c5209;
 }
 
 .assignment-grid {
@@ -917,6 +917,10 @@ input:focus-visible,
 
 .workout-shell.interval_rest .assignment-icon {
   color: var(--color-rest);
+}
+
+.workout-shell.round_start .assignment-icon {
+  color: var(--color-break);
 }
 
 .round-break-stack {
