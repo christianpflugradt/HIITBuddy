@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  semantic-release:
+    name: Semantic release
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      release_tag: ${{ steps.release-tag.outputs.release_tag }}
+    env:
+      CI: true
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: .node-version
+
+      - name: Install repository toolchain
+        run: npm ci
+
+      - name: Run semantic-release
+        run: npm run release --silent
+
+      - name: Derive release tag output
+        id: release-tag
+        run: |
+          tag="$(git tag --points-at "$GITHUB_SHA" --sort=-v:refname | head -n 1)"
+          if [ -z "$tag" ]; then
+            tag="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+          fi
+          if [ -z "$tag" ]; then
+            echo "No release tag available for image publish." >&2
+            exit 1
+          fi
+          echo "release_tag=$tag" >> "$GITHUB_OUTPUT"
+
+  publish-image:
+    name: Publish Docker image
+    needs: semantic-release
+    if: ${{ needs.semantic-release.outputs.release_tag != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Derive image metadata
+        id: image-metadata
+        run: |
+          set -euo pipefail
+          release_tag="${{ needs.semantic-release.outputs.release_tag }}"
+          release_commit="$(git rev-list -n 1 "$release_tag")"
+          release_timestamp="$(git show --no-patch --date=iso-strict --format=%cd "$release_commit")"
+
+          if [ -z "$release_commit" ] || [ -z "$release_timestamp" ]; then
+            echo "Unable to derive release commit metadata for image." >&2
+            exit 1
+          fi
+
+          echo "release_commit=$release_commit" >> "$GITHUB_OUTPUT"
+          echo "release_timestamp=$release_timestamp" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/hiitbuddy:${{ needs.semantic-release.outputs.release_tag }}
+            ghcr.io/${{ github.repository_owner }}/hiitbuddy:latest
+          labels: |
+            org.opencontainers.image.title=HIITBuddy
+            org.opencontainers.image.description=Framework-free HIIT circuit training companion.
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.semantic-release.outputs.release_tag }}
+            org.opencontainers.image.revision=${{ steps.image-metadata.outputs.release_commit }}
+            org.opencontainers.image.created=${{ steps.image-metadata.outputs.release_timestamp }}
