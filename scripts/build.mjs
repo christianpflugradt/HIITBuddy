@@ -18,5 +18,6 @@ const run = (command, args) =>
 await rm("dist", { recursive: true, force: true });
 await run("tsc", []);
 await mkdir("dist", { recursive: true });
+await cp("src/public", "dist", { recursive: true });
 await cp("src/index.html", "dist/index.html");
 await cp("src/styles.css", "dist/styles.css");

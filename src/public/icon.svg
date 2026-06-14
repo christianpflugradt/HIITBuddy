@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">HIITBuddy App Icon</title>
+  <desc id="desc">A circuit training layout with four stations and a central timer.</desc>
+  <rect width="512" height="512" rx="112" fill="#f7f7f2"/>
+  <rect x="68" y="68" width="376" height="376" rx="56" fill="#fbfbf8" stroke="rgba(21,23,26,0.1)" stroke-width="8"/>
+  <path d="M256 132v248M132 256h248" stroke="#2563eb" stroke-linecap="round" stroke-width="18"/>
+  <g fill="#fff" stroke="rgba(21,23,26,0.08)" stroke-width="6">
+    <rect x="84" y="84" width="112" height="92" rx="20"/>
+    <rect x="316" y="84" width="112" height="92" rx="20"/>
+    <rect x="84" y="336" width="112" height="92" rx="20"/>
+    <rect x="316" y="336" width="112" height="92" rx="20"/>
+  </g>
+  <g fill="#15171a">
+    <rect x="108" y="118" width="58" height="10" rx="5"/>
+    <rect x="108" y="372" width="58" height="10" rx="5"/>
+    <rect x="340" y="118" width="58" height="10" rx="5"/>
+    <rect x="340" y="372" width="58" height="10" rx="5"/>
+    <rect x="108" y="138" width="12" height="32" rx="6"/>
+    <rect x="154" y="138" width="12" height="32" rx="6"/>
+    <rect x="108" y="392" width="12" height="32" rx="6"/>
+    <rect x="154" y="392" width="12" height="32" rx="6"/>
+    <rect x="340" y="138" width="12" height="32" rx="6"/>
+    <rect x="386" y="138" width="12" height="32" rx="6"/>
+    <rect x="340" y="392" width="12" height="32" rx="6"/>
+    <rect x="386" y="392" width="12" height="32" rx="6"/>
+  </g>
+  <g>
+    <rect x="192" y="192" width="128" height="128" rx="28" fill="#fff" stroke="#a3e635" stroke-width="18"/>
+    <rect x="250" y="220" width="12" height="44" rx="6" fill="#15171a"/>
+    <rect x="250" y="250" width="12" height="38" rx="6" fill="#15171a" transform="rotate(55 256 269)"/>
+  </g>
+</svg>

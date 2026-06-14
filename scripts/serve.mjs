@@ -10,10 +10,12 @@ const port = Number.parseInt(process.env.PORT ?? "8080", 10);
 const contentTypes = new Map([
   [".css", "text/css; charset=utf-8"],
   [".html", "text/html; charset=utf-8"],
+  [".ico", "image/x-icon"],
   [".js", "text/javascript; charset=utf-8"],
   [".json", "application/json; charset=utf-8"],
   [".map", "application/json; charset=utf-8"],
-  [".svg", "image/svg+xml"]
+  [".svg", "image/svg+xml"],
+  [".webmanifest", "application/manifest+json; charset=utf-8"]
 ]);
 
 const send = (response, status, body, contentType = "text/plain; charset=utf-8") => {

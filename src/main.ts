@@ -43,6 +43,12 @@ if (!app) {
   throw new Error("HIITBuddy app root was not found.");
 }
 
+if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+  window.addEventListener("load", () => {
+    void navigator.serviceWorker.register("./service-worker.js");
+  });
+}
+
 const hasConfigQueryParameter = (() => {
   try {
     return new URL(window.location.href).searchParams.has(CONFIG_QUERY_PARAMETER);
