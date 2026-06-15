@@ -91,11 +91,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@e20f78486d0ff2e2386f29b223f69eb1b3ff7f4f # v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@1d5eaf1ff549b4b79d058ed9c4bd1b360a9021c0 # v3
+
       - name: Build and push image
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/hiitbuddy:${{ needs.semantic-release.outputs.release_tag }}
