@@ -31,7 +31,7 @@ test("default config contains the eight HYROX stations and no running station", 
     getReadySeconds: { min: 5, max: 300 },
     workSeconds: { min: 5, max: 300 },
     intervalRestSeconds: { min: 5, max: 300 },
-    roundBreakSeconds: { min: 5, max: 300 }
+    roundBreakSeconds: { min: 30, max: 300, step: 30 }
   });
   assert.deepEqual(START_LIMITS, {
     activePeople: { min: 1, max: 12 },
@@ -133,14 +133,14 @@ test("start validation enforces active people and selected exercise count limits
   assert.equal(validateStartWorkout(validEdge).valid, true);
 });
 
-test("timer validation enforces five to three hundred seconds for every timer", () => {
+test("timer validation enforces allowed ranges and round-break steps", () => {
   const timerKeys = ["getReadySeconds", "workSeconds", "intervalRestSeconds", "roundBreakSeconds"];
 
   for (const key of timerKeys) {
     const belowMinimum = createDefaultConfig();
     belowMinimum.people = [{ id: "p1", name: "Alice", active: true }];
     belowMinimum.selectedExerciseIds = ["rowing"];
-    belowMinimum.timer[key] = 4;
+    belowMinimum.timer[key] = key === "roundBreakSeconds" ? 29 : 4;
 
     assert.deepEqual(
       validateStartWorkout(belowMinimum).issues.map((issue) => issue.code),
@@ -157,6 +157,16 @@ test("timer validation enforces five to three hundred seconds for every timer", 
       ["invalid_timer_settings"]
     );
   }
+
+  const offStepRoundBreak = createDefaultConfig();
+  offStepRoundBreak.timer.roundBreakSeconds = 65;
+
+  const offStepResult = validateConfig(offStepRoundBreak);
+  assert.equal(offStepResult.valid, false);
+  assert.deepEqual(
+    offStepResult.issues.map((issue) => issue.code),
+    ["invalid_timer_settings"]
+  );
 });
 
 test("config validation trims names and normalizes selected exercise flags", () => {

@@ -142,10 +142,13 @@ export const updateTimerSetting = (
   }
 
   const nextConfig = cloneConfig(config);
-  nextConfig.timer[key] = Math.min(
-    TIMER_LIMITS[key].max,
-    Math.max(TIMER_LIMITS[key].min, Math.trunc(numericValue))
-  );
+  const clampedValue = Math.min(TIMER_LIMITS[key].max, Math.max(TIMER_LIMITS[key].min, Math.trunc(numericValue)));
+
+  nextConfig.timer[key] =
+    key === "roundBreakSeconds"
+      ? Math.round(clampedValue / TIMER_LIMITS.roundBreakSeconds.step) * TIMER_LIMITS.roundBreakSeconds.step
+      : clampedValue;
+
   return nextConfig;
 };
 

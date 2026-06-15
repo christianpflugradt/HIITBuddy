@@ -22,8 +22,9 @@ export const TIMER_LIMITS = {
     max: 300
   },
   roundBreakSeconds: {
-    min: 5,
-    max: 300
+    min: 30,
+    max: 300,
+    step: 30
   }
 } as const;
 
@@ -92,6 +93,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const isWholeNumberInRange = (value: unknown, min: number, max: number): value is number =>
   typeof value === "number" && Number.isInteger(value) && value >= min && value <= max;
 
+const isWholeNumberStepAligned = (value: number, step: number): boolean => value % step === 0;
+
 const addIssue = (
   issues: ValidationIssue[],
   code: ConfigValidationIssueCode,
@@ -120,7 +123,8 @@ const validateTimerSettings = (value: unknown, issues: ValidationIssue[], path =
       TIMER_LIMITS.intervalRestSeconds.min,
       TIMER_LIMITS.intervalRestSeconds.max
     ) ||
-    !isWholeNumberInRange(roundBreakSeconds, TIMER_LIMITS.roundBreakSeconds.min, TIMER_LIMITS.roundBreakSeconds.max)
+    !isWholeNumberInRange(roundBreakSeconds, TIMER_LIMITS.roundBreakSeconds.min, TIMER_LIMITS.roundBreakSeconds.max) ||
+    !isWholeNumberStepAligned(roundBreakSeconds, TIMER_LIMITS.roundBreakSeconds.step)
   ) {
     addIssue(issues, "invalid_timer_settings", START_VALIDATION_MESSAGES.invalid_timer, path);
     return null;

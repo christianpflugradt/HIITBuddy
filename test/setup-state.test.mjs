@@ -116,13 +116,18 @@ test("timer updates and start validation reflect setup state", () => {
   config = updateTimerSetting(config, "getReadySeconds", "35");
   config = updateTimerSetting(config, "workSeconds", "45");
   config = updateTimerSetting(config, "intervalRestSeconds", 10);
+  config = updateTimerSetting(config, "roundBreakSeconds", 65);
   assert.equal(config.timer.getReadySeconds, 35);
   assert.equal(config.timer.workSeconds, 45);
   assert.equal(config.timer.intervalRestSeconds, 10);
+  assert.equal(config.timer.roundBreakSeconds, 60);
 
   config = updateTimerSetting(config, "getReadySeconds", "0");
   config = updateTimerSetting(config, "workSeconds", 301);
   config = updateTimerSetting(config, "intervalRestSeconds", -10);
+  config = updateTimerSetting(config, "roundBreakSeconds", "5");
+  assert.equal(config.timer.roundBreakSeconds, 30);
+
   config = updateTimerSetting(config, "roundBreakSeconds", "999");
   assert.equal(config.timer.getReadySeconds, 5);
   assert.equal(config.timer.workSeconds, 300);
