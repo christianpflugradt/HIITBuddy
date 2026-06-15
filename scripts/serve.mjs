@@ -20,7 +20,11 @@ const contentTypes = new Map([
 ]);
 
 const send = (response, status, body, contentType = "text/plain; charset=utf-8") => {
-  response.writeHead(status, { "content-type": contentType });
+  response.writeHead(status, {
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "content-type": contentType,
+    pragma: "no-cache"
+  });
   response.end(body);
 };
 
@@ -57,8 +61,10 @@ const server = createServer(async (request, response) => {
     const contentType = contentTypes.get(extname(finalPath)) ?? "application/octet-stream";
 
     response.writeHead(200, {
+      "cache-control": "no-store, no-cache, must-revalidate",
       "content-length": (await stat(finalPath)).size,
-      "content-type": contentType
+      "content-type": contentType,
+      pragma: "no-cache"
     });
 
     if (request.method === "HEAD") {

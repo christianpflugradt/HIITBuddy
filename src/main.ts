@@ -43,9 +43,19 @@ if (!app) {
   throw new Error("HIITBuddy app root was not found.");
 }
 
-if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+if (window.location.protocol !== "file:") {
   window.addEventListener("load", () => {
-    void navigator.serviceWorker.register("./service-worker.js");
+    void (async () => {
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map((registration) => registration.unregister()));
+      }
+
+      if ("caches" in window) {
+        const cacheKeys = await caches.keys();
+        await Promise.all(cacheKeys.map((key) => caches.delete(key)));
+      }
+    })();
   });
 }
 
@@ -427,7 +437,7 @@ const renderAssignmentTiles = (workoutSession: WorkoutSession) => {
       return `
         <article class="assignment-card">
           ${renderIcon(exercise.iconId, "assignment-icon")}
-          <div>
+          <div class="assignment-copy">
             <h2>${escapeHtml(person.name)}</h2>
             <p>${escapeHtml(exercise.name)}</p>
           </div>
@@ -465,6 +475,8 @@ const getAssignmentLayoutClass = (workoutSession: WorkoutSession) => {
 
 const getWorkoutDensityClass = (workoutSession: WorkoutSession) =>
   getActivePeople(workoutSession.config).length >= 5 ? "workout-compact" : "";
+
+const getParticipantLabel = (count: number) => `${count} ${count === 1 ? "participant" : "participants"}`;
 
 const renderWorkoutControls = (workoutSession: WorkoutSession) => {
   if (workoutSession.phase === "work") {
@@ -530,17 +542,20 @@ const renderWorkoutScreen = (workoutSession: WorkoutSession) => {
   lastRenderedSecond = snapshot.remainingSeconds;
   lastRoundBreakPreviewVisible = shouldShowRoundBreakPreview(workoutSession, snapshot);
   const controls = renderWorkoutControls(workoutSession);
-  const assignmentLayoutClass = getAssignmentLayoutClass(workoutSession);
   const densityClass = getWorkoutDensityClass(workoutSession);
+  const activeParticipants = getActivePeople(workoutSession.config).length;
 
   return `
     <section class="workout-shell ${workoutSession.phase} ${densityClass}" aria-labelledby="phase-title">
       <header class="workout-topbar">
-        <div>
-          <p class="eyebrow">Round ${workoutSession.roundIndex + 1}</p>
+        <div class="phase-heading">
+          <p class="phase-round">Round ${workoutSession.roundIndex + 1}</p>
           <h1 id="phase-title">${formatPhase(workoutSession)}</h1>
         </div>
-        <div class="phase-meta">${getIntervalMeta(workoutSession)}</div>
+        <div class="phase-meta-row" aria-label="Workout progress">
+          <div class="phase-meta">${getIntervalMeta(workoutSession)}</div>
+          <div class="phase-meta subtle">${getParticipantLabel(activeParticipants)}</div>
+        </div>
       </header>
       ${renderWorkoutMain(workoutSession, snapshot)}
       <footer class="timer-band ${controls ? "" : "countdown-only"}">

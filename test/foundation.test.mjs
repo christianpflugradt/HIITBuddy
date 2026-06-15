@@ -24,20 +24,21 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
   assert.match(html, /favicon-32\.png/);
   assert.match(html, /apple-touch-icon\.png/);
   assert.match(main, /HIITBuddy/);
-  assert.match(main, /serviceWorker\.register/);
+  assert.doesNotMatch(main, /serviceWorker\.register/);
+  assert.match(main, /navigator\.serviceWorker\.getRegistrations/);
   assert.match(styles, /--color-action/);
   assert.equal(parsedManifest.name, "HIITBuddy");
   assert.deepEqual(
     parsedManifest.icons.map((entry) => entry.src),
     ["./icon-192.png", "./icon-512.png", "./icon-512.png"]
   );
-  assert.match(serviceWorker, /CACHE_NAME/);
-  assert.match(serviceWorker, /favicon\.ico/);
-  assert.match(serviceWorker, /icon-192\.png/);
-  assert.match(serviceWorker, /favicon-32\.png/);
+  assert.doesNotMatch(serviceWorker, /CACHE_NAME/);
+  assert.match(serviceWorker, /registration\.unregister/);
+  assert.match(serviceWorker, /caches\.keys/);
   assert.match(icon, /HIITBuddy App Icon/);
   assert.match(favicon, /HIITBuddy Favicon/);
   assert.equal(pkg.scripts.build, "node scripts/build.mjs");
   assert.equal(pkg.scripts.start, "node scripts/serve.mjs");
   assert.match(await readFile("scripts/serve.mjs", "utf8"), /\.png", "image\/png"/);
+  assert.match(await readFile("scripts/serve.mjs", "utf8"), /no-store, no-cache, must-revalidate/);
 });
