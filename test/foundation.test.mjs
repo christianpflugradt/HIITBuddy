@@ -39,4 +39,5 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
   assert.match(favicon, /HIITBuddy Favicon/);
   assert.equal(pkg.scripts.build, "node scripts/build.mjs");
   assert.equal(pkg.scripts.start, "node scripts/serve.mjs");
+  assert.match(await readFile("scripts/serve.mjs", "utf8"), /\.png", "image\/png"/);
 });
