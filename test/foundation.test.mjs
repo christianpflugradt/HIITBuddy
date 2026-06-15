@@ -19,12 +19,22 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
 
   assert.match(html, /<title>HIITBuddy<\/title>/);
   assert.match(html, /manifest\.webmanifest/);
+  assert.match(html, /favicon\.ico/);
   assert.match(html, /favicon\.svg/);
+  assert.match(html, /favicon-32\.png/);
+  assert.match(html, /apple-touch-icon\.png/);
   assert.match(main, /HIITBuddy/);
   assert.match(main, /serviceWorker\.register/);
   assert.match(styles, /--color-action/);
   assert.equal(parsedManifest.name, "HIITBuddy");
+  assert.deepEqual(
+    parsedManifest.icons.map((entry) => entry.src),
+    ["./icon-192.png", "./icon-512.png", "./icon-512.png"]
+  );
   assert.match(serviceWorker, /CACHE_NAME/);
+  assert.match(serviceWorker, /favicon\.ico/);
+  assert.match(serviceWorker, /icon-192\.png/);
+  assert.match(serviceWorker, /favicon-32\.png/);
   assert.match(icon, /HIITBuddy App Icon/);
   assert.match(favicon, /HIITBuddy Favicon/);
   assert.equal(pkg.scripts.build, "node scripts/build.mjs");
