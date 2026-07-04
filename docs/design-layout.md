@@ -53,3 +53,23 @@ If any answer is `no`, the layout is not finished.
 - Tablet landscape, `3-4` participants: broad cards with strong content scaling
 - Tablet landscape, `5-8` participants: balanced grid
 - Tablet landscape, `9-12` participants: dense overview grid
+
+## Automated validation
+
+The repository should keep a reproducible layout audit, not just manual spot checks.
+
+Current audit approach:
+
+- Playwright screenshots for fixed phone and tablet viewport cases
+- Heuristic checks for column count per case
+- Heuristic checks for compact mobile card height
+- Heuristic checks for grid width usage on wide `2`-participant layouts
+- Heuristic checks for card-area-to-stage-area ratio as a coarse whitespace signal
+
+The audit command is:
+
+```bash
+npm run audit:layout
+```
+
+Artifacts should be written to `artifacts/layout-audit/` so regressions can be inspected visually.

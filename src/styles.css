@@ -824,8 +824,6 @@ input:focus-visible,
 .assignment-grid.count-2 {
   grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: minmax(0, 1fr);
-  max-width: min(100%, 76rem);
-  margin-inline: auto;
 }
 
 .assignment-grid.medium {
@@ -1381,7 +1379,8 @@ input:focus-visible,
 
   .assignment-grid,
   .assignment-grid.count-2,
-  .assignment-grid.few,
+  .assignment-grid.few:not(.count-2),
+  .assignment-grid.few.count-2,
   .assignment-grid.medium,
   .assignment-grid.dense {
     grid-template-columns: 1fr;
