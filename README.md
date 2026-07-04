@@ -82,6 +82,13 @@ Responsive breakpoints:
 - Up to `980px`: reduced grid density for portrait tablets and smaller laptops
 - Above `980px`: larger training-display grid for tablet and desktop views
 
+Product requirement:
+
+- For every relevant viewport and participant count, choose the arrangement that uses space best for that exact case, not just a generically responsive layout.
+- `2` participants on wide tablet/desktop should prefer a vertical stack over two oversized side-by-side cards, because participant and exercise labels read horizontally.
+
+The fuller layout rules live in [docs/design-layout.md](/Users/cpf/Workspace/personal/HIITBuddy/docs/design-layout.md).
+
 At the end you see a summary screen and can return to a new workout from there.
 
 ## Sharing setups

@@ -464,16 +464,17 @@ const renderAssignmentTiles = (workoutSession: WorkoutSession) => {
 
 const getAssignmentLayoutClass = (workoutSession: WorkoutSession) => {
   const activeCount = getActivePeople(workoutSession.config).length;
+  const countClass = `count-${activeCount}`;
 
   if (activeCount <= 4) {
-    return "few";
+    return `few ${countClass}`;
   }
 
   if (activeCount <= 8) {
-    return "medium";
+    return `medium ${countClass}`;
   }
 
-  return "dense";
+  return `dense ${countClass}`;
 };
 
 const getWorkoutDensityClass = (workoutSession: WorkoutSession) =>
