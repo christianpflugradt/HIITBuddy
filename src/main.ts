@@ -165,6 +165,21 @@ const formatPhase = (workoutSession: WorkoutSession) => {
   }
 };
 
+const getPhaseScreenValue = (workoutSession: WorkoutSession) => {
+  switch (workoutSession.phase) {
+    case "round_start":
+      return "prepare";
+    case "work":
+      return "work";
+    case "interval_rest":
+      return "short-break";
+    case "round_break":
+      return "round-break";
+    default:
+      return "work";
+  }
+};
+
 const getIntervalMeta = (workoutSession: WorkoutSession) => {
   const intervalsPerRound = getWorkIntervalsPerRound(workoutSession.config);
 
@@ -438,8 +453,8 @@ const renderAssignmentTiles = (workoutSession: WorkoutSession) => {
         <article class="assignment-card">
           ${renderIcon(exercise.iconId, "assignment-icon")}
           <div class="assignment-copy">
-            <h2>${escapeHtml(person.name)}</h2>
-            <p>${escapeHtml(exercise.name)}</p>
+            <div class="participant-name">${escapeHtml(person.name)}</div>
+            <div class="exercise-name">${escapeHtml(exercise.name)}</div>
           </div>
         </article>
       `;
@@ -450,33 +465,19 @@ const renderAssignmentTiles = (workoutSession: WorkoutSession) => {
 const getAssignmentLayoutClass = (workoutSession: WorkoutSession) => {
   const activeCount = getActivePeople(workoutSession.config).length;
 
-  if (activeCount <= 1) {
-    return "assignment-count-1";
+  if (activeCount <= 4) {
+    return "few";
   }
 
-  if (activeCount === 2) {
-    return "assignment-count-2";
+  if (activeCount <= 8) {
+    return "medium";
   }
 
-  if (activeCount === 3) {
-    return "assignment-count-3";
-  }
-
-  if (activeCount <= 6) {
-    return "assignment-count-4-6";
-  }
-
-  if (activeCount === 7) {
-    return "assignment-count-7";
-  }
-
-  return "assignment-count-8-plus";
+  return "dense";
 };
 
 const getWorkoutDensityClass = (workoutSession: WorkoutSession) =>
-  getActivePeople(workoutSession.config).length >= 5 ? "workout-compact" : "";
-
-const getParticipantLabel = (count: number) => `${count} ${count === 1 ? "participant" : "participants"}`;
+  getActivePeople(workoutSession.config).length >= 9 ? "workout-dense" : getActivePeople(workoutSession.config).length >= 5 ? "workout-compact" : "";
 
 const renderWorkoutControls = (workoutSession: WorkoutSession) => {
   if (workoutSession.phase === "work") {
@@ -507,12 +508,13 @@ const renderWorkoutControls = (workoutSession: WorkoutSession) => {
 
 const renderWorkoutMain = (workoutSession: WorkoutSession, snapshot: ReturnType<typeof getSessionSnapshot>) => {
   const assignmentLayoutClass = getAssignmentLayoutClass(workoutSession);
+  const assignmentCount = getActivePeople(workoutSession.config).length;
 
   if (workoutSession.phase === "round_break") {
     const previewVisible = shouldShowRoundBreakPreview(workoutSession, snapshot);
 
     return `
-      <section class="round-break-stack">
+      <section class="assignment-stage round-break-stage">
         <section class="round-break-panel" aria-label="Round status">
           <div>
             <span>${workoutSession.completedRounds}</span>
@@ -523,7 +525,7 @@ const renderWorkoutMain = (workoutSession: WorkoutSession, snapshot: ReturnType<
             <p>Abandoned</p>
           </div>
         </section>
-        <section class="assignment-grid ${assignmentLayoutClass} round-preview ${previewVisible ? "visible" : ""}" aria-label="Next assignments" aria-hidden="${previewVisible ? "false" : "true"}">
+        <section class="assignment-grid ${assignmentLayoutClass} round-preview ${previewVisible ? "visible" : ""}" style="--assignment-count: ${assignmentCount};" aria-label="Next assignments" aria-hidden="${previewVisible ? "false" : "true"}">
           ${renderAssignmentTiles(workoutSession)}
         </section>
       </section>
@@ -531,8 +533,10 @@ const renderWorkoutMain = (workoutSession: WorkoutSession, snapshot: ReturnType<
   }
 
   return `
-    <section class="assignment-grid ${assignmentLayoutClass}" aria-label="Assignments">
+    <section class="assignment-stage">
+      <section class="assignment-grid ${assignmentLayoutClass}" style="--assignment-count: ${assignmentCount};" aria-label="Assignments">
       ${renderAssignmentTiles(workoutSession)}
+      </section>
     </section>
   `;
 };
@@ -543,25 +547,24 @@ const renderWorkoutScreen = (workoutSession: WorkoutSession) => {
   lastRoundBreakPreviewVisible = shouldShowRoundBreakPreview(workoutSession, snapshot);
   const controls = renderWorkoutControls(workoutSession);
   const densityClass = getWorkoutDensityClass(workoutSession);
-  const activeParticipants = getActivePeople(workoutSession.config).length;
+  const phaseLabel = formatPhase(workoutSession);
+  const phaseScreenValue = getPhaseScreenValue(workoutSession);
 
   return `
-    <section class="workout-shell ${workoutSession.phase} ${densityClass}" aria-labelledby="phase-title">
+    <section class="workout-shell ${workoutSession.phase} ${densityClass}" data-phase="${phaseScreenValue}" aria-labelledby="phase-title">
       <header class="workout-topbar">
-        <div class="phase-heading">
-          <p class="phase-round">Round ${workoutSession.roundIndex + 1}</p>
-          <h1 id="phase-title">${formatPhase(workoutSession)}</h1>
-        </div>
-        <div class="phase-meta-row" aria-label="Workout progress">
-          <div class="phase-meta">${getIntervalMeta(workoutSession)}</div>
-          <div class="phase-meta subtle">${getParticipantLabel(activeParticipants)}</div>
+        <div class="workout-status" aria-label="Workout status">
+          <div class="status-pill round-pill">Round ${workoutSession.roundIndex + 1}</div>
+          <div class="status-pill phase-pill" id="phase-title">${phaseLabel}</div>
+          <div class="status-pill progress-pill">${getIntervalMeta(workoutSession)}</div>
         </div>
       </header>
-      ${renderWorkoutMain(workoutSession, snapshot)}
-      <footer class="timer-band ${controls ? "" : "countdown-only"}">
+      <section class="timer-band" aria-label="Countdown">
+        <div class="countdown-label">Time left</div>
         <div class="countdown" data-countdown>${snapshot.remainingSeconds}</div>
-        ${controls ? `<div class="timer-actions">${controls}</div>` : ""}
-      </footer>
+      </section>
+      ${renderWorkoutMain(workoutSession, snapshot)}
+      ${controls ? `<footer class="controls-panel"><div class="timer-actions">${controls}</div></footer>` : ""}
     </section>
   `;
 };

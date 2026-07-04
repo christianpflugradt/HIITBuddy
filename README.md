@@ -61,6 +61,27 @@ During the workout:
 - You can skip the current exercise, skip to the round end, or extend breaks with the buttons on screen.
 - The workout runs for unlimited rounds until you choose to finish.
 
+## Training display layout
+
+The workout screen now follows a display-first hierarchy:
+
+- Compact header with `Round`, `Phase`, and `Progress`
+- Large centered timer that stays visible above the assignments
+- Assignment cards as the main content area
+- Controls in a smaller footer area
+
+Assignment density adapts to the number of visible participants:
+
+- `few`: up to 4 assignments
+- `medium`: 5 to 8 assignments
+- `dense`: 9 to 12 assignments
+
+Responsive breakpoints:
+
+- Up to `620px`: compact phone card layout with icon-left/text-right rows
+- Up to `980px`: reduced grid density for portrait tablets and smaller laptops
+- Above `980px`: larger training-display grid for tablet and desktop views
+
 At the end you see a summary screen and can return to a new workout from there.
 
 ## Sharing setups
