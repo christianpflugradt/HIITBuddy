@@ -1360,6 +1360,12 @@ input:focus-visible,
   .assignment-grid.dense {
     grid-template-columns: 1fr;
     gap: 0.5rem;
+    grid-auto-rows: auto;
+    align-content: start;
+  }
+
+  .assignment-stage {
+    align-content: start;
   }
 
   .assignment-card,
