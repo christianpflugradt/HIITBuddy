@@ -46,13 +46,47 @@ If any answer is `no`, the layout is not finished.
 
 ## Current decision matrix
 
-- Phone, `2-4` participants: single-column compact list
-- Phone, `5+` participants: single-column dense list
-- Tablet portrait, `3-4` participants: multi-column layout only if text remains comfortably horizontal
-- Tablet landscape, `2` participants: vertical stack
-- Tablet landscape, `3-4` participants: broad cards with strong content scaling
-- Tablet landscape, `5-8` participants: balanced grid
-- Tablet landscape, `9-12` participants: dense overview grid
+Phone:
+
+- `2`: `1 x 2`
+- `3`: `1 x 3`
+- `4`: `1 x 4`
+- `5`: `1 x 5`
+- `6`: `1 x 6`
+- `7`: `1 x 7`
+- `8`: `1 x 8`
+- `9`: `1 x 9`
+- `10`: `1 x 10`
+- `11`: `1 x 11`
+- `12`: `1 x 12`
+
+Tablet/Desktop portrait:
+
+- `2`: `1 x 2`
+- `3`: `2 + 1`
+- `4`: `2 x 2`
+- `5`: `2 + 2 + 1`
+- `6`: `2 x 3`
+- `7`: `2 + 2 + 2 + 1`
+- `8`: `2 x 4`
+- `9`: `3 x 3`
+- `10`: `3 + 3 + 2 + 2`
+- `11`: `3 + 3 + 3 + 2`
+- `12`: `3 x 4`
+
+Tablet/Desktop landscape:
+
+- `2`: `1 x 2` stacked
+- `3`: `3 x 1`
+- `4`: `2 x 2`
+- `5`: `3 + 2`
+- `6`: `3 x 2`
+- `7`: `4 + 3`
+- `8`: `4 x 2`
+- `9`: `3 x 3`
+- `10`: `4 + 3 + 3`
+- `11`: `4 + 4 + 3`
+- `12`: `4 x 3`
 
 ## Automated validation
 
@@ -65,6 +99,7 @@ Current audit approach:
 - Heuristic checks for compact mobile card height
 - Heuristic checks for grid width usage on wide `2`-participant layouts
 - Heuristic checks for card-area-to-stage-area ratio as a coarse whitespace signal
+- Heuristic checks for row balance so layouts such as `4 + 1` fail automatically
 
 The audit command is:
 

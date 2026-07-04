@@ -105,7 +105,7 @@ const cases = [
     id: "tablet-portrait-8",
     count: 8,
     viewport: { width: 820, height: 1180 },
-    expect: { columns: 3, minCardsAreaRatio: 0.55 }
+    expect: { columns: 2, minCardsAreaRatio: 0.55 }
   },
   {
     id: "tablet-landscape-2",
@@ -118,6 +118,12 @@ const cases = [
     count: 3,
     viewport: { width: 1180, height: 820 },
     expect: { columns: 3, minCardsAreaRatio: 0.5 }
+  },
+  {
+    id: "tablet-landscape-5",
+    count: 5,
+    viewport: { width: 1366, height: 1024 },
+    expect: { columns: 6, minCardsAreaRatio: 0.58, maxRowImbalance: 1 }
   },
   {
     id: "tablet-landscape-8",
@@ -204,6 +210,7 @@ try {
         return {
           area: cardRect.width * cardRect.height,
           height: cardRect.height,
+          top: cardRect.top,
           contentWidth:
             iconRect && copyRect
               ? Math.max(iconRect.right, copyRect.right) - Math.min(iconRect.left, copyRect.left)
@@ -212,6 +219,14 @@ try {
       });
 
       const totalCardsArea = cardRects.reduce((sum, rect) => sum + rect.area, 0);
+      const rowMap = new Map();
+
+      for (const rect of cardRects) {
+        const bucket = Math.round(rect.top / 10) * 10;
+        rowMap.set(bucket, (rowMap.get(bucket) ?? 0) + 1);
+      }
+
+      const rowCounts = [...rowMap.values()];
 
       return {
         cardsAreaRatio: totalCardsArea / (stageRect.width * stageRect.height),
@@ -221,6 +236,7 @@ try {
           rect.contentWidth > 0 && gridRect.width > 0 ? rect.contentWidth / gridRect.width : 0
         ),
         gridWidthRatio: gridRect.width / stageRect.width,
+        rowCounts,
         stageRect: { width: stageRect.width, height: stageRect.height }
       };
     });
@@ -256,6 +272,17 @@ try {
       failures.push(
         `${auditCase.id}: expected cards/stage area ratio >= ${auditCase.expect.minCardsAreaRatio.toFixed(2)}, got ${metrics.cardsAreaRatio.toFixed(2)}`
       );
+    }
+
+    if (typeof auditCase.expect.maxRowImbalance === "number" && metrics.rowCounts.length > 1) {
+      const maxRowCount = Math.max(...metrics.rowCounts);
+      const minRowCount = Math.min(...metrics.rowCounts);
+
+      if (maxRowCount - minRowCount > auditCase.expect.maxRowImbalance) {
+        failures.push(
+          `${auditCase.id}: expected row imbalance <= ${auditCase.expect.maxRowImbalance}, got rows ${metrics.rowCounts.join("/")}`
+        );
+      }
     }
   }
 

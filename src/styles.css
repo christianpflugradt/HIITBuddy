@@ -815,10 +815,7 @@ input:focus-visible,
   grid-auto-rows: minmax(0, 1fr);
   overflow: auto;
   padding-right: 0.15rem;
-}
-
-.assignment-grid.few {
-  grid-template-columns: repeat(var(--assignment-count), minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .assignment-grid.count-2 {
@@ -826,12 +823,74 @@ input:focus-visible,
   grid-auto-rows: minmax(0, 1fr);
 }
 
-.assignment-grid.medium {
+.assignment-grid.count-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.assignment-grid.count-4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.assignment-grid.count-5 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.assignment-grid.count-5 .assignment-card {
+  grid-column: span 2;
+}
+
+.assignment-grid.count-5 .assignment-card:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.assignment-grid.count-5 .assignment-card:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
+.assignment-grid.count-6 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.assignment-grid.count-7,
+.assignment-grid.count-10,
+.assignment-grid.count-11 {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.assignment-grid.count-7 .assignment-card,
+.assignment-grid.count-10 .assignment-card,
+.assignment-grid.count-11 .assignment-card {
+  grid-column: span 2;
+}
+
+.assignment-grid.count-7 .assignment-card:nth-child(5),
+.assignment-grid.count-10 .assignment-card:nth-child(5),
+.assignment-grid.count-10 .assignment-card:nth-child(8),
+.assignment-grid.count-11 .assignment-card:nth-child(9) {
+  grid-column: 2 / span 2;
+}
+
+.assignment-grid.count-7 .assignment-card:nth-child(6),
+.assignment-grid.count-10 .assignment-card:nth-child(6),
+.assignment-grid.count-10 .assignment-card:nth-child(9),
+.assignment-grid.count-11 .assignment-card:nth-child(10) {
+  grid-column: 4 / span 2;
+}
+
+.assignment-grid.count-7 .assignment-card:nth-child(7),
+.assignment-grid.count-10 .assignment-card:nth-child(7),
+.assignment-grid.count-10 .assignment-card:nth-child(10),
+.assignment-grid.count-11 .assignment-card:nth-child(11) {
+  grid-column: 6 / span 2;
+}
+
+.assignment-grid.count-8,
+.assignment-grid.count-12 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.assignment-grid.dense {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.assignment-grid.count-9 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .assignment-card {
@@ -897,39 +956,59 @@ input:focus-visible,
 }
 
 .workout-shell.workout-compact .assignment-card,
-.assignment-grid.medium .assignment-card,
-.assignment-grid.dense .assignment-card {
+.assignment-grid.count-5 .assignment-card,
+.assignment-grid.count-6 .assignment-card,
+.assignment-grid.count-7 .assignment-card,
+.assignment-grid.count-8 .assignment-card {
   padding: clamp(0.875rem, 1.4vw, 1.5rem);
   gap: clamp(0.75rem, 1.2vw, 1.25rem);
 }
 
 .workout-shell.workout-compact .participant-name,
-.assignment-grid.medium .participant-name {
+.assignment-grid.count-5 .participant-name,
+.assignment-grid.count-6 .participant-name,
+.assignment-grid.count-7 .participant-name,
+.assignment-grid.count-8 .participant-name {
   font-size: clamp(1.6rem, 2.8vw, 3rem);
 }
 
 .workout-shell.workout-compact .exercise-name,
-.assignment-grid.medium .exercise-name {
+.assignment-grid.count-5 .exercise-name,
+.assignment-grid.count-6 .exercise-name,
+.assignment-grid.count-7 .exercise-name,
+.assignment-grid.count-8 .exercise-name {
   font-size: clamp(1rem, 1.7vw, 1.55rem);
 }
 
 .workout-shell.workout-dense .assignment-card,
-.assignment-grid.dense .assignment-card {
+.assignment-grid.count-9 .assignment-card,
+.assignment-grid.count-10 .assignment-card,
+.assignment-grid.count-11 .assignment-card,
+.assignment-grid.count-12 .assignment-card {
   grid-template-columns: clamp(3.5rem, 18%, 5rem) minmax(0, 1fr);
 }
 
 .workout-shell.workout-dense .participant-name,
-.assignment-grid.dense .participant-name {
+.assignment-grid.count-9 .participant-name,
+.assignment-grid.count-10 .participant-name,
+.assignment-grid.count-11 .participant-name,
+.assignment-grid.count-12 .participant-name {
   font-size: clamp(1.25rem, 1.9vw, 2.1rem);
 }
 
 .workout-shell.workout-dense .exercise-name,
-.assignment-grid.dense .exercise-name {
+.assignment-grid.count-9 .exercise-name,
+.assignment-grid.count-10 .exercise-name,
+.assignment-grid.count-11 .exercise-name,
+.assignment-grid.count-12 .exercise-name {
   font-size: clamp(0.95rem, 1.3vw, 1.3rem);
 }
 
 .workout-shell.workout-dense .assignment-icon,
-.assignment-grid.dense .assignment-icon {
+.assignment-grid.count-9 .assignment-icon,
+.assignment-grid.count-10 .assignment-icon,
+.assignment-grid.count-11 .assignment-icon,
+.assignment-grid.count-12 .assignment-icon {
   max-width: 4.75rem;
 }
 
@@ -1242,13 +1321,44 @@ input:focus-visible,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .assignment-grid.few:not(.count-2) {
+  .assignment-grid.count-3,
+  .assignment-grid.count-4,
+  .assignment-grid.count-5,
+  .assignment-grid.count-6,
+  .assignment-grid.count-7,
+  .assignment-grid.count-8 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .assignment-grid.medium,
-  .assignment-grid.dense {
+  .assignment-grid.count-5 .assignment-card,
+  .assignment-grid.count-7 .assignment-card {
+    grid-column: auto;
+  }
+
+  .assignment-grid.count-5 .assignment-card:nth-child(5),
+  .assignment-grid.count-7 .assignment-card:nth-child(7) {
+    grid-column: 1 / span 2;
+  }
+
+  .assignment-grid.count-9,
+  .assignment-grid.count-10,
+  .assignment-grid.count-11,
+  .assignment-grid.count-12 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .assignment-grid.count-10 .assignment-card,
+  .assignment-grid.count-11 .assignment-card {
+    grid-column: auto;
+  }
+
+  .assignment-grid.count-10 .assignment-card:nth-child(7),
+  .assignment-grid.count-10 .assignment-card:nth-child(8),
+  .assignment-grid.count-10 .assignment-card:nth-child(9),
+  .assignment-grid.count-10 .assignment-card:nth-child(10),
+  .assignment-grid.count-11 .assignment-card:nth-child(10),
+  .assignment-grid.count-11 .assignment-card:nth-child(11) {
+    grid-column: auto;
   }
 
   .summary-grid {
@@ -1257,6 +1367,59 @@ input:focus-visible,
 
   .summary-grid .wide {
     grid-column: span 2;
+  }
+}
+
+@media (min-width: 621px) and (orientation: portrait) {
+  .assignment-grid.count-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .assignment-grid.count-3,
+  .assignment-grid.count-4,
+  .assignment-grid.count-5,
+  .assignment-grid.count-6,
+  .assignment-grid.count-7,
+  .assignment-grid.count-8 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .assignment-grid.count-3 .assignment-card,
+  .assignment-grid.count-5 .assignment-card,
+  .assignment-grid.count-7 .assignment-card {
+    grid-column: auto;
+  }
+
+  .assignment-grid.count-3 .assignment-card:nth-child(3),
+  .assignment-grid.count-5 .assignment-card:nth-child(5),
+  .assignment-grid.count-7 .assignment-card:nth-child(7) {
+    grid-column: 1 / span 2;
+  }
+
+  .assignment-grid.count-9,
+  .assignment-grid.count-10,
+  .assignment-grid.count-11,
+  .assignment-grid.count-12 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .assignment-grid.count-10,
+  .assignment-grid.count-11 {
+    grid-auto-rows: minmax(0, 1fr);
+  }
+
+  .assignment-grid.count-10 .assignment-card,
+  .assignment-grid.count-11 .assignment-card {
+    grid-column: auto;
+  }
+
+  .assignment-grid.count-10 .assignment-card:nth-child(7),
+  .assignment-grid.count-10 .assignment-card:nth-child(8),
+  .assignment-grid.count-10 .assignment-card:nth-child(9),
+  .assignment-grid.count-10 .assignment-card:nth-child(10),
+  .assignment-grid.count-11 .assignment-card:nth-child(10),
+  .assignment-grid.count-11 .assignment-card:nth-child(11) {
+    grid-column: auto;
   }
 }
 
