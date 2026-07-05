@@ -12,6 +12,18 @@ The evaluation question is always:
 
 The screen is not acceptable if it is merely readable but wastes a large amount of space or makes the participant-to-exercise pairing weaker than necessary.
 
+## PWA product requirement
+
+HIITBuddy should be installable as a PWA on supported devices.
+
+The installable shell must not trade away update visibility for offline caching:
+
+- The app should use a manifest and service worker so users can add it to the home screen.
+- The service worker should be intentionally cache-light.
+- App updates should become visible immediately after deployment.
+- Prefer fresh network responses over offline-first behavior.
+- Do not keep stale UI bundles in long-lived application caches unless there is an explicit product decision to do so.
+
 ## Required evaluation questions
 
 For every viewport/person-count combination, validate all of these:
