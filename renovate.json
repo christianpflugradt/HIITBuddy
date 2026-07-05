@@ -1,0 +1,72 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Europe/Berlin",
+  "labels": [
+    "dependencies"
+  ],
+  "dependencyDashboard": true,
+  "prConcurrentLimit": 5,
+  "rangeStrategy": "replace",
+  "rebaseWhen": "behind-base-branch",
+  "minimumReleaseAge": "3 days",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 4am on monday"
+    ]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "semanticCommits": "disabled",
+  "commitMessagePrefix": "chore: ",
+  "packageRules": [
+    {
+      "description": "Keep major npm updates separate for easier review.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "npm major dependencies"
+    },
+    {
+      "description": "Batch minor and patch npm updates into one PR.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "npm minor and patch dependencies"
+    },
+    {
+      "description": "Keep GitHub Action major updates separate.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "github actions major updates"
+    },
+    {
+      "description": "Batch non-major GitHub Action updates.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "github actions non-major updates"
+    }
+  ]
+}
