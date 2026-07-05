@@ -1,7 +1,7 @@
 import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { createServer } from "node:http";
-import { extname, join, normalize, resolve, sep } from "node:path";
+import { basename, extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("../dist", import.meta.url)));
@@ -19,9 +19,25 @@ const contentTypes = new Map([
   [".webmanifest", "application/manifest+json; charset=utf-8"]
 ]);
 
+const immutableAssetPattern = /\.[0-9a-f]{10}\.(css|js)$/u;
+
+const getCacheControl = (filePath) => {
+  const fileName = basename(filePath);
+
+  if (fileName === "index.html" || fileName === "service-worker.js" || fileName === "manifest.webmanifest") {
+    return "no-cache, must-revalidate";
+  }
+
+  if (immutableAssetPattern.test(fileName)) {
+    return "public, max-age=31536000, immutable";
+  }
+
+  return "no-cache, must-revalidate";
+};
+
 const send = (response, status, body, contentType = "text/plain; charset=utf-8") => {
   response.writeHead(status, {
-    "cache-control": "no-store, no-cache, must-revalidate",
+    "cache-control": "no-cache, must-revalidate",
     "content-type": contentType,
     pragma: "no-cache"
   });
@@ -61,7 +77,7 @@ const server = createServer(async (request, response) => {
     const contentType = contentTypes.get(extname(finalPath)) ?? "application/octet-stream";
 
     response.writeHead(200, {
-      "cache-control": "no-store, no-cache, must-revalidate",
+      "cache-control": getCacheControl(finalPath),
       "content-length": (await stat(finalPath)).size,
       "content-type": contentType,
       pragma: "no-cache"

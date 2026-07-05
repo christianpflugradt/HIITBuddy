@@ -117,8 +117,9 @@ The only share mechanism is the setup link you explicitly copy.
 HIITBuddy is installable as a Progressive Web App.
 
 - It includes a web app manifest and a service worker so it can be added to the home screen.
-- The service worker is intentionally cache-light and always fetches fresh responses from the network with `no-store`.
-- Updated versions should become visible immediately instead of being held back by an application cache.
+- `index.html`, the manifest, and the service worker are always revalidated so deployments become visible quickly.
+- Built entry CSS and JS files use content hashes in their filenames and can therefore be cached aggressively until the content actually changes.
+- Updated versions should become visible immediately without serving stale bundles after a deployment.
 
 ## For developers
 

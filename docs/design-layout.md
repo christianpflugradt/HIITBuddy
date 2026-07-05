@@ -21,8 +21,9 @@ The installable shell must not trade away update visibility for offline caching:
 - The app should use a manifest and service worker so users can add it to the home screen.
 - The service worker should be intentionally cache-light.
 - App updates should become visible immediately after deployment.
-- Prefer fresh network responses over offline-first behavior.
-- Do not keep stale UI bundles in long-lived application caches unless there is an explicit product decision to do so.
+- `index.html`, the manifest, and the service worker should revalidate on every load.
+- Built JS and CSS assets may be cached aggressively only when they carry unique content hashes in their filenames.
+- Do not keep stale non-hashed UI bundles in long-lived application caches unless there is an explicit product decision to do so.
 
 ## Required evaluation questions
 

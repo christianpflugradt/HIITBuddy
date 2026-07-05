@@ -1,9 +1,9 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import assert from "node:assert/strict";
 
 test("foundation files describe a framework-free HIITBuddy shell", async () => {
-  const [html, main, styles, packageJson, manifest, serviceWorker, icon, favicon] = await Promise.all([
+  const [html, main, styles, packageJson, manifest, serviceWorker, icon, favicon, distHtml, distFiles, serveScript] = await Promise.all([
     readFile("src/index.html", "utf8"),
     readFile("src/main.ts", "utf8"),
     readFile("src/styles.css", "utf8"),
@@ -11,7 +11,10 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
     readFile("src/public/manifest.webmanifest", "utf8"),
     readFile("src/public/service-worker.js", "utf8"),
     readFile("src/public/icon.svg", "utf8"),
-    readFile("src/public/favicon.svg", "utf8")
+    readFile("src/public/favicon.svg", "utf8"),
+    readFile("dist/index.html", "utf8"),
+    readdir("dist"),
+    readFile("scripts/serve.mjs", "utf8")
   ]);
 
   const pkg = JSON.parse(packageJson);
@@ -36,12 +39,20 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
   assert.doesNotMatch(serviceWorker, /CACHE_NAME/);
   assert.doesNotMatch(serviceWorker, /registration\.unregister/);
   assert.match(serviceWorker, /caches\.keys/);
-  assert.match(serviceWorker, /cache:\s*"no-store"/);
+  assert.doesNotMatch(serviceWorker, /cache:\s*"no-store"/);
   assert.match(serviceWorker, /skipWaiting/);
   assert.match(icon, /HIITBuddy App Icon/);
   assert.match(favicon, /HIITBuddy Favicon/);
   assert.equal(pkg.scripts.build, "node scripts/build.mjs");
   assert.equal(pkg.scripts.start, "node scripts/serve.mjs");
-  assert.match(await readFile("scripts/serve.mjs", "utf8"), /\.png", "image\/png"/);
-  assert.match(await readFile("scripts/serve.mjs", "utf8"), /no-store, no-cache, must-revalidate/);
+  assert.match(serveScript, /\.png", "image\/png"/);
+  assert.match(serveScript, /public, max-age=31536000, immutable/);
+  assert.match(serveScript, /no-cache, must-revalidate/);
+  assert.match(distHtml, /styles\.[0-9a-f]{10}\.css/);
+  assert.match(distHtml, /main\.[0-9a-f]{10}\.js/);
+  assert.ok(distFiles.some((file) => /^styles\.[0-9a-f]{10}\.css$/u.test(file)));
+  assert.ok(distFiles.some((file) => /^main\.[0-9a-f]{10}\.js$/u.test(file)));
+  assert.ok(distFiles.some((file) => /^main\.[0-9a-f]{10}\.js\.map$/u.test(file)));
+  assert.ok(!distFiles.includes("main.js"));
+  assert.ok(!distFiles.includes("styles.css"));
 });

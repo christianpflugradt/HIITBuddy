@@ -35,7 +35,7 @@ self.addEventListener("fetch", (event) => {
         return preloadResponse;
       }
 
-      return fetch(event.request, { cache: "no-store" });
+      return fetch(event.request);
     })()
   );
 });
