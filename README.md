@@ -112,6 +112,14 @@ HIITBuddy is a frontend-only application.
 
 The only share mechanism is the setup link you explicitly copy.
 
+## PWA behavior
+
+HIITBuddy is installable as a Progressive Web App.
+
+- It includes a web app manifest and a service worker so it can be added to the home screen.
+- The service worker is intentionally cache-light and always fetches fresh responses from the network with `no-store`.
+- Updated versions should become visible immediately instead of being held back by an application cache.
+
 ## For developers
 
 HIITBuddy is a framework-free TypeScript app with Web Components, plain CSS, and a small Node-based build and static server setup. The repository includes GitHub Actions for push checks and manual semantic-release publishing to GHCR.

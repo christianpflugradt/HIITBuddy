@@ -46,15 +46,44 @@ if (!app) {
 if (window.location.protocol !== "file:") {
   window.addEventListener("load", () => {
     void (async () => {
-      if ("serviceWorker" in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map((registration) => registration.unregister()));
+      if (!("serviceWorker" in navigator)) {
+        return;
       }
 
-      if ("caches" in window) {
-        const cacheKeys = await caches.keys();
-        await Promise.all(cacheKeys.map((key) => caches.delete(key)));
-      }
+      const registration = await navigator.serviceWorker.register("./service-worker.js", {
+        scope: "./",
+        updateViaCache: "none"
+      });
+
+      const activateWaitingWorker = () => {
+        registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+      };
+
+      registration.addEventListener("updatefound", () => {
+        const installingWorker = registration.installing;
+
+        if (!installingWorker) {
+          return;
+        }
+
+        installingWorker.addEventListener("statechange", () => {
+          if (installingWorker.state === "installed") {
+            activateWaitingWorker();
+          }
+        });
+      });
+
+      activateWaitingWorker();
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) {
+          return;
+        }
+
+        refreshing = true;
+        window.location.reload();
+      });
     })();
   });
 }

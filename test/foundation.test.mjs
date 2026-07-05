@@ -24,8 +24,9 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
   assert.match(html, /favicon-32\.png/);
   assert.match(html, /apple-touch-icon\.png/);
   assert.match(main, /HIITBuddy/);
-  assert.doesNotMatch(main, /serviceWorker\.register/);
-  assert.match(main, /navigator\.serviceWorker\.getRegistrations/);
+  assert.match(main, /serviceWorker\.register/);
+  assert.match(main, /updateViaCache:\s*"none"/);
+  assert.match(main, /controllerchange/);
   assert.match(styles, /--color-action/);
   assert.equal(parsedManifest.name, "HIITBuddy");
   assert.deepEqual(
@@ -33,8 +34,10 @@ test("foundation files describe a framework-free HIITBuddy shell", async () => {
     ["./icon-192.png", "./icon-512.png", "./icon-512.png"]
   );
   assert.doesNotMatch(serviceWorker, /CACHE_NAME/);
-  assert.match(serviceWorker, /registration\.unregister/);
+  assert.doesNotMatch(serviceWorker, /registration\.unregister/);
   assert.match(serviceWorker, /caches\.keys/);
+  assert.match(serviceWorker, /cache:\s*"no-store"/);
+  assert.match(serviceWorker, /skipWaiting/);
   assert.match(icon, /HIITBuddy App Icon/);
   assert.match(favicon, /HIITBuddy Favicon/);
   assert.equal(pkg.scripts.build, "node scripts/build.mjs");
