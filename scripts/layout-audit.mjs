@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const port = 4173;
 const rootUrl = `http://127.0.0.1:${port}`;
-const artifactDir = new URL("../artifacts/layout-audit/", import.meta.url);
+const artifactDir = new URL("../tmp/layout-audit/", import.meta.url);
 
 const { createDefaultConfig } = await import(new URL("../dist/config/default-config.js", import.meta.url));
 const { createShareUrl } = await import(new URL("../dist/domain/share-link.js", import.meta.url));

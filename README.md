@@ -92,7 +92,7 @@ The fuller layout rules live in [docs/design-layout.md](/Users/cpf/Workspace/per
 Automated validation:
 
 - Run `npm run audit:layout` to generate Playwright screenshots and verify layout heuristics for defined phone/tablet cases.
-- The audit writes screenshots and a JSON report to `artifacts/layout-audit/`.
+- The audit writes screenshots and a JSON report to `tmp/layout-audit/`.
 - Browser dependency setup for a fresh machine: `npx playwright install chromium`
 
 At the end you see a summary screen and can return to a new workout from there.

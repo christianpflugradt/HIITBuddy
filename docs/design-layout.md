@@ -107,4 +107,4 @@ The audit command is:
 npm run audit:layout
 ```
 
-Artifacts should be written to `artifacts/layout-audit/` so regressions can be inspected visually.
+Artifacts should be written to `tmp/layout-audit/` so regressions can be inspected visually after the latest run while staying out of Git.
