@@ -8,6 +8,7 @@
   --color-soft: #f0f2ec;
   --color-action: #2563eb;
   --color-action-ink: #ffffff;
+  --color-prepare: #f5b335;
   --color-energy: #a3e635;
   --color-rest: #14b8a6;
   --color-danger: #f9735b;
@@ -951,6 +952,10 @@ input:focus-visible,
   color: var(--phase-color, var(--color-action));
 }
 
+.round-break-stage .assignment-grid.round-preview.visible .assignment-icon {
+  color: var(--color-prepare);
+}
+
 .assignment-grid.count-2 .assignment-icon {
   max-width: 10.5rem;
 }
@@ -1110,7 +1115,7 @@ input:focus-visible,
 }
 
 .workout-shell[data-phase="prepare"] {
-  --phase-color: #f5b335;
+  --phase-color: var(--color-prepare);
   --screen-bg: #fbf7ee;
 }
 
