@@ -67,6 +67,30 @@
         "digest"
       ],
       "groupName": "github actions non-major updates"
+    },
+    {
+      "description": "Update the semantic-release toolchain together, including major versions.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "semantic-release",
+        "@semantic-release/**",
+        "conventional-changelog-conventionalcommits"
+      ],
+      "groupName": "semantic-release toolchain",
+      "groupSlug": "semantic-release-toolchain",
+      "separateMajorMinor": false
+    },
+    {
+      "description": "The v10 preset requires changelog-writer v9, which the current semantic-release plugins do not support yet.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "conventional-changelog-conventionalcommits"
+      ],
+      "allowedVersions": "<10"
     }
   ]
 }
