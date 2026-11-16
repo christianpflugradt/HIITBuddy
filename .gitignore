@@ -4,3 +4,12 @@ tmp/
 .DS_Store
 npm-debug.log*
 .idea/
+.please/reports/*
+!.please/reports/.gitignore
+/release-evidence/
+/.tools/
+__pycache__/
+.ruff_cache/
+.env
+.env.*
+!.env.example

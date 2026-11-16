@@ -9,10 +9,10 @@
     "build": "node scripts/build.mjs",
     "check": "tsc --noEmit",
     "dev": "npm run build && node scripts/serve.mjs",
-    "release": "semantic-release",
+    "release": "node .github/scripts/publish-release.mjs",
+    "release:plan": "node .github/scripts/release-plan.mjs",
     "start": "node scripts/serve.mjs",
-    "test": "npm run build && node --test",
-    "verify:commit-msg": "node scripts/verify-commit-msg.mjs"
+    "test": "npm run build && node --test"
   },
   "devDependencies": {
     "@semantic-release/commit-analyzer": "13.0.1",
@@ -22,5 +22,9 @@
     "playwright": "^1.61.1",
     "semantic-release": "25.0.9",
     "typescript": "^7.0.0"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24.10.0 <27"
   }
 }

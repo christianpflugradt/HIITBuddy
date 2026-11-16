@@ -1,0 +1,8 @@
+id = "release-candidate"
+name = "Release candidate image"
+description = "The Docker image builds for linux/amd64 and serves the application"
+run_at = ["release"]
+
+[check]
+command = "python3 -B @rule/check.py"
+timeout_seconds = 900

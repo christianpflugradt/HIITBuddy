@@ -1,0 +1,8 @@
+id = "node-tests"
+name = "Node tests"
+description = "The application builds and all Node tests pass"
+run_at = ["pre-push", "check"]
+
+[check]
+command = "npm test"
+timeout_seconds = 600

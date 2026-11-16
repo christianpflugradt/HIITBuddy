@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { generateNotes } from "@semantic-release/release-notes-generator";
 
+import releaseConfig from "../release.config.mjs";
+
 test("semantic-release toolchain generates Conventional Commits release notes", async () => {
-  const releaseConfig = JSON.parse(await readFile(new URL("../.releaserc.json", import.meta.url), "utf8"));
   const releaseNotesPlugin = releaseConfig.plugins.find(
     (plugin) => Array.isArray(plugin) && plugin[0] === "@semantic-release/release-notes-generator",
   );

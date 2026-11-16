@@ -102,8 +102,7 @@ ist_zustand:
     - Summary helpers and tests for compact elapsed-time formatting and summary facts.
     - Reduced structural UI chrome so setup and workout headers/stages avoid unnecessary frames, borders, and shadows.
     - Git workflow specification with commit-after-prompt rule.
-    - Repository-local Git hooks for pre-commit verification and commit-message validation.
-    - Dependency-free commit message validator enforcing Conventional Commits without scopes.
+    - Git hooks and commit validation managed by Please Behave.
   not_implemented:
     - Web Components.
     - Application UI/runtime tests beyond the foundation, domain, workout-core, icon-registry, setup-state, and summary tests.
@@ -154,9 +153,6 @@ soll_zustand:
     - Dockerfile using a Node image.
     - docker-compose.yml for local container execution.
     - Makefile exposing build, up, and down.
-    - Git initialized with .githooks as core.hooksPath.
-    - pre-commit hook running npm run check and npm test.
-    - commit-msg hook enforcing Conventional Commits without scopes.
     - Unit tests for validation, share links, scheduler, and timer calculations.
     - Browser or manual verification for tablet landscape layouts.
 

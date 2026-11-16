@@ -2,16 +2,16 @@ git_workflow:
   last_updated: "2026-06-10"
   ist_zustand:
     - Git workflow rules are documented for future agent turns.
-    - Repository-local hooks are defined in .githooks.
-    - pre-commit runs npm run check and npm test.
-    - commit-msg validates Conventional Commit headers without scopes.
-    - Commit message validation uses a dependency-free Node script.
+    - Please Behave manages the Git hooks and validates commits and pushes; see .please/README.md.
+    - pre-commit checks formatting and the AGENTS.md size.
+    - commit-msg validates Conventional Commit headers; scopes are optional and none are defined.
+    - pre-push runs npm run check, npm test and the other local rules.
   soll_zustand:
     - Git is initialized for the project.
-    - core.hooksPath points to .githooks.
+    - Hooks are installed with please sync --yes.
     - Every file-changing user prompt is finished with a commit.
     - Commits use Conventional Commits without scopes.
-    - pre-commit verification must pass before commits are created.
+    - Hooks must pass before commits and pushes are created.
   commit_convention:
     format: "type: subject"
     scopes: forbidden
@@ -38,11 +38,5 @@ git_workflow:
         - "fix(dialog): keep cancel buttons valid"
         - "update stuff"
   hooks:
-    pre_commit:
-      path: ".githooks/pre-commit"
-      commands:
-        - "npm run check"
-        - "npm test"
-    commit_msg:
-      path: ".githooks/commit-msg"
-      command: "node scripts/verify-commit-msg.mjs <message-file>"
+    managed_by: Please Behave
+    install: please sync --yes

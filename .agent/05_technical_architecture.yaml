@@ -154,7 +154,6 @@ technical_architecture:
   repository_workflow:
     git:
       initialized: true
-      hooks_path: ".githooks"
     commit_conventions:
       format: "type: subject"
       scopes: forbidden
@@ -171,14 +170,7 @@ technical_architecture:
         - chore
         - revert
     hooks:
-      pre_commit:
-        purpose: Verify code before each commit.
-        commands:
-          - npm run check
-          - npm test
-      commit_msg:
-        purpose: Enforce Conventional Commit headers without scopes.
-        command: node scripts/verify-commit-msg.mjs
+      managed_by: Please Behave (please sync --yes)
 
   url_and_routing:
     routing: Single root route.

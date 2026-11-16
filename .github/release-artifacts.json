@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "repository": "christianpflugradt/HiitBuddy",
+  "workflow": ".github/workflows/release.yml",
+  "root": "dist",
+  "targets": {
+    "linux-amd64": [
+      "hiitbuddy.tar",
+      "metadata.json"
+    ]
+  }
+}

@@ -1,0 +1,174 @@
+name: Release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+env:
+  MISE_AUTO_INSTALL: 'false'
+
+jobs:
+  plan:
+    name: Plan
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write # Semantic Release verifies push access even in a dry run.
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+      version: ${{ steps.plan.outputs.version }}
+      source_sha: ${{ steps.plan.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          install_args: node
+      - run: npm ci --ignore-scripts
+      - name: Plan semantic release without publication
+        id: plan
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run release:plan
+
+  release-readiness:
+    name: Release Readiness
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.plan.outputs.source_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          install_args: python
+      - name: Verify exact-source CI prerequisites
+        run: python3 .github/scripts/check-release-ci.py
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  release-candidate:
+    name: Release Candidate
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      RELEASE_TAG: v${{ needs.plan.outputs.version }}
+      EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.plan.outputs.source_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          install_args: python github:please-behave/cli
+      - name: Validate the Docker candidate
+        uses: please-behave/action@700671acc8274ec7bfad27f3e40f732e727b6b9c # v1.3.1
+        with:
+          install: 'false'
+          sync: 'true'
+          execution-point: release
+          summary: 'true'
+      - name: Export the verified image candidate
+        run: mise run package
+      - name: Verify candidate archive
+        run: python3 .github/scripts/release-artifacts.py verify
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: hiitbuddy-${{ github.run_id }}-${{ github.run_attempt }}-linux-amd64
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload governance report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: release-candidate-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .please/reports/last.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Record release candidate evidence
+        run: python3 .github/scripts/release-evidence.py record
+        env:
+          EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+          RELEASE_TARGET: linux-amd64
+      - name: Upload release candidate evidence
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: release-evidence-${{ github.run_id }}-${{ github.run_attempt }}-linux-amd64
+          path: release-evidence/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish
+    needs: [plan, release-readiness, release-candidate]
+    if: >-
+      needs.plan.outputs.release == 'true' &&
+      needs.release-readiness.result == 'success' &&
+      needs.release-candidate.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      packages: write
+    env:
+      EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.plan.outputs.source_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          install_args: python node
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: hiitbuddy-${{ github.run_id }}-${{ github.run_attempt }}-linux-amd64
+          path: dist
+      - name: Verify the candidate image without rebuilding
+        run: python3 .github/scripts/release-artifacts.py verify
+      - name: Log in to GHCR
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Download release candidate evidence
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          pattern: release-evidence-${{ github.run_id }}-${{ github.run_attempt }}-*
+          path: release-evidence
+          merge-multiple: true
+      - name: Verify complete release candidate evidence
+        run: python3 .github/scripts/release-evidence.py verify
+        env:
+          EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+      - name: Publish the verified image, version tag and release notes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run release
+

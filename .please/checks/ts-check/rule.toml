@@ -1,0 +1,8 @@
+id = "ts-check"
+name = "TypeScript check"
+description = "TypeScript sources compile without type errors"
+run_at = ["pre-push", "check"]
+
+[check]
+command = "npm run check"
+timeout_seconds = 300

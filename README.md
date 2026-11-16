@@ -123,4 +123,4 @@ HIITBuddy is installable as a Progressive Web App.
 
 ## For developers
 
-HIITBuddy is a framework-free TypeScript app with Web Components, plain CSS, and a small Node-based build and static server setup. The repository includes GitHub Actions for push checks and manual semantic-release publishing to GHCR.
+HIITBuddy is a framework-free TypeScript app with Web Components, plain CSS, and a small Node-based build and static server setup. The repository is governed by [Please Behave](https://github.com/please-behave/cli) (see `.please/README.md`) and includes GitHub Actions for push checks and manual semantic-release publishing to GHCR.
