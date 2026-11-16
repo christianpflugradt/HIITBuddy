@@ -1,5 +1,9 @@
 # HIITBuddy
 
+[![build](https://github.com/christianpflugradt/HIITBuddy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/christianpflugradt/HIITBuddy/actions/workflows/ci.yml) [![release](https://img.shields.io/github/v/release/christianpflugradt/HIITBuddy?display_name=tag&sort=semver)](https://github.com/christianpflugradt/HIITBuddy/releases) [![license](https://img.shields.io/badge/license-Apache%202.0-3949ab.svg)](https://opensource.org/licenses/Apache-2.0)
+
+[![tests](https://christianpflugradt.github.io/badges-and-stuff/hiitbuddy/tests.svg)](https://christianpflugradt.github.io/badges-and-stuff/) [![line coverage](https://christianpflugradt.github.io/badges-and-stuff/hiitbuddy/line-coverage.svg)](https://christianpflugradt.github.io/badges-and-stuff/) [![branch coverage](https://christianpflugradt.github.io/badges-and-stuff/hiitbuddy/branch-coverage.svg)](https://christianpflugradt.github.io/badges-and-stuff/) [![LOC](https://christianpflugradt.github.io/badges-and-stuff/hiitbuddy/loc.svg)](https://christianpflugradt.github.io/badges-and-stuff/)
+
 HIITBuddy is a lightweight workout companion for interval-based circuit training on a shared screen. It is designed first for tablets in landscape orientation and works well when mounted on a wall during a session.
 
 The app helps a group move through rounds without discussing who goes where next. You choose participants, choose exercises, set the timers, and start. HIITBuddy assigns each active person to a different station, shows the current pairing with a large countdown, handles breaks between efforts and rounds, and keeps going for as many rounds as you want until you finish the workout.

@@ -37,3 +37,12 @@ the verified image as an archive with a receipt bound to version, source and wor
 verifies it, loads the same image and pushes it to GHCR as the planned version and `latest`, then
 semantic-release tags the source. Publication never builds. `.github/release-ci.json` and
 `.github/release-artifacts.json` hold the workflow policies. Only `linux/amd64` is released.
+
+## Statistics
+
+`.github/workflows/statistics.yml` runs on pushes to main and manually. Job `collect` builds the app, runs the Node
+tests with the built-in coverage and takes the test count from their summary. Line and branch coverage cover the
+compiled files under `dist/` that the tests load. Production lines of `src/**/*.ts` are counted with the scc version
+pinned in `mise.toml`. `.github/scripts/write-*-metrics.py` write the metric files. Job `publish` alone uses
+`STATISTICS_TOKEN` to send them as project `hiitbuddy` to badges-and-stuff, which renders the README badges. The
+shared `statistics-workflow` rule checks the structure.
