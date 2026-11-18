@@ -1,0 +1,19 @@
+purpose: Run the Python unit tests of the release scripts and of the local rules together.
+problem: >-
+  The repository keeps Python glue code for releases, audits, metrics and local rules.
+  Without this Rule none of it is tested automatically, and defects surface only in the release workflow.
+value: Defects in release scripts and local rules are found early, before a push and in CI.
+conditions:
+  - statement: Every test discovered as test_*.py in the release scripts directory and in each local rule directory passes.
+    rationale: These are the places where the repository keeps Python code.
+  - statement: A crash of the test runner is an ERROR, not a FAIL.
+    rationale: A technical failure says nothing about the tests themselves.
+success_criteria:
+  - A failing test fails the Rule and a passing suite passes it.
+  - A crash of the runner is an ERROR.
+out_of_scope:
+  - description: Node tests, which node-tests covers.
+  - description: Python code outside the release scripts and local rule directories.
+limitations:
+  - Tests placed in other directories are not discovered.
+placement: Local, because it only concerns this repository's scripts and rules.

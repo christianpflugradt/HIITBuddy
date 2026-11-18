@@ -1,0 +1,11 @@
+purpose: Keep TypeScript sources free of type errors.
+problem: Type errors surface only at build time or at run time, late and far from the change that caused them.
+value: Type errors are found early, without running the application.
+conditions:
+  - statement: The TypeScript compiler reports no errors when it only type-checks the sources.
+    rationale: It is the compiler of the TypeScript toolchain used by this repository.
+success_criteria:
+  - Code with a type error fails and type-correct code passes.
+out_of_scope:
+  - description: Behavior of the code, which the tests cover.
+placement: Local, because the compiler belongs to this repository's technology stack.

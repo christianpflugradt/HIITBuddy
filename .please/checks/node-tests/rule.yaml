@@ -1,0 +1,12 @@
+purpose: Keep the application buildable and its Node tests passing.
+problem: Regressions and a broken build reach main and the release unnoticed.
+value: A change that breaks the build or a test is stopped before it is pushed.
+conditions:
+  - statement: The application builds and every Node test passes.
+    rationale: The test command builds the application first, so a broken build fails the same way as a failing test.
+success_criteria:
+  - A failing build or test fails the Rule and a green build and test run passes it.
+out_of_scope:
+  - description: Python tests, which python-tests covers.
+  - description: Type checking, which ts-check covers.
+placement: Local, because build and test tooling belongs to this repository's technology stack.

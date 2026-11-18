@@ -1,0 +1,25 @@
+purpose: Build the release candidate image for linux/amd64 and prove that it serves the application.
+problem: An image that builds but does not start or serve the application would be published.
+value: The image that is published has been built and exercised before release.
+conditions:
+  - statement: The image builds and carries labels for the release version and the source commit, both taken from the environment.
+    rationale: The image can be traced back to the release and the source it was built from.
+  - statement: A container started from the image answers with status 200 and an HTML page within the waiting time.
+    rationale: Only an answering container shows that the application runs.
+  - statement: The container is stopped afterwards, also when the check fails.
+    rationale: No container is left running.
+  - statement: A missing environment variable or any other crash is an ERROR, not a FAIL.
+    rationale: A technical failure is no verdict about the image.
+success_criteria:
+  - An image that builds and serves the application passes.
+  - An image that does not serve the application fails.
+  - A crash or missing tool is an ERROR.
+out_of_scope:
+  - description: Publishing the image and exporting it with its receipt.
+  - description: Platforms other than linux/amd64.
+  - description: Testing application behavior beyond serving a page.
+limitations:
+  - The smoke test only checks the status and the presence of an HTML tag.
+  - It publishes the container on a fixed host port, which may be in use.
+  - It needs Docker and runs only at the release execution point.
+placement: Local, because it only concerns this repository's image.
