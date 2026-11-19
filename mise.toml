@@ -28,6 +28,3 @@ run = "please run --at pre-push --checks-only --fail-fast"
 description = "Fetch locked npm dependencies for CI and Git hooks"
 run = "npm ci --ignore-scripts"
 
-[tasks.package]
-description = "Export the verified Docker image candidate without rebuilding"
-run = "python3 .github/scripts/release-artifacts.py package"
