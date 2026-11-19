@@ -7,6 +7,7 @@ npm-debug.log*
 .please/reports/*
 !.please/reports/.gitignore
 /release-evidence/
+/release-candidate/
 /.tools/
 __pycache__/
 .ruff_cache/
