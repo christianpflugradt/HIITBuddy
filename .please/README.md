@@ -35,8 +35,9 @@ are Conventional Commits without scopes; `commit-scopes.txt` lists no scope.
 shared structure (`plan`, `release-readiness`, `release-candidate`, `publish`). The candidate exports
 the verified image as an archive with a receipt bound to version, source and workflow run; `publish`
 verifies it, loads the same image and pushes it to GHCR as the planned version and `latest`, then
-semantic-release tags the source. Publication never builds. `.github/release-ci.json` and
-`.github/release-artifacts.json` hold the workflow policies. Only `linux/amd64` is released.
+the shared release action tags the source. Publication never builds. The plan, CI proof, candidate evidence and publish
+steps are the pinned release actions of the governance repository; the publish step runs `release-artifacts.py` as
+its verify, prepare and publish hooks. `.github/release-artifacts.json` lists the candidate artifacts. Only `linux/amd64` is released.
 
 ## Statistics
 
