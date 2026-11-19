@@ -25,8 +25,8 @@ class ReleaseEvidenceTests(unittest.TestCase):
             EXPECTED_RELEASE_VERSION="1.3.0",
             GITHUB_SHA=self.head,
             GITHUB_REF="refs/heads/main",
-            GITHUB_REPOSITORY="christianpflugradt/HiitBuddy",
-            GITHUB_WORKFLOW_REF="christianpflugradt/HiitBuddy/.github/workflows/release.yml@refs/heads/main",
+            GITHUB_REPOSITORY="christianpflugradt/HIITBuddy",
+            GITHUB_WORKFLOW_REF="christianpflugradt/HIITBuddy/.github/workflows/release.yml@refs/heads/main",
             GITHUB_RUN_ID="123",
             GITHUB_RUN_ATTEMPT="1",
         )

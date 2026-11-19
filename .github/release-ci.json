@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "repository": "christianpflugradt/HiitBuddy",
+  "repository": "christianpflugradt/HIITBuddy",
   "workflow": ".github/workflows/ci.yml",
   "event": "push",
   "branch": "main",

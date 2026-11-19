@@ -3,7 +3,7 @@ import { pathToFileURL } from "node:url";
 
 export function verifySource(env, cwd, git = execFileSync) {
   if (env.GITHUB_REF !== "refs/heads/main" || !env.GITHUB_REPOSITORY
-      || env.GITHUB_REPOSITORY !== "christianpflugradt/HiitBuddy"
+      || env.GITHUB_REPOSITORY !== "christianpflugradt/HIITBuddy"
       || !/^[0-9a-f]{40}$/.test(env.GITHUB_SHA ?? "")) {
     throw new Error("Invalid publication context");
   }

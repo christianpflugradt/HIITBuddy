@@ -16,7 +16,7 @@ spec.loader.exec_module(mod)
 SHA = "a" * 40
 POLICY = dict(
     schema_version=1,
-    repository="christianpflugradt/HiitBuddy",
+    repository="christianpflugradt/HIITBuddy",
     workflow=".github/workflows/ci.yml",
     event="push",
     branch="main",
@@ -27,7 +27,7 @@ ENV = dict(
     GITHUB_REPOSITORY=POLICY["repository"],
     GITHUB_REPOSITORY_ID="7",
     GITHUB_RUN_ID="99",
-    GITHUB_WORKFLOW_REF="christianpflugradt/HiitBuddy/.github/workflows/release.yml@refs/heads/main",
+    GITHUB_WORKFLOW_REF="christianpflugradt/HIITBuddy/.github/workflows/release.yml@refs/heads/main",
 )
 
 
@@ -57,8 +57,8 @@ class API:
         self.reads = 0
 
     def get(self, path):
-        if path == "/repos/christianpflugradt/HiitBuddy":
-            return dict(id=7, full_name="christianpflugradt/HiitBuddy")
+        if path == "/repos/christianpflugradt/HIITBuddy":
+            return dict(id=7, full_name="christianpflugradt/HIITBuddy")
         if path.endswith("/workflows/ci.yml"):
             return dict(id=8, path=POLICY["workflow"])
         if path.endswith("/runs/10"):
@@ -154,7 +154,7 @@ class ProofTests(unittest.TestCase):
             dict(GITHUB_REPOSITORY="attacker/cli"),
             dict(GITHUB_REPOSITORY_ID="8"),
             dict(GITHUB_RUN_ID="10"),
-            dict(GITHUB_WORKFLOW_REF="christianpflugradt/HiitBuddy/.github/workflows/ci.yml@refs/heads/main"),
+            dict(GITHUB_WORKFLOW_REF="christianpflugradt/HIITBuddy/.github/workflows/ci.yml@refs/heads/main"),
             dict(GITHUB_API_URL="https://attacker.invalid"),
         ]:
             with self.subTest(change=change), self.assertRaises(ValueError):
@@ -226,7 +226,7 @@ class ProofTests(unittest.TestCase):
         api = mod.GitHub("test-token")
         entries = [dict(id=i + 1) for i in range(101)]
         with patch.object(api, "get", side_effect=[dict(total_count=101, jobs=entries[:100]), dict(total_count=101, jobs=entries[100:])]):
-            self.assertEqual(api.pages("/repos/christianpflugradt/HiitBuddy/jobs", "jobs"), entries)
+            self.assertEqual(api.pages("/repos/christianpflugradt/HIITBuddy/jobs", "jobs"), entries)
         for result in [
             dict(total_count=1, jobs=[]),
             dict(total_count=1000, jobs=[]),
@@ -234,18 +234,18 @@ class ProofTests(unittest.TestCase):
             dict(total_count="1", jobs=[]),
         ]:
             with patch.object(api, "get", return_value=result), self.assertRaises(ValueError):
-                api.pages("/repos/christianpflugradt/HiitBuddy/jobs", "jobs")
+                api.pages("/repos/christianpflugradt/HIITBuddy/jobs", "jobs")
 
     def test_api_errors_and_invalid_json_cannot_pass_or_disclose_tokens(self):
         api = mod.GitHub("private-test-token")
         with patch.object(api.opener, "open", side_effect=OSError("private-test-token")):
             with self.assertRaisesRegex(ValueError, "request failed") as error:
-                api.get("/repos/christianpflugradt/HiitBuddy")
+                api.get("/repos/christianpflugradt/HIITBuddy")
             self.assertNotIn("private-test-token", str(error.exception))
         response = unittest.mock.MagicMock()
         response.__enter__.return_value.read.return_value = b"not json"
         with patch.object(api.opener, "open", return_value=response), self.assertRaises(ValueError):
-            api.get("/repos/christianpflugradt/HiitBuddy")
+            api.get("/repos/christianpflugradt/HIITBuddy")
         with self.assertRaises(ValueError):
             mod.GitHub("")
         with self.assertRaises(ValueError):

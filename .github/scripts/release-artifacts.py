@@ -12,7 +12,7 @@ import tarfile
 
 
 COMPONENTS = ("hiitbuddy",)
-REPOSITORY = "christianpflugradt/HiitBuddy"
+REPOSITORY = "christianpflugradt/HIITBuddy"
 
 
 def run(*args):

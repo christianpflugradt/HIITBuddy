@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "repository": "christianpflugradt/HiitBuddy",
+  "repository": "christianpflugradt/HIITBuddy",
   "workflow": ".github/workflows/release.yml",
   "root": "dist",
   "targets": {
