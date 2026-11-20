@@ -1,0 +1,12 @@
+config
+domain
+icons
+setup
+workout
+pwa
+ui
+build
+ci
+deps
+docs
+test
