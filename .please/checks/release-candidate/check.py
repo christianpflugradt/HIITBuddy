@@ -1,6 +1,7 @@
-"""Build the release candidate image for linux/amd64 and verify that it serves the application."""
+"""Build the release candidate image for linux/amd64 and linux/arm64 and verify that the amd64 image serves the application."""
 
 import os
+from pathlib import Path
 import subprocess
 import sys
 import time
@@ -8,16 +9,35 @@ from urllib.error import URLError
 from urllib.request import urlopen
 
 TAG = "hiitbuddy:candidate"
+ARCHIVE = Path("dist/hiitbuddy.tar")
 PORT = "18080"
 
 
+def labels(version, source):
+    return [
+        "--label", f"org.opencontainers.image.version=v{version}",
+        "--label", f"org.opencontainers.image.revision={source}",
+    ]  # fmt: skip
+
+
 def build(version, source):
+    ARCHIVE.parent.mkdir(exist_ok=True)
     subprocess.run(
         [
-            "docker", "build", "--platform", "linux/amd64", "--tag", TAG,
-            "--label", f"org.opencontainers.image.version=v{version}",
-            "--label", f"org.opencontainers.image.revision={source}",
-            ".",
+            "docker", "buildx", "build", "--platform", "linux/amd64,linux/arm64",
+            "--provenance=mode=max", "--sbom=true", *labels(version, source),
+            "--output", f"type=oci,dest={ARCHIVE}", ".",
+        ],
+        check=True,
+    )  # fmt: skip
+
+
+def load(version, source):
+    """Loads the amd64 image for the smoke test; the layers come from the cache of the candidate build."""
+    subprocess.run(
+        [
+            "docker", "buildx", "build", "--platform", "linux/amd64", "--provenance=false", "--sbom=false",
+            "--load", "--tag", TAG, *labels(version, source), ".",
         ],
         check=True,
     )  # fmt: skip
@@ -47,7 +67,9 @@ def smoke():
 
 
 def main():
-    build(os.environ["EXPECTED_RELEASE_VERSION"], os.environ["GITHUB_SHA"])
+    version, source = os.environ["EXPECTED_RELEASE_VERSION"], os.environ["GITHUB_SHA"]
+    build(version, source)
+    load(version, source)
     smoke()
     return 0
 
