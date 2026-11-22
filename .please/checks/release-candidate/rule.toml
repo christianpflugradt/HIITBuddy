@@ -1,6 +1,6 @@
 id = "release-candidate"
 name = "Release candidate image"
-description = "The Docker image builds for linux/amd64 and linux/arm64, and the amd64 image serves the application"
+description = "The Docker image builds for the platform of the job and serves the application"
 run_at = ["release"]
 
 [check]

@@ -1,4 +1,4 @@
-purpose: Build the release candidate image for linux/amd64 and linux/arm64 and prove that the amd64 image serves the application.
+purpose: Build the release candidate image for the platform of the job and prove that it serves the application.
 problem: An image that builds but does not start or serve the application would be published.
 value: The image that is published has been built and exercised before release.
 conditions:
@@ -15,12 +15,12 @@ success_criteria:
   - An image that does not serve the application fails.
   - A crash or missing tool is an ERROR.
 out_of_scope:
-  - description: Publishing the image and exporting it with its receipt.
-  - description: Platforms other than linux/amd64 and linux/arm64.
-  - description: Running the arm64 image.
+  - description: Publishing the image and verifying the archive; the shared check-image action does that.
+  - description: Platforms other than the one of the job; the release workflow runs the check once per platform on a native runner.
+  - description: Assembling the platforms into one image.
   - description: Testing application behavior beyond serving a page.
 limitations:
-  - Only the amd64 image is started; the arm64 image is built and verified but not run.
+  - It needs the platform as RELEASE_TARGET, which the release workflow sets for each candidate job.
   - The smoke test only checks the status and the presence of an HTML tag.
   - It publishes the container on a fixed host port, which may be in use.
   - It needs Docker and runs only at the release execution point.

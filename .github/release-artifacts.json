@@ -2,8 +2,10 @@
   "root": "dist",
   "targets": {
     "linux-amd64": [
-      "hiitbuddy.tar",
-      "metadata.json"
+      "hiitbuddy-linux-amd64.tar"
+    ],
+    "linux-arm64": [
+      "hiitbuddy-linux-arm64.tar"
     ]
   }
 }

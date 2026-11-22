@@ -9,24 +9,23 @@ spec.loader.exec_module(candidate)
 
 
 class CandidateCheckTest(unittest.TestCase):
-    def test_build_writes_the_multi_architecture_archive_labeled_with_version_and_source(self):
-        with patch.object(candidate.subprocess, "run") as run, patch.object(candidate.ARCHIVE.parent.__class__, "mkdir"):
-            candidate.build("1.2.3", "a" * 40)
+    def test_build_writes_the_archive_of_the_target_labeled_with_version_and_source(self):
+        with patch.object(candidate.subprocess, "run") as run, patch("pathlib.Path.mkdir"):
+            candidate.build("linux-arm64", "1.2.3", "a" * 40)
         command = run.call_args.args[0]
         self.assertIn("org.opencontainers.image.version=v1.2.3", command)
         self.assertIn("org.opencontainers.image.revision=" + "a" * 40, command)
-        self.assertIn("linux/amd64,linux/arm64", command)
+        self.assertIn("linux/arm64", command)
         self.assertIn("--provenance=mode=max", command)
         self.assertIn("--sbom=true", command)
-        self.assertIn("type=oci,dest=dist/hiitbuddy.tar", command)
+        self.assertIn("type=oci,dest=dist/hiitbuddy-linux-arm64.tar", command)
 
-    def test_load_provides_only_the_amd64_image_for_the_smoke_test(self):
+    def test_load_provides_the_image_of_the_target_for_the_smoke_test(self):
         with patch.object(candidate.subprocess, "run") as run:
-            candidate.load("1.2.3", "a" * 40)
+            candidate.load("linux-amd64", "1.2.3", "a" * 40)
         command = run.call_args.args[0]
         self.assertIn("--load", command)
-        self.assertIn("linux/amd64", command)
-        self.assertNotIn("linux/amd64,linux/arm64", command)
+        self.assertEqual(command[command.index("--platform") + 1], "linux/amd64")
 
     def test_unreachable_image_is_reported_as_not_serving(self):
         with patch.object(candidate, "urlopen", side_effect=OSError("refused")):
@@ -39,7 +38,7 @@ class CandidateCheckTest(unittest.TestCase):
             patch.object(candidate, "serves", return_value=False),
         ):
             with self.assertRaises(ValueError):
-                candidate.smoke()
+                candidate.smoke("linux-amd64")
         run.assert_called_once_with(["docker", "stop", "abc"], check=False)
 
 

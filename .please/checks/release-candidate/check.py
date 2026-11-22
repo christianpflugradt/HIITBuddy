@@ -1,4 +1,4 @@
-"""Build the release candidate image for linux/amd64 and linux/arm64 and verify that the amd64 image serves the application."""
+"""Build the release candidate image for the platform of the job and verify that it serves the application."""
 
 import os
 from pathlib import Path
@@ -9,8 +9,11 @@ from urllib.error import URLError
 from urllib.request import urlopen
 
 TAG = "hiitbuddy:candidate"
-ARCHIVE = Path("dist/hiitbuddy.tar")
 PORT = "18080"
+
+
+def platform(target):
+    return target.replace("-", "/", 1)
 
 
 def labels(version, source):
@@ -20,23 +23,24 @@ def labels(version, source):
     ]  # fmt: skip
 
 
-def build(version, source):
-    ARCHIVE.parent.mkdir(exist_ok=True)
+def build(target, version, source):
+    archive = Path(f"dist/hiitbuddy-{target}.tar")
+    archive.parent.mkdir(exist_ok=True)
     subprocess.run(
         [
-            "docker", "buildx", "build", "--platform", "linux/amd64,linux/arm64",
+            "docker", "buildx", "build", "--platform", platform(target),
             "--provenance=mode=max", "--sbom=true", *labels(version, source),
-            "--output", f"type=oci,dest={ARCHIVE}", ".",
+            "--output", f"type=oci,dest={archive}", ".",
         ],
         check=True,
     )  # fmt: skip
 
 
-def load(version, source):
-    """Loads the amd64 image for the smoke test; the layers come from the cache of the candidate build."""
+def load(target, version, source):
+    """Loads the image of the platform for the smoke test; the layers come from the cache of the candidate build."""
     subprocess.run(
         [
-            "docker", "buildx", "build", "--platform", "linux/amd64", "--provenance=false", "--sbom=false",
+            "docker", "buildx", "build", "--platform", platform(target), "--provenance=false", "--sbom=false",
             "--load", "--tag", TAG, *labels(version, source), ".",
         ],
         check=True,
@@ -55,9 +59,9 @@ def serves(url, attempts=30, pause=1.0):
     return False
 
 
-def smoke():
+def smoke(target):
     container = subprocess.check_output(
-        ["docker", "run", "--detach", "--rm", "--platform", "linux/amd64", "--publish", f"127.0.0.1:{PORT}:8080", TAG], text=True
+        ["docker", "run", "--detach", "--rm", "--platform", platform(target), "--publish", f"127.0.0.1:{PORT}:8080", TAG], text=True
     ).strip()
     try:
         if not serves(f"http://127.0.0.1:{PORT}/"):
@@ -67,10 +71,10 @@ def smoke():
 
 
 def main():
-    version, source = os.environ["EXPECTED_RELEASE_VERSION"], os.environ["GITHUB_SHA"]
-    build(version, source)
-    load(version, source)
-    smoke()
+    target, version, source = os.environ["RELEASE_TARGET"], os.environ["EXPECTED_RELEASE_VERSION"], os.environ["GITHUB_SHA"]
+    build(target, version, source)
+    load(target, version, source)
+    smoke(target)
     return 0
 
 
