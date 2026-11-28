@@ -21,7 +21,7 @@ jobs:
         with:
           install_args: node python aqua:boyter/scc
           experimental: true
-          version: 2026.11.11
+          version: 2026.11.12
       - name: Fetch locked dependencies
         run: mise run setup
       - name: Run tests with coverage
