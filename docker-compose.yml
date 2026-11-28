@@ -1,6 +1,6 @@
 services:
   hiitbuddy:
-    image: ghcr.io/christianpflugradt/hiitbuddy:latest
+    image: ghcr.io/christianpflugradt/hiitbuddy:latest@sha256:badd1df9f97728a8ae817c28a48a4df07cd55782cfda90f3875164657e56d11a
     pull_policy: always
     ports:
       - "8080:8080"
